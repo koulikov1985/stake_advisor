@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const paymentRoutes = require('./routes/payment');
 const authRoutes = require('./routes/auth');
 const verifyRoutes = require('./routes/verify');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,6 +45,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api', paymentRoutes);
 app.use('/api', authRoutes);
 app.use('/api', verifyRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use((req, res) => {
