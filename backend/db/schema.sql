@@ -4,9 +4,10 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    license_key UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(),
-    plan VARCHAR(20) NOT NULL CHECK (plan IN ('daily', 'weekly', 'monthly')),
-    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    password_hash VARCHAR(255),
+    license_key UUID UNIQUE DEFAULT gen_random_uuid(),
+    plan VARCHAR(20) CHECK (plan IN ('daily', 'weekly', 'monthly', 'yearly')),
+    expires_at TIMESTAMP WITH TIME ZONE,
     active BOOLEAN DEFAULT true,
     stripe_customer_id VARCHAR(255),
     stripe_session_id VARCHAR(255),
@@ -35,3 +36,30 @@ CREATE TRIGGER update_users_updated_at
     BEFORE UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- Migration: Add password_hash column if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'password_hash') THEN
+        ALTER TABLE users ADD COLUMN password_hash VARCHAR(255);
+    END IF;
+END $$;
+
+-- Migration: Allow yearly plan
+DO $$
+BEGIN
+    ALTER TABLE users DROP CONSTRAINT IF EXISTS users_plan_check;
+    ALTER TABLE users ADD CONSTRAINT users_plan_check CHECK (plan IN ('daily', 'weekly', 'monthly', 'yearly'));
+EXCEPTION WHEN OTHERS THEN
+    NULL;
+END $$;
+
+-- Migration: Make plan and expires_at nullable for users who signed up but haven't purchased
+DO $$
+BEGIN
+    ALTER TABLE users ALTER COLUMN plan DROP NOT NULL;
+    ALTER TABLE users ALTER COLUMN expires_at DROP NOT NULL;
+    ALTER TABLE users ALTER COLUMN license_key DROP NOT NULL;
+EXCEPTION WHEN OTHERS THEN
+    NULL;
+END $$;

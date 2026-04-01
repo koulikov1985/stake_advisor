@@ -167,20 +167,6 @@ function Home() {
           <a href="#pricing" className="btn btn-primary btn-large">Get Started</a>
           <a href="#how-it-works" className="btn btn-secondary btn-large">How It Works</a>
         </div>
-        <div className="hero-stats">
-          <div className="stat">
-            <span className="stat-value">10K+</span>
-            <span className="stat-label">Active Users</span>
-          </div>
-          <div className="stat">
-            <span className="stat-value">50M+</span>
-            <span className="stat-label">Hands Analyzed</span>
-          </div>
-          <div className="stat">
-            <span className="stat-value">24/7</span>
-            <span className="stat-label">Support</span>
-          </div>
-        </div>
       </section>
 
       {/* Features Section */}
@@ -249,7 +235,7 @@ function Home() {
       {/* Final CTA */}
       <section className="final-cta">
         <h2>Ready to Improve Your Game?</h2>
-        <p>Join thousands of players already using Stake Advisor to win more.</p>
+        <p>Start using Stake Advisor today and take your poker game to the next level.</p>
         <a href="#pricing" className="btn btn-primary btn-large">Get Started Now</a>
       </section>
     </div>
