@@ -64,13 +64,18 @@ function Admin() {
 
   const toggleActive = async (id, currentActive) => {
     try {
-      await fetch(`${API_URL}/api/admin/licenses/${id}`, {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${id}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify({ active: !currentActive })
       });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to update');
+      }
       fetchData();
     } catch (err) {
+      alert('Error: ' + err.message);
       setError('Failed to update license');
     }
   };
@@ -79,25 +84,37 @@ function Admin() {
     if (!confirm('Are you sure you want to delete this license?')) return;
 
     try {
-      await fetch(`${API_URL}/api/admin/licenses/${id}`, {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${id}`, {
         method: 'DELETE',
         headers
       });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to delete');
+      }
       fetchData();
+      alert('License deleted');
     } catch (err) {
+      alert('Error: ' + err.message);
       setError('Failed to delete license');
     }
   };
 
   const extendLicense = async (id, days) => {
     try {
-      await fetch(`${API_URL}/api/admin/licenses/${id}`, {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${id}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify({ extend_days: days })
       });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to extend');
+      }
       fetchData();
+      alert('License extended by ' + days + ' days');
     } catch (err) {
+      alert('Error: ' + err.message);
       setError('Failed to extend license');
     }
   };
