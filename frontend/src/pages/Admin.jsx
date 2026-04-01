@@ -104,23 +104,33 @@ function Admin() {
 
   const addLicense = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
+      console.log('Creating license:', newLicense);
       const res = await fetch(`${API_URL}/api/admin/licenses`, {
         method: 'POST',
         headers,
         body: JSON.stringify(newLicense)
       });
 
+      const data = await res.json();
+      console.log('Response:', data);
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error);
+        throw new Error(data.error || 'Failed to create license');
       }
 
       setShowAddModal(false);
       setNewLicense({ email: '', plan: 'monthly', days: 30 });
       fetchData();
+      alert('License created successfully!');
     } catch (err) {
+      console.error('Error:', err);
       setError(err.message);
+      alert('Error: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -314,7 +324,9 @@ function Admin() {
               </div>
               <div className="modal-actions">
                 <button type="button" onClick={() => setShowAddModal(false)}>Cancel</button>
-                <button type="submit" className="btn-primary">Create License</button>
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? 'Creating...' : 'Create License'}
+                </button>
               </div>
             </form>
           </div>
