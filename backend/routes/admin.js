@@ -124,7 +124,7 @@ router.get('/licenses/:id', async (req, res) => {
   }
 });
 
-// Create manual license
+// Create or update license
 router.post('/licenses', async (req, res) => {
   try {
     const { email, plan, days } = req.body;
@@ -136,21 +136,37 @@ router.post('/licenses', async (req, res) => {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + parseInt(days));
 
-    // Generate a license key
-    const licenseKey = crypto.randomUUID();
-
-    const result = await pool.query(
-      `INSERT INTO users (email, license_key, plan, expires_at, active)
-       VALUES ($1, $2, $3, $4, true)
-       RETURNING *`,
-      [email.toLowerCase(), licenseKey, plan, expiresAt]
+    // Check if user already exists
+    const existingUser = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email.toLowerCase()]
     );
+
+    let result;
+
+    if (existingUser.rows.length > 0) {
+      // Update existing user with license
+      const licenseKey = existingUser.rows[0].license_key || crypto.randomUUID();
+      result = await pool.query(
+        `UPDATE users
+         SET license_key = $1, plan = $2, expires_at = $3, active = true
+         WHERE email = $4
+         RETURNING *`,
+        [licenseKey, plan, expiresAt, email.toLowerCase()]
+      );
+    } else {
+      // Create new user with license
+      const licenseKey = crypto.randomUUID();
+      result = await pool.query(
+        `INSERT INTO users (email, license_key, plan, expires_at, active)
+         VALUES ($1, $2, $3, $4, true)
+         RETURNING *`,
+        [email.toLowerCase(), licenseKey, plan, expiresAt]
+      );
+    }
 
     res.json(result.rows[0]);
   } catch (error) {
-    if (error.code === '23505') {
-      return res.status(400).json({ error: 'Email already has a license' });
-    }
     console.error('Error creating license:', error);
     res.status(500).json({ error: 'Failed to create license' });
   }
