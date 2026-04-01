@@ -278,4 +278,17 @@ router.post('/licenses/:id/reset-password', async (req, res) => {
   }
 });
 
+// One-time migration endpoint
+router.post('/migrate', async (req, res) => {
+  try {
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS stripe_subscription_id VARCHAR(255)
+    `);
+    res.json({ message: 'Migration complete' });
+  } catch (error) {
+    console.error('Migration error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
