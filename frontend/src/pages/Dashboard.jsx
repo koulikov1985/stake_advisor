@@ -16,6 +16,7 @@ function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [purchasing, setPurchasing] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [managingSubscription, setManagingSubscription] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ function Dashboard() {
   };
 
   const handleManageSubscription = async () => {
+    setManagingSubscription(true);
     try {
       const res = await fetch(`${API_URL}/api/create-portal-session`, {
         method: 'POST',
@@ -72,6 +74,7 @@ function Dashboard() {
       if (data.url) window.location.href = data.url;
     } catch (err) {
       alert('Could not open subscription manager');
+      setManagingSubscription(false);
     }
   };
 
@@ -301,8 +304,12 @@ function Dashboard() {
                 )}
                 {user?.plan && (
                   <div className="settings-row" style={{ marginTop: '1rem' }}>
-                    <button className="pro-btn secondary" onClick={handleManageSubscription}>
-                      Manage Subscription
+                    <button
+                      className="pro-btn secondary"
+                      onClick={handleManageSubscription}
+                      disabled={managingSubscription}
+                    >
+                      {managingSubscription ? 'Opening...' : 'Manage Subscription'}
                     </button>
                   </div>
                 )}
