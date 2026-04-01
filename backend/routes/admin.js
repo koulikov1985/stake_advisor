@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
 const pool = require('../db/pool');
 
 // Simple admin auth middleware
@@ -136,7 +137,7 @@ router.post('/licenses', async (req, res) => {
     expiresAt.setDate(expiresAt.getDate() + parseInt(days));
 
     // Generate a license key
-    const licenseKey = require('crypto').randomUUID();
+    const licenseKey = crypto.randomUUID();
 
     const result = await pool.query(
       `INSERT INTO users (email, license_key, plan, expires_at, active)
