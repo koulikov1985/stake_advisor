@@ -172,7 +172,7 @@ function Admin() {
   return (
     <div className="admin-page">
       <div className="admin-header">
-        <h1>License Management</h1>
+        <h1>🦈 SharkScope Pro Admin</h1>
         <button className="btn-add" onClick={() => setShowAddModal(true)}>
           + Add License
         </button>
@@ -299,6 +299,7 @@ function Admin() {
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
                 </select>
               </div>
               <div className="form-group">

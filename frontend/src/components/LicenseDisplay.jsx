@@ -56,9 +56,9 @@ function LicenseDisplay({ licenseKey, plan, expiresAt }) {
         <h4>How to use your license:</h4>
         <ol>
           <li>Copy the license key above</li>
-          <li>Open the software and go to Settings</li>
+          <li>Open the SharkScope Pro extension</li>
           <li>Paste your license key in the activation field</li>
-          <li>Click Activate</li>
+          <li>Click Activate and start playing</li>
         </ol>
       </div>
     </div>

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-function Login() {
+function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,21 +15,19 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/user/login`, {
+      const response = await fetch(`${API_URL}/api/user/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email })
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
+        throw new Error(data.error || 'Failed to send reset email');
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/dashboard');
+      setSuccess(true);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -38,11 +35,31 @@ function Login() {
     }
   };
 
+  if (success) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card">
+          <div className="success-icon-large">✓</div>
+          <h2>Check Your Email</h2>
+          <p className="auth-subtitle">
+            We've sent a password reset link to <strong>{email}</strong>
+          </p>
+          <p className="auth-note">
+            Didn't receive the email? Check your spam folder or try again.
+          </p>
+          <Link to="/login" className="btn btn-primary btn-full">
+            Back to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h2>Welcome Back</h2>
-        <p className="auth-subtitle">Sign in to your account</p>
+        <h2>Forgot Password?</h2>
+        <p className="auth-subtitle">Enter your email and we'll send you a reset link</p>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -56,33 +73,19 @@ function Login() {
             />
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
-              required
-            />
-          </div>
-
           {error && <p className="error-message">{error}</p>}
 
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
 
         <p className="auth-footer">
-          <Link to="/forgot-password">Forgot password?</Link>
-        </p>
-        <p className="auth-footer">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          Remember your password? <Link to="/login">Sign in</Link>
         </p>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default ForgotPassword;

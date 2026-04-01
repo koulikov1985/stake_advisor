@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
+  // Check login status when location changes
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, []);
+    setIsLoggedIn(!!localStorage.getItem('token'));
+  }, [location]);
 
   return (
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
-          <span className="logo-icon">♠️</span>
-          <span className="logo-text">Stake Advisor</span>
+          <span className="logo-icon">🦈</span>
+          <span className="logo-text">SharkScope Pro</span>
         </Link>
         <nav>
-          <a href="#features" className="nav-link">Features</a>
-          <a href="#pricing" className="nav-link">Pricing</a>
-          <a href="#faq" className="nav-link">FAQ</a>
+          <Link to="/features" className="nav-link">Features</Link>
+          <Link to="/pricing" className="nav-link">Pricing</Link>
+          <Link to="/faq" className="nav-link">FAQ</Link>
           {isLoggedIn ? (
             <Link to="/dashboard" className="nav-link nav-btn">Dashboard</Link>
           ) : (

@@ -1,143 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import PricingCard from '../components/PricingCard';
-
-const plans = [
-  {
-    plan: 'daily',
-    name: '1-Day Pass',
-    price: '5',
-    duration: 'day',
-    features: [
-      'Full real-time advisor',
-      'All stakes supported',
-      'Unlimited sessions',
-      'Email support'
-    ],
-    popular: false
-  },
-  {
-    plan: 'weekly',
-    name: 'Weekly',
-    price: '25',
-    duration: 'week',
-    features: [
-      'Full real-time advisor',
-      'All stakes supported',
-      'Unlimited sessions',
-      'Priority support',
-      'Save 29%'
-    ],
-    popular: false
-  },
-  {
-    plan: 'monthly',
-    name: 'Monthly',
-    price: '75',
-    duration: 'month',
-    features: [
-      'Full real-time advisor',
-      'All stakes supported',
-      'Unlimited sessions',
-      'Priority support',
-      'Save 50%'
-    ],
-    popular: true
-  },
-  {
-    plan: 'yearly',
-    name: 'Yearly',
-    price: '699',
-    duration: 'year',
-    features: [
-      'Full real-time advisor',
-      'All stakes supported',
-      'Unlimited sessions',
-      'Priority support',
-      'Best value - Save 62%'
-    ],
-    popular: false
-  }
-];
-
-const features = [
-  {
-    icon: '🎯',
-    title: 'Real-Time Analysis',
-    description: 'Get instant recommendations as you play. Our advisor analyzes every hand in real-time.'
-  },
-  {
-    icon: '💰',
-    title: 'Cash Game Optimized',
-    description: 'Built specifically for cash games. Maximize your win rate at any stake level.'
-  },
-  {
-    icon: '🧠',
-    title: 'GTO-Based Strategy',
-    description: 'Decisions powered by game theory optimal strategies used by professional players.'
-  },
-  {
-    icon: '🌐',
-    title: 'Browser-Based',
-    description: 'Works directly in your browser. No downloads, no installations, instant access.'
-  },
-  {
-    icon: '📊',
-    title: 'Hand Range Analysis',
-    description: 'See opponent ranges and equity calculations for every decision point.'
-  },
-  {
-    icon: '⚡',
-    title: 'Lightning Fast',
-    description: 'Sub-second recommendations so you never miss a beat at the tables.'
-  }
-];
-
-const howItWorks = [
-  {
-    step: '1',
-    title: 'Get Your License',
-    description: 'Choose a plan and get your license key instantly after payment.'
-  },
-  {
-    step: '2',
-    title: 'Activate Advisor',
-    description: 'Enter your license key in the browser extension to activate.'
-  },
-  {
-    step: '3',
-    title: 'Play & Win',
-    description: 'Start playing and receive real-time advice on every hand.'
-  }
-];
-
-const faqs = [
-  {
-    question: 'Which poker sites are supported?',
-    answer: 'Stake Advisor works with all major online poker rooms that run in your browser.'
-  },
-  {
-    question: 'Will this get me banned?',
-    answer: 'Stake Advisor runs locally in your browser and does not interact with poker site software. However, always check the terms of service of your poker room.'
-  },
-  {
-    question: 'What stakes does it support?',
-    answer: 'All stakes from micro to high stakes. The advisor adapts its recommendations based on the game dynamics.'
-  },
-  {
-    question: 'How do I get my license key?',
-    answer: 'After payment, your license key is displayed immediately and sent to your email.'
-  },
-  {
-    question: 'Can I use it on multiple devices?',
-    answer: 'Your license key works on any device, but only one active session at a time.'
-  }
-];
+import { Link, useSearchParams } from 'react-router-dom';
 
 function Home() {
   const [searchParams] = useSearchParams();
   const [showCanceled, setShowCanceled] = useState(false);
-  const [openFaq, setOpenFaq] = useState(null);
+  const [, forceUpdate] = useState(0);
+
+  // Force re-render on mount to check login status
+  useEffect(() => {
+    forceUpdate(n => n + 1);
+  }, []);
 
   useEffect(() => {
     if (searchParams.get('canceled') === 'true') {
@@ -146,8 +18,33 @@ function Home() {
     }
   }, [searchParams]);
 
+  // Check directly - no state caching
+  const token = localStorage.getItem('token');
+  const isLoggedIn = !!token;
+
   return (
-    <div className="home">
+    <div className="landing">
+      {/* Landing Header */}
+      <header className="landing-header">
+        <Link to="/" className="landing-logo">
+          <span>🦈</span>
+          <span>SharkScope Pro</span>
+        </Link>
+        <nav className="landing-nav">
+          <Link to="/features">Features</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/faq">FAQ</Link>
+          {isLoggedIn ? (
+            <Link to="/dashboard" className="nav-btn-primary">Dashboard</Link>
+          ) : (
+            <>
+              <Link to="/login" className="nav-btn-ghost">Login</Link>
+              <Link to="/signup" className="nav-btn-primary">Sign Up</Link>
+            </>
+          )}
+        </nav>
+      </header>
+
       {showCanceled && (
         <div className="canceled-banner">
           <p>Payment was canceled. Feel free to try again when you're ready.</p>
@@ -156,88 +53,142 @@ function Home() {
       )}
 
       {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-badge">Real-Time Poker Assistant</div>
-        <h1>Dominate Cash Games with <span className="highlight">Stake Advisor</span></h1>
-        <p className="hero-subtitle">
-          Professional-grade poker advisor that analyzes every hand in real-time.
-          Make optimal decisions, increase your win rate, and crush the tables.
-        </p>
-        <div className="hero-cta">
-          <a href="#pricing" className="btn btn-primary btn-large">Get Started</a>
-          <a href="#how-it-works" className="btn btn-secondary btn-large">How It Works</a>
+      <section className="landing-hero">
+        <div className="hero-glow"></div>
+        <div className="hero-content">
+          <div className="hero-badge-pro">
+            <span className="badge-icon">🦈</span>
+            <span>Real-Time Poker Intelligence</span>
+          </div>
+          <h1>
+            Play Every Hand<br />
+            <span className="gradient-text">Like a Pro</span>
+          </h1>
+          <p className="hero-desc">
+            SharkScope Pro analyzes your poker hands in real-time using GTO strategies.
+            Get instant recommendations and dominate cash games at any stake.
+          </p>
+          <div className="hero-buttons">
+            <Link to="/pricing" className="btn-hero-primary">
+              Get Started
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+            <Link to="/features" className="btn-hero-secondary">
+              See How It Works
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features" id="features">
-        <h2>Why Players Choose Stake Advisor</h2>
-        <p className="section-subtitle">Everything you need to make winning decisions at the poker table</p>
-        <div className="features-grid">
-          {features.map((feature, index) => (
-            <div className="feature-card" key={index}>
-              <span className="feature-icon">{feature.icon}</span>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
+      {/* Features Grid */}
+      <section className="landing-features">
+        <div className="features-header">
+          <span className="section-tag">Features</span>
+          <h2>Everything You Need to Win</h2>
+          <p>Professional-grade tools used by winning players</p>
+        </div>
+        <div className="features-grid-pro">
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>⚡</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section className="how-it-works" id="how-it-works">
-        <h2>Start Winning in 3 Simple Steps</h2>
-        <p className="section-subtitle">Get up and running in minutes</p>
-        <div className="steps-grid">
-          {howItWorks.map((item, index) => (
-            <div className="step-card" key={index}>
-              <div className="step-number">{item.step}</div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+            <h3>Real-Time Analysis</h3>
+            <p>Instant hand analysis as you play. No delays, no waiting.</p>
+          </div>
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>🎯</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="pricing" id="pricing">
-        <h2>Choose Your Plan</h2>
-        <p className="section-subtitle">No commitments. Cancel anytime.</p>
-        <div className="pricing-grid">
-          {plans.map((plan) => (
-            <PricingCard key={plan.plan} {...plan} />
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="faq" id="faq">
-        <h2>Frequently Asked Questions</h2>
-        <div className="faq-list">
-          {faqs.map((faq, index) => (
-            <div
-              className={`faq-item ${openFaq === index ? 'open' : ''}`}
-              key={index}
-              onClick={() => setOpenFaq(openFaq === index ? null : index)}
-            >
-              <div className="faq-question">
-                <span>{faq.question}</span>
-                <span className="faq-toggle">{openFaq === index ? '−' : '+'}</span>
-              </div>
-              {openFaq === index && (
-                <div className="faq-answer">{faq.answer}</div>
-              )}
+            <h3>GTO Strategy</h3>
+            <p>Game theory optimal recommendations from advanced algorithms.</p>
+          </div>
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>💰</span>
             </div>
-          ))}
+            <h3>All Stakes</h3>
+            <p>Works from micro stakes to high roller tables.</p>
+          </div>
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>🌐</span>
+            </div>
+            <h3>Browser-Based</h3>
+            <p>No downloads. Works instantly in your browser.</p>
+          </div>
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>📊</span>
+            </div>
+            <h3>Range Analysis</h3>
+            <p>See opponent ranges and equity calculations live.</p>
+          </div>
+          <div className="feature-card-pro">
+            <div className="feature-icon-wrap">
+              <span>🔒</span>
+            </div>
+            <h3>Secure & Private</h3>
+            <p>Your data stays on your device. Always.</p>
+          </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="final-cta">
-        <h2>Ready to Improve Your Game?</h2>
-        <p>Start using Stake Advisor today and take your poker game to the next level.</p>
-        <a href="#pricing" className="btn btn-primary btn-large">Get Started Now</a>
+      {/* How It Works */}
+      <section className="landing-steps">
+        <div className="steps-header">
+          <span className="section-tag">How It Works</span>
+          <h2>Start Winning in Minutes</h2>
+        </div>
+        <div className="steps-row">
+          <div className="step-item">
+            <div className="step-num">1</div>
+            <h3>Get Your License</h3>
+            <p>Choose a plan and receive your license key instantly</p>
+          </div>
+          <div className="step-connector"></div>
+          <div className="step-item">
+            <div className="step-num">2</div>
+            <h3>Activate</h3>
+            <p>Enter your key in the SharkScope Pro extension</p>
+          </div>
+          <div className="step-connector"></div>
+          <div className="step-item">
+            <div className="step-num">3</div>
+            <h3>Play & Win</h3>
+            <p>Get real-time advice on every hand you play</p>
+          </div>
+        </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="landing-cta">
+        <div className="cta-card">
+          <h2>Ready to Dominate the Tables?</h2>
+          <p>Join SharkScope Pro and start making better decisions today.</p>
+          <Link to="/pricing" className="btn-hero-primary">
+            View Pricing
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="footer-brand">
+          <span>🦈</span>
+          <span>SharkScope Pro</span>
+        </div>
+        <div className="footer-links">
+          <Link to="/features">Features</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/faq">FAQ</Link>
+        </div>
+        <p className="footer-copy">© 2024 SharkScope Pro. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

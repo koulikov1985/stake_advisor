@@ -208,7 +208,7 @@ router.put('/password', authenticate, async (req, res) => {
   }
 });
 
-// Request password reset (simplified - just validates email exists)
+// Request password reset
 router.post('/forgot-password', apiLimiter, async (req, res) => {
   try {
     const { email } = req.body;
@@ -218,22 +218,80 @@ router.post('/forgot-password', apiLimiter, async (req, res) => {
     }
 
     const result = await pool.query(
-      'SELECT id FROM users WHERE email = $1',
+      'SELECT id, email FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
     // Always return success to prevent email enumeration
+    if (result.rows.length === 0) {
+      return res.json({
+        message: 'If an account exists with this email, you will receive reset instructions.'
+      });
+    }
+
+    const user = result.rows[0];
+
+    // Generate a reset token (expires in 1 hour)
+    const resetToken = jwt.sign(
+      { userId: user.id, purpose: 'password-reset' },
+      JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // In production, send this via email
+    // For now, log it to console
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    console.log(`Password reset link for ${email}: ${resetUrl}`);
+
     res.json({
       message: 'If an account exists with this email, you will receive reset instructions.'
     });
-
-    // In production, you would send an email here with a reset link
-    if (result.rows.length > 0) {
-      console.log(`Password reset requested for: ${email}`);
-    }
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+
+// Reset password with token
+router.post('/reset-password', apiLimiter, async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ error: 'Token and password are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    // Verify the token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      return res.status(400).json({ error: 'Invalid or expired reset link' });
+    }
+
+    if (decoded.purpose !== 'password-reset') {
+      return res.status(400).json({ error: 'Invalid reset link' });
+    }
+
+    // Update the password
+    const passwordHash = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2 RETURNING id',
+      [passwordHash, decoded.userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    res.json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 
