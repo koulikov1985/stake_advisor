@@ -6,11 +6,13 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
-          <span className="logo-icon">🔑</span>
-          <span className="logo-text">LicenseKey</span>
+          <span className="logo-icon">♠️</span>
+          <span className="logo-text">Stake Advisor</span>
         </Link>
         <nav>
-          <Link to="/" className="nav-link">Home</Link>
+          <a href="#features" className="nav-link">Features</a>
+          <a href="#pricing" className="nav-link">Pricing</a>
+          <a href="#faq" className="nav-link">FAQ</a>
         </nav>
       </div>
     </header>

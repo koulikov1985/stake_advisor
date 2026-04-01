@@ -9,20 +9,26 @@ const PLANS = {
   daily: {
     priceId: process.env.STRIPE_PRICE_DAILY,
     duration: 1, // days
-    name: 'Daily Plan',
-    price: 4.99
+    name: '1-Day Pass',
+    price: 5
   },
   weekly: {
     priceId: process.env.STRIPE_PRICE_WEEKLY,
     duration: 7,
-    name: 'Weekly Plan',
-    price: 19.99
+    name: 'Weekly Access',
+    price: 25
   },
   monthly: {
     priceId: process.env.STRIPE_PRICE_MONTHLY,
     duration: 30,
-    name: 'Monthly Plan',
-    price: 79.99
+    name: 'Monthly',
+    price: 75
+  },
+  yearly: {
+    priceId: process.env.STRIPE_PRICE_YEARLY,
+    duration: 365,
+    name: 'Yearly',
+    price: 699
   }
 };
 
