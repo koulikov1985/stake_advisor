@@ -1,47 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import PricingCard from '../components/PricingCard';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const plans = [
-  {
-    plan: 'daily',
-    name: '1-Day Pass',
-    price: '5',
-    duration: 'day',
-    features: ['Full real-time advisor', 'All stakes supported', 'Unlimited sessions'],
-    popular: false
-  },
-  {
-    plan: 'weekly',
-    name: 'Weekly',
-    price: '25',
-    duration: 'week',
-    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Save 29%'],
-    popular: false
-  },
-  {
-    plan: 'monthly',
-    name: 'Monthly',
-    price: '75',
-    duration: 'month',
-    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Save 50%'],
-    popular: true
-  },
-  {
-    plan: 'yearly',
-    name: 'Yearly',
-    price: '699',
-    duration: 'year',
-    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Best value - Save 62%'],
-    popular: false
-  }
+  { plan: 'daily', name: '1-Day Pass', price: 5, duration: '24 hours' },
+  { plan: 'weekly', name: 'Weekly', price: 25, duration: '7 days' },
+  { plan: 'monthly', name: 'Monthly', price: 75, duration: '30 days', popular: true },
+  { plan: 'yearly', name: 'Yearly', price: 699, duration: '365 days' }
 ];
 
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('plans');
+  const [purchasing, setPurchasing] = useState(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +22,17 @@ function Dashboard() {
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    // Set default tab based on subscription status
+    if (user) {
+      if (user.plan && user.licenseKey) {
+        setActiveTab('license');
+      } else {
+        setActiveTab('plans');
+      }
+    }
+  }, [user]);
 
   const fetchProfile = async () => {
     try {
@@ -87,6 +71,30 @@ function Dashboard() {
     navigate('/');
   };
 
+  const handlePurchase = async (planId) => {
+    setPurchasing(planId);
+    setError('');
+
+    try {
+      const response = await fetch(`${API_URL}/api/create-checkout-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: planId, email: user?.email })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to start checkout');
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      setError(err.message);
+      setPurchasing(null);
+    }
+  };
+
   const copyLicenseKey = async () => {
     if (user?.licenseKey) {
       await navigator.clipboard.writeText(user.licenseKey);
@@ -106,139 +114,144 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <div className="dashboard-page">
+      <div className="dash">
         <div className="loading">Loading...</div>
       </div>
     );
   }
 
-  // User has no subscription - show purchase options
-  if (!user?.plan) {
-    return (
-      <div className="dashboard-page">
-        <div className="dashboard-header">
-          <div>
-            <h1>Welcome, {user?.email?.split('@')[0]}</h1>
-            <p className="welcome-subtitle">Choose a plan to get started</p>
-          </div>
-          <button onClick={handleLogout} className="btn btn-secondary">
-            Logout
-          </button>
-        </div>
-
-        <div className="purchase-section">
-          <div className="pricing-grid">
-            {plans.map((plan) => (
-              <PricingCard key={plan.plan} {...plan} />
-            ))}
-          </div>
+  return (
+    <div className="dash">
+      {/* Top Bar */}
+      <div className="dash-topbar">
+        <span className="dash-logo">♠️ Stake Advisor</span>
+        <div className="dash-user">
+          <span>{user?.email}</span>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
-    );
-  }
 
-  // User has subscription - show dashboard
-  return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <div>
-          <h1>Welcome back, {user?.email?.split('@')[0]}</h1>
-          <p className="welcome-subtitle">Manage your subscription and license</p>
-        </div>
-        <button onClick={handleLogout} className="btn btn-secondary">
-          Logout
+      {/* Tab Navigation */}
+      <div className="dash-tabs">
+        <button
+          className={`tab ${activeTab === 'plans' ? 'active' : ''}`}
+          onClick={() => setActiveTab('plans')}
+        >
+          Plans
+        </button>
+        <button
+          className={`tab ${activeTab === 'license' ? 'active' : ''}`}
+          onClick={() => setActiveTab('license')}
+        >
+          License
+        </button>
+        <button
+          className={`tab ${activeTab === 'account' ? 'active' : ''}`}
+          onClick={() => setActiveTab('account')}
+        >
+          Account
         </button>
       </div>
 
-      {error && <p className="error-message">{error}</p>}
+      {/* Tab Content */}
+      <div className="dash-content">
+        {error && <p className="error-message">{error}</p>}
 
-      <div className="dashboard-content">
-        {/* Status Banner */}
-        <div className={`status-banner ${user.isActive ? 'active' : 'expired'}`}>
-          <div className="status-info">
-            <span className="status-icon">{user.isActive ? '✓' : '!'}</span>
-            <div>
-              <strong>{user.isActive ? 'Subscription Active' : 'Subscription Expired'}</strong>
-              <p>
-                {user.isActive
-                  ? `${user.daysRemaining} days remaining (expires ${formatDate(user.expiresAt)})`
-                  : `Expired on ${formatDate(user.expiresAt)}`
-                }
-              </p>
-            </div>
-          </div>
-          <div className="status-plan">
-            {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} Plan
-          </div>
-        </div>
+        {/* Plans Tab */}
+        {activeTab === 'plans' && (
+          <div className="tab-panel">
+            <h2>Choose a Plan</h2>
+            <p className="tab-desc">Select a subscription to activate Stake Advisor</p>
 
-        {/* License Key Section */}
-        {user?.licenseKey && (
-          <div className="license-section">
-            <h3>Your License Key</h3>
-            <div className="license-key-display">
-              <code>{user.licenseKey}</code>
-              <button onClick={copyLicenseKey} className="copy-btn">
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
+            <div className="plans-list">
+              {plans.map((p) => (
+                <div key={p.plan} className={`plan-row ${p.popular ? 'popular' : ''}`}>
+                  {p.popular && <span className="pop-badge">Popular</span>}
+                  <div className="plan-details">
+                    <strong>{p.name}</strong>
+                    <span>{p.duration}</span>
+                  </div>
+                  <div className="plan-action">
+                    <span className="plan-cost">${p.price}</span>
+                    <button
+                      onClick={() => handlePurchase(p.plan)}
+                      disabled={purchasing === p.plan}
+                    >
+                      {purchasing === p.plan ? '...' : 'Buy'}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="license-instructions">
-              Use this key to activate Stake Advisor in your browser extension.
-            </p>
           </div>
         )}
 
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          {!user.isActive && (
-            <div className="action-card renew">
-              <h4>Renew Your Subscription</h4>
-              <p>Your access has expired. Renew now to continue using Stake Advisor.</p>
-              <div className="action-buttons">
-                {plans.slice(0, 3).map((plan) => (
-                  <PricingCard key={plan.plan} {...plan} compact />
-                ))}
-              </div>
-            </div>
-          )}
+        {/* License Tab */}
+        {activeTab === 'license' && (
+          <div className="tab-panel">
+            <h2>Your License</h2>
 
-          {user.isActive && user.daysRemaining <= 7 && (
-            <div className="action-card extend">
-              <h4>Extend Your Subscription</h4>
-              <p>Your subscription expires soon. Extend now to avoid interruption.</p>
-              <div className="mini-pricing">
-                {plans.map((plan) => (
-                  <PricingCard key={plan.plan} {...plan} compact />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+            {user?.licenseKey ? (
+              <>
+                <div className={`status-bar ${user.isActive ? 'active' : 'expired'}`}>
+                  <span className="dot"></span>
+                  {user.isActive ? 'Active' : 'Expired'}
+                  <span className="plan-type">{user.plan}</span>
+                  {user.isActive && <span className="days-left">{user.daysRemaining} days left</span>}
+                </div>
 
-        {/* Account Info */}
-        <div className="account-section">
-          <h3>Account Information</h3>
-          <div className="account-grid">
-            <div className="account-item">
-              <span className="label">Email</span>
-              <span className="value">{user?.email}</span>
-            </div>
-            <div className="account-item">
-              <span className="label">Member Since</span>
-              <span className="value">{formatDate(user?.createdAt)}</span>
-            </div>
-            <div className="account-item">
-              <span className="label">Current Plan</span>
-              <span className="value">{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}</span>
-            </div>
-            <div className="account-item">
-              <span className="label">Status</span>
-              <span className={`value status-text ${user.isActive ? 'active' : 'expired'}`}>
-                {user.isActive ? 'Active' : 'Expired'}
-              </span>
+                <div className="license-card">
+                  <label>License Key</label>
+                  <div className="key-box">
+                    <code>{user.licenseKey}</code>
+                    <button onClick={copyLicenseKey}>
+                      {copied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                </div>
+
+                <p className="help-text">
+                  Use this key to activate the Stake Advisor browser extension.
+                </p>
+              </>
+            ) : (
+              <div className="no-license">
+                <p>You don't have a license yet.</p>
+                <button onClick={() => setActiveTab('plans')}>
+                  Get a Plan
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Account Tab */}
+        {activeTab === 'account' && (
+          <div className="tab-panel">
+            <h2>Account</h2>
+
+            <div className="account-info">
+              <div className="info-row">
+                <label>Email</label>
+                <span>{user?.email}</span>
+              </div>
+              <div className="info-row">
+                <label>Member Since</label>
+                <span>{formatDate(user?.createdAt)}</span>
+              </div>
+              <div className="info-row">
+                <label>Subscription</label>
+                <span>{user?.plan ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1) : 'None'}</span>
+              </div>
+              <div className="info-row">
+                <label>Status</label>
+                <span className={user?.isActive ? 'text-green' : 'text-red'}>
+                  {user?.plan ? (user.isActive ? 'Active' : 'Expired') : 'No subscription'}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
