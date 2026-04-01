@@ -13,6 +13,9 @@ function Admin() {
   const [filter, setFilter] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [newLicense, setNewLicense] = useState({ email: '', plan: 'monthly', days: 30 });
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetUser, setResetUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const headers = {
     'Content-Type': 'application/json',
@@ -116,6 +119,31 @@ function Admin() {
     } catch (err) {
       alert('Error: ' + err.message);
       setError('Failed to extend license');
+    }
+  };
+
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      alert('Password must be at least 6 characters');
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${resetUser.id}/reset-password`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ new_password: newPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to reset password');
+      }
+      setShowResetModal(false);
+      setResetUser(null);
+      setNewPassword('');
+      alert('Password reset successfully for ' + data.email);
+    } catch (err) {
+      alert('Error: ' + err.message);
     }
   };
 
@@ -284,6 +312,12 @@ function Admin() {
                         +7 days
                       </button>
                       <button
+                        className="btn-reset"
+                        onClick={() => { setResetUser(license); setShowResetModal(true); }}
+                      >
+                        Reset PW
+                      </button>
+                      <button
                         className="btn-delete"
                         onClick={() => deleteLicense(license.id)}
                       >
@@ -343,6 +377,34 @@ function Admin() {
                 <button type="button" onClick={() => setShowAddModal(false)}>Cancel</button>
                 <button type="submit" className="btn-primary" disabled={loading}>
                   {loading ? 'Creating...' : 'Create License'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showResetModal && resetUser && (
+        <div className="modal-overlay" onClick={() => { setShowResetModal(false); setResetUser(null); setNewPassword(''); }}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Reset Password</h3>
+            <p>Reset password for: <strong>{resetUser.email}</strong></p>
+            <form onSubmit={resetPassword}>
+              <div className="form-group">
+                <label>New Password</label>
+                <input
+                  type="text"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password (min 6 chars)"
+                  minLength="6"
+                  required
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" onClick={() => { setShowResetModal(false); setResetUser(null); setNewPassword(''); }}>Cancel</button>
+                <button type="submit" className="btn-primary">
+                  Reset Password
                 </button>
               </div>
             </form>

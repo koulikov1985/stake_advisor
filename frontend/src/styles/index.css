@@ -916,6 +916,7 @@ main {
 .btn-activate { background: var(--success); color: white; }
 .btn-deactivate { background: var(--warning); color: var(--background); }
 .btn-extend { background: var(--primary); color: white; }
+.btn-reset { background: #3b82f6; color: white; }
 .btn-delete { background: var(--error); color: white; }
 
 .no-data {
