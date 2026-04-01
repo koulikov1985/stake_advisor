@@ -266,7 +266,7 @@ function Admin() {
                 return (
                   <tr key={license.id}>
                     <td>{license.email}</td>
-                    <td className="license-key">{license.license_key}</td>
+                    <td className="license-key">{license.license_key || 'No key'}</td>
                     <td className="plan">{license.plan}</td>
                     <td><span className={`status ${status.class}`}>{status.text}</span></td>
                     <td>{formatDate(license.expires_at)}</td>
