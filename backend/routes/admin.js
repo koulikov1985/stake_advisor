@@ -135,11 +135,14 @@ router.post('/licenses', async (req, res) => {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + parseInt(days));
 
+    // Generate a license key
+    const licenseKey = require('crypto').randomUUID();
+
     const result = await pool.query(
-      `INSERT INTO users (email, plan, expires_at)
-       VALUES ($1, $2, $3)
+      `INSERT INTO users (email, license_key, plan, expires_at, active)
+       VALUES ($1, $2, $3, $4, true)
        RETURNING *`,
-      [email.toLowerCase(), plan, expiresAt]
+      [email.toLowerCase(), licenseKey, plan, expiresAt]
     );
 
     res.json(result.rows[0]);
