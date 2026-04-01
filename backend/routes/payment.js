@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const crypto = require('crypto');
 const pool = require('../db/pool');
 const { checkoutLimiter } = require('../middleware/rateLimit');
 
@@ -107,50 +108,85 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 // Handle successful checkout
 async function handleCheckoutComplete(session) {
   try {
-    // For subscriptions, metadata is in subscription_data
-    const metadata = session.metadata || {};
-    const plan = metadata.plan || session.subscription_data?.metadata?.plan;
-    const duration_days = metadata.duration_days || session.subscription_data?.metadata?.duration_days;
     const email = session.customer_email || session.customer_details?.email;
     const customerId = session.customer;
 
-    if (!email || !plan) {
-      console.error('Missing email or plan in session:', session.id);
+    if (!email) {
+      console.error('Missing email in session:', session.id);
       return;
     }
 
-    const durationDays = parseInt(duration_days) || PLANS[plan]?.duration || 30;
+    // For subscriptions, get metadata from the subscription object
+    let plan = null;
+    let durationDays = 30;
+
+    if (session.subscription) {
+      const subscription = await stripe.subscriptions.retrieve(session.subscription);
+      plan = subscription.metadata?.plan;
+      durationDays = parseInt(subscription.metadata?.duration_days) || 30;
+
+      // If no metadata, try to determine plan from price
+      if (!plan && subscription.items?.data?.[0]?.price?.id) {
+        const priceId = subscription.items.data[0].price.id;
+        for (const [planName, config] of Object.entries(PLANS)) {
+          if (config.priceId === priceId) {
+            plan = planName;
+            durationDays = config.duration;
+            break;
+          }
+        }
+      }
+    }
+
+    // Fallback to session metadata
+    if (!plan) {
+      plan = session.metadata?.plan;
+      durationDays = parseInt(session.metadata?.duration_days) || 30;
+    }
+
+    if (!plan) {
+      console.error('Could not determine plan for session:', session.id);
+      plan = 'monthly'; // Default fallback
+      durationDays = 30;
+    }
+
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + durationDays);
 
     // Check if user already exists
     const existingUser = await pool.query(
       'SELECT * FROM users WHERE email = $1',
-      [email]
+      [email.toLowerCase()]
     );
 
     if (existingUser.rows.length > 0) {
       // Extend existing license
-      const currentExpiry = new Date(existingUser.rows[0].expires_at);
+      const user = existingUser.rows[0];
+      const currentExpiry = user.expires_at ? new Date(user.expires_at) : new Date();
       const newExpiry = currentExpiry > new Date()
         ? new Date(currentExpiry.getTime() + durationDays * 24 * 60 * 60 * 1000)
         : expiresAt;
+
+      // Generate license key if not exists
+      const licenseKey = user.license_key || crypto.randomUUID();
 
       await pool.query(
         `UPDATE users
          SET expires_at = $1, plan = $2, active = true,
              stripe_customer_id = COALESCE($3, stripe_customer_id),
-             stripe_session_id = $4
-         WHERE email = $5`,
-        [newExpiry, plan, customerId, session.id, email]
+             stripe_session_id = $4,
+             license_key = COALESCE(license_key, $5)
+         WHERE email = $6`,
+        [newExpiry, plan, customerId, session.id, licenseKey, email.toLowerCase()]
       );
       console.log(`Extended license for ${email} until ${newExpiry}`);
     } else {
-      // Create new license
+      // Create new license with generated key
+      const licenseKey = crypto.randomUUID();
       await pool.query(
-        `INSERT INTO users (email, plan, expires_at, stripe_customer_id, stripe_session_id)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [email, plan, expiresAt, customerId, session.id]
+        `INSERT INTO users (email, license_key, plan, expires_at, active, stripe_customer_id, stripe_session_id)
+         VALUES ($1, $2, $3, $4, true, $5, $6)`,
+        [email.toLowerCase(), licenseKey, plan, expiresAt, customerId, session.id]
       );
       console.log(`Created new license for ${email} until ${expiresAt}`);
     }
