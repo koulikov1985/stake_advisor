@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const verifyRoutes = require('./routes/verify');
 const adminRoutes = require('./routes/admin');
 const { router: userRoutes } = require('./routes/user');
+const licenseRoutes = require('./routes/license');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -61,6 +62,7 @@ app.use('/api', authRoutes);
 app.use('/api', verifyRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api', licenseRoutes);  // v1 license activation/deactivation
 
 // 404 handler
 app.use((req, res) => {

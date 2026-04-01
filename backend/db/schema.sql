@@ -71,3 +71,17 @@ BEGIN
         ALTER TABLE users ADD COLUMN stripe_subscription_id VARCHAR(255);
     END IF;
 END $$;
+
+-- Migration: Add device binding columns
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'device_id') THEN
+        ALTER TABLE users ADD COLUMN device_id VARCHAR(255);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'device_info') THEN
+        ALTER TABLE users ADD COLUMN device_info JSONB;
+    END IF;
+END $$;
+
+-- Index for device lookups
+CREATE INDEX IF NOT EXISTS idx_users_device_id ON users(device_id);
