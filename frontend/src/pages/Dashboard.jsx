@@ -1,7 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import PricingCard from '../components/PricingCard';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+const plans = [
+  {
+    plan: 'daily',
+    name: '1-Day Pass',
+    price: '5',
+    duration: 'day',
+    features: ['Full real-time advisor', 'All stakes supported', 'Unlimited sessions'],
+    popular: false
+  },
+  {
+    plan: 'weekly',
+    name: 'Weekly',
+    price: '25',
+    duration: 'week',
+    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Save 29%'],
+    popular: false
+  },
+  {
+    plan: 'monthly',
+    name: 'Monthly',
+    price: '75',
+    duration: 'month',
+    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Save 50%'],
+    popular: true
+  },
+  {
+    plan: 'yearly',
+    name: 'Yearly',
+    price: '699',
+    duration: 'year',
+    features: ['Full real-time advisor', 'All stakes supported', 'Priority support', 'Best value - Save 62%'],
+    popular: false
+  }
+];
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -76,10 +112,39 @@ function Dashboard() {
     );
   }
 
+  // User has no subscription - show purchase options
+  if (!user?.plan) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-header">
+          <div>
+            <h1>Welcome, {user?.email?.split('@')[0]}</h1>
+            <p className="welcome-subtitle">Choose a plan to get started</p>
+          </div>
+          <button onClick={handleLogout} className="btn btn-secondary">
+            Logout
+          </button>
+        </div>
+
+        <div className="purchase-section">
+          <div className="pricing-grid">
+            {plans.map((plan) => (
+              <PricingCard key={plan.plan} {...plan} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // User has subscription - show dashboard
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
-        <h1>My Dashboard</h1>
+        <div>
+          <h1>Welcome back, {user?.email?.split('@')[0]}</h1>
+          <p className="welcome-subtitle">Manage your subscription and license</p>
+        </div>
         <button onClick={handleLogout} className="btn btn-secondary">
           Logout
         </button>
@@ -87,87 +152,90 @@ function Dashboard() {
 
       {error && <p className="error-message">{error}</p>}
 
-      <div className="dashboard-grid">
-        {/* Subscription Card */}
-        <div className="dashboard-card">
-          <h3>Subscription Status</h3>
-          {user?.plan ? (
-            <>
-              <div className={`status-badge ${user.isActive ? 'active' : 'expired'}`}>
-                {user.isActive ? 'Active' : 'Expired'}
-              </div>
-              <div className="subscription-details">
-                <div className="detail-row">
-                  <span>Plan:</span>
-                  <span>{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}</span>
-                </div>
-                <div className="detail-row">
-                  <span>Expires:</span>
-                  <span>{formatDate(user.expiresAt)}</span>
-                </div>
-                {user.daysRemaining && (
-                  <div className="detail-row">
-                    <span>Days Remaining:</span>
-                    <span className={user.daysRemaining <= 3 ? 'warning' : ''}>
-                      {user.daysRemaining} days
-                    </span>
-                  </div>
-                )}
-              </div>
-              {!user.isActive && (
-                <Link to="/#pricing" className="btn btn-primary btn-full">
-                  Renew Subscription
-                </Link>
-              )}
-              {user.isActive && user.daysRemaining <= 7 && (
-                <Link to="/#pricing" className="btn btn-primary btn-full">
-                  Extend Subscription
-                </Link>
-              )}
-            </>
-          ) : (
-            <div className="no-subscription">
-              <p>You don't have an active subscription yet.</p>
-              <Link to="/#pricing" className="btn btn-primary">
-                Get Started
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* License Key Card */}
-        <div className="dashboard-card">
-          <h3>License Key</h3>
-          {user?.licenseKey ? (
-            <>
-              <div className="license-key-box">
-                <code>{user.licenseKey}</code>
-                <button onClick={copyLicenseKey} className="copy-btn">
-                  {copied ? 'Copied!' : 'Copy'}
-                </button>
-              </div>
-              <p className="license-note">
-                Use this key to activate Stake Advisor in your browser.
+      <div className="dashboard-content">
+        {/* Status Banner */}
+        <div className={`status-banner ${user.isActive ? 'active' : 'expired'}`}>
+          <div className="status-info">
+            <span className="status-icon">{user.isActive ? '✓' : '!'}</span>
+            <div>
+              <strong>{user.isActive ? 'Subscription Active' : 'Subscription Expired'}</strong>
+              <p>
+                {user.isActive
+                  ? `${user.daysRemaining} days remaining (expires ${formatDate(user.expiresAt)})`
+                  : `Expired on ${formatDate(user.expiresAt)}`
+                }
               </p>
-            </>
-          ) : (
-            <p className="no-license">
-              Your license key will appear here after you purchase a subscription.
+            </div>
+          </div>
+          <div className="status-plan">
+            {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} Plan
+          </div>
+        </div>
+
+        {/* License Key Section */}
+        {user?.licenseKey && (
+          <div className="license-section">
+            <h3>Your License Key</h3>
+            <div className="license-key-display">
+              <code>{user.licenseKey}</code>
+              <button onClick={copyLicenseKey} className="copy-btn">
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <p className="license-instructions">
+              Use this key to activate Stake Advisor in your browser extension.
             </p>
+          </div>
+        )}
+
+        {/* Quick Actions */}
+        <div className="quick-actions">
+          {!user.isActive && (
+            <div className="action-card renew">
+              <h4>Renew Your Subscription</h4>
+              <p>Your access has expired. Renew now to continue using Stake Advisor.</p>
+              <div className="action-buttons">
+                {plans.slice(0, 3).map((plan) => (
+                  <PricingCard key={plan.plan} {...plan} compact />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {user.isActive && user.daysRemaining <= 7 && (
+            <div className="action-card extend">
+              <h4>Extend Your Subscription</h4>
+              <p>Your subscription expires soon. Extend now to avoid interruption.</p>
+              <div className="mini-pricing">
+                {plans.map((plan) => (
+                  <PricingCard key={plan.plan} {...plan} compact />
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Account Card */}
-        <div className="dashboard-card">
-          <h3>Account</h3>
-          <div className="account-details">
-            <div className="detail-row">
-              <span>Email:</span>
-              <span>{user?.email}</span>
+        {/* Account Info */}
+        <div className="account-section">
+          <h3>Account Information</h3>
+          <div className="account-grid">
+            <div className="account-item">
+              <span className="label">Email</span>
+              <span className="value">{user?.email}</span>
             </div>
-            <div className="detail-row">
-              <span>Member Since:</span>
-              <span>{formatDate(user?.createdAt)}</span>
+            <div className="account-item">
+              <span className="label">Member Since</span>
+              <span className="value">{formatDate(user?.createdAt)}</span>
+            </div>
+            <div className="account-item">
+              <span className="label">Current Plan</span>
+              <span className="value">{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}</span>
+            </div>
+            <div className="account-item">
+              <span className="label">Status</span>
+              <span className={`value status-text ${user.isActive ? 'active' : 'expired'}`}>
+                {user.isActive ? 'Active' : 'Expired'}
+              </span>
             </div>
           </div>
         </div>
