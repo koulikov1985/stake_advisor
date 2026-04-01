@@ -61,6 +61,20 @@ function Dashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleManageSubscription = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/create-portal-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user?.email })
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch (err) {
+      alert('Could not open subscription manager');
+    }
+  };
+
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
   if (loading) return <div className="pro-dash"><div className="pro-loading"><div className="spinner"></div></div></div>;
@@ -283,6 +297,13 @@ function Dashboard() {
                       <label>Expires</label>
                       <span>{formatDate(user.expiresAt)}</span>
                     </div>
+                  </div>
+                )}
+                {user?.plan && (
+                  <div className="settings-row" style={{ marginTop: '1rem' }}>
+                    <button className="pro-btn secondary" onClick={handleManageSubscription}>
+                      Manage Subscription
+                    </button>
                   </div>
                 )}
               </div>

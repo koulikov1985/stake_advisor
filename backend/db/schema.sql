@@ -63,3 +63,11 @@ BEGIN
 EXCEPTION WHEN OTHERS THEN
     NULL;
 END $$;
+
+-- Migration: Add stripe_subscription_id column
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'stripe_subscription_id') THEN
+        ALTER TABLE users ADD COLUMN stripe_subscription_id VARCHAR(255);
+    END IF;
+END $$;

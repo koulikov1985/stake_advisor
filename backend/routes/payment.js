@@ -110,6 +110,7 @@ async function handleCheckoutComplete(session) {
   try {
     const email = session.customer_email || session.customer_details?.email;
     const customerId = session.customer;
+    const newSubscriptionId = session.subscription;
 
     if (!email) {
       console.error('Missing email in session:', session.id);
@@ -120,8 +121,8 @@ async function handleCheckoutComplete(session) {
     let plan = null;
     let durationDays = 30;
 
-    if (session.subscription) {
-      const subscription = await stripe.subscriptions.retrieve(session.subscription);
+    if (newSubscriptionId) {
+      const subscription = await stripe.subscriptions.retrieve(newSubscriptionId);
       plan = subscription.metadata?.plan;
       durationDays = parseInt(subscription.metadata?.duration_days) || 30;
 
@@ -160,33 +161,40 @@ async function handleCheckoutComplete(session) {
     );
 
     if (existingUser.rows.length > 0) {
-      // Extend existing license
       const user = existingUser.rows[0];
-      const currentExpiry = user.expires_at ? new Date(user.expires_at) : new Date();
-      const newExpiry = currentExpiry > new Date()
-        ? new Date(currentExpiry.getTime() + durationDays * 24 * 60 * 60 * 1000)
-        : expiresAt;
+
+      // Cancel old subscription if exists and different from new one
+      if (user.stripe_subscription_id && user.stripe_subscription_id !== newSubscriptionId) {
+        try {
+          await stripe.subscriptions.cancel(user.stripe_subscription_id);
+          console.log(`Cancelled old subscription ${user.stripe_subscription_id} for ${email}`);
+        } catch (cancelErr) {
+          console.error('Failed to cancel old subscription:', cancelErr.message);
+        }
+      }
 
       // Generate license key if not exists
       const licenseKey = user.license_key || crypto.randomUUID();
 
+      // Set new expiry based on new plan (don't stack, replace)
       await pool.query(
         `UPDATE users
          SET expires_at = $1, plan = $2, active = true,
              stripe_customer_id = COALESCE($3, stripe_customer_id),
              stripe_session_id = $4,
-             license_key = COALESCE(license_key, $5)
-         WHERE email = $6`,
-        [newExpiry, plan, customerId, session.id, licenseKey, email.toLowerCase()]
+             stripe_subscription_id = $5,
+             license_key = COALESCE(license_key, $6)
+         WHERE email = $7`,
+        [expiresAt, plan, customerId, session.id, newSubscriptionId, licenseKey, email.toLowerCase()]
       );
-      console.log(`Extended license for ${email} until ${newExpiry}`);
+      console.log(`Updated license for ${email} with ${plan} plan until ${expiresAt}`);
     } else {
       // Create new license with generated key
       const licenseKey = crypto.randomUUID();
       await pool.query(
-        `INSERT INTO users (email, license_key, plan, expires_at, active, stripe_customer_id, stripe_session_id)
-         VALUES ($1, $2, $3, $4, true, $5, $6)`,
-        [email.toLowerCase(), licenseKey, plan, expiresAt, customerId, session.id]
+        `INSERT INTO users (email, license_key, plan, expires_at, active, stripe_customer_id, stripe_session_id, stripe_subscription_id)
+         VALUES ($1, $2, $3, $4, true, $5, $6, $7)`,
+        [email.toLowerCase(), licenseKey, plan, expiresAt, customerId, session.id, newSubscriptionId]
       );
       console.log(`Created new license for ${email} until ${expiresAt}`);
     }
@@ -232,6 +240,40 @@ router.get('/session/:sessionId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching session:', error);
     res.status(500).json({ error: 'Failed to fetch session details' });
+  }
+});
+
+// Create Stripe Customer Portal session for managing subscriptions
+router.post('/create-portal-session', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Get user's Stripe customer ID
+    const result = await pool.query(
+      'SELECT stripe_customer_id FROM users WHERE email = $1',
+      [email.toLowerCase()]
+    );
+
+    if (result.rows.length === 0 || !result.rows[0].stripe_customer_id) {
+      return res.status(404).json({ error: 'No subscription found for this email' });
+    }
+
+    const customerId = result.rows[0].stripe_customer_id;
+
+    // Create portal session
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: `${process.env.FRONTEND_URL}/dashboard`,
+    });
+
+    res.json({ url: portalSession.url });
+  } catch (error) {
+    console.error('Error creating portal session:', error);
+    res.status(500).json({ error: 'Failed to create portal session' });
   }
 });
 
