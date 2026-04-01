@@ -51,12 +51,14 @@ router.post('/create-checkout-session', checkoutLimiter, async (req, res) => {
           quantity: 1
         }
       ],
-      mode: 'payment',
+      mode: 'subscription',
       success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/?canceled=true`,
-      metadata: {
-        plan: plan,
-        duration_days: planConfig.duration
+      subscription_data: {
+        metadata: {
+          plan: plan,
+          duration_days: planConfig.duration
+        }
       }
     };
 
@@ -105,7 +107,10 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 // Handle successful checkout
 async function handleCheckoutComplete(session) {
   try {
-    const { plan, duration_days } = session.metadata;
+    // For subscriptions, metadata is in subscription_data
+    const metadata = session.metadata || {};
+    const plan = metadata.plan || session.subscription_data?.metadata?.plan;
+    const duration_days = metadata.duration_days || session.subscription_data?.metadata?.duration_days;
     const email = session.customer_email || session.customer_details?.email;
     const customerId = session.customer;
 
