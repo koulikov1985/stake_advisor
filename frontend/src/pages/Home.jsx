@@ -277,47 +277,32 @@ function Home() {
         </div>
       </section>
 
-      {/* Features Grid - Clean Icons Only */}
-      <section className="features-grid-section">
-        <div className="features-header-ultra">
-          <span className="section-tag-pro">Why Players Switch</span>
-          <h2 className="section-title-pro">
-            Everything You Need To<br/>
-            <span className="gradient-text-ultra">Play Like A Shark</span>
-          </h2>
-        </div>
-
-        <div className="features-bento">
-          <div className="bento-item large">
-            <div className="bento-icon">⚡</div>
-            <h3>Real-Time GTO</h3>
-            <p>Instant advice on every decision. Preflop and postflop.</p>
-            <div className="bento-stat">{"<"}1s response</div>
+      {/* Simple Feature Pills */}
+      <section className="feature-pills-section">
+        <div className="pills-container">
+          <div className="pill">
+            <span className="pill-icon">⚡</span>
+            <span className="pill-text">Real-Time GTO</span>
           </div>
-          <div className="bento-item">
-            <div className="bento-icon">🎯</div>
-            <h3>6 Tables</h3>
-            <p>Multi-table without sacrificing accuracy</p>
+          <div className="pill">
+            <span className="pill-icon">🎯</span>
+            <span className="pill-text">6 Tables</span>
           </div>
-          <div className="bento-item">
-            <div className="bento-icon">👥</div>
-            <h3>8,825+ Opponents</h3>
-            <p>Full HUD stats on every player</p>
+          <div className="pill">
+            <span className="pill-icon">👥</span>
+            <span className="pill-text">8,825+ Opponents</span>
           </div>
-          <div className="bento-item">
-            <div className="bento-icon">📊</div>
-            <h3>Profit Tracking</h3>
-            <p>Beautiful graphs and daily P/L calendar</p>
+          <div className="pill">
+            <span className="pill-icon">📊</span>
+            <span className="pill-text">P/L Tracking</span>
           </div>
-          <div className="bento-item">
-            <div className="bento-icon">🔄</div>
-            <h3>Hand Replay</h3>
-            <p>Review every hand street-by-street</p>
+          <div className="pill">
+            <span className="pill-icon">🔄</span>
+            <span className="pill-text">Hand Replay</span>
           </div>
-          <div className="bento-item accent">
-            <div className="bento-icon">🔒</div>
-            <h3>100% Private</h3>
-            <p>All data stays on your computer</p>
+          <div className="pill gold">
+            <span className="pill-icon">🔒</span>
+            <span className="pill-text">100% Private</span>
           </div>
         </div>
       </section>
