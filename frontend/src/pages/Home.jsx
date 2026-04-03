@@ -140,97 +140,98 @@ function Home() {
         </div>
       </section>
 
-      {/* App Preview Section */}
-      <section className="app-preview">
-        <div className="preview-header">
+      {/* App Preview Section - Modern Slider */}
+      <section className="app-showcase">
+        <div className="showcase-header">
           <span className="section-tag-pro">See It In Action</span>
           <h2 className="section-title-pro">
             Professional-Grade Analytics<br/>
             <span className="gradient-text-ultra">At Your Fingertips</span>
           </h2>
+          <p className="showcase-hint">
+            <span className="scroll-icon">←</span>
+            Scroll to explore
+            <span className="scroll-icon">→</span>
+          </p>
         </div>
 
-        <div className="preview-showcase">
-          {/* Main Feature - Profit Tracker */}
-          <div className="preview-main">
-            <div className="preview-card featured animate-scale-in">
-              <div className="preview-card-glow"></div>
-              <div className="preview-card-header">
-                <span className="preview-badge tracker">📊</span>
-                <span className="preview-title">Profit Tracker</span>
+        <div className="showcase-slider">
+          <div className="showcase-track">
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/live-tables.png" alt="Live 6-table dashboard" />
               </div>
-              <div className="preview-image-container">
-                <img src="/images/profit-tracker.png" alt="Profit Tracker showing +9449 BB profit" className="preview-screenshot" />
-              </div>
-              <p className="preview-description">
-                Track your results with beautiful graphs. See profit, all-in EV, win rate, and more — all in real-time.
-              </p>
-            </div>
-          </div>
-
-          {/* Secondary Features */}
-          <div className="preview-grid">
-            <div className="preview-card animate-slide-up">
-              <div className="preview-card-glow"></div>
-              <div className="preview-card-header">
-                <span className="preview-badge calendar">📅</span>
-                <span className="preview-title">Daily P/L Calendar</span>
-              </div>
-              <div className="preview-image-container">
-                <img src="/images/calendar.png" alt="Calendar showing +19011 BB monthly profit" className="preview-screenshot" />
-              </div>
-              <p className="preview-description">
-                See your winning and losing days at a glance. Track monthly performance and identify patterns.
-              </p>
-            </div>
-
-            <div className="preview-card animate-slide-up delay-1">
-              <div className="preview-card-glow"></div>
-              <div className="preview-card-header">
-                <span className="preview-badge live">🎯</span>
-                <span className="preview-title">Hand Replay</span>
-              </div>
-              <div className="preview-image-container">
-                <img src="/images/hand-replay.png" alt="Hand replay showing detailed action log" className="preview-screenshot" />
-              </div>
-              <p className="preview-description">
-                Review every hand street-by-street. Analyze your decisions and find leaks in your game.
-              </p>
-            </div>
-          </div>
-
-          {/* More Features Row */}
-          <div className="preview-grid three-col">
-            <div className="preview-card compact animate-float">
-              <div className="preview-card-header">
-                <span className="preview-badge live">🎮</span>
-                <span className="preview-title">6 Tables Live</span>
-              </div>
-              <div className="preview-image-container">
-                <img src="/images/live-tables.png" alt="Live dashboard tracking 6 poker tables" className="preview-screenshot" />
+              <div className="slide-info">
+                <span className="slide-badge live">LIVE</span>
+                <h3>6 Tables Simultaneously</h3>
+                <p>Track all your tables in real-time with GTO advice on every hand</p>
               </div>
             </div>
 
-            <div className="preview-card compact animate-float delay-1">
-              <div className="preview-card-header">
-                <span className="preview-badge">📋</span>
-                <span className="preview-title">Activity Feed</span>
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/profit-tracker.png" alt="Profit tracking graph" />
               </div>
-              <div className="preview-image-container">
-                <img src="/images/activity-feeds.png" alt="Live activity feeds and system events" className="preview-screenshot" />
+              <div className="slide-info">
+                <span className="slide-badge gold">+9,449 BB</span>
+                <h3>Profit Tracker</h3>
+                <p>Beautiful graphs showing profit, EV, and win rate over time</p>
               </div>
             </div>
 
-            <div className="preview-card compact animate-float delay-2">
-              <div className="preview-card-header">
-                <span className="preview-badge success">⚡</span>
-                <span className="preview-title">97% Execution</span>
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/calendar.png" alt="Monthly P/L calendar" />
               </div>
-              <div className="preview-image-container">
-                <img src="/images/activity-metrics.png" alt="Execution metrics showing 97% success" className="preview-screenshot" />
+              <div className="slide-info">
+                <span className="slide-badge success">24-1</span>
+                <h3>Daily P/L Calendar</h3>
+                <p>See winning and losing days at a glance. Track monthly results.</p>
+              </div>
+            </div>
+
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/activity-metrics.png" alt="97% execution rate" />
+              </div>
+              <div className="slide-info">
+                <span className="slide-badge success">97%</span>
+                <h3>Execution Rate</h3>
+                <p>Industry-leading accuracy on every GTO recommendation</p>
+              </div>
+            </div>
+
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/hand-replay.png" alt="Hand replay viewer" />
+              </div>
+              <div className="slide-info">
+                <span className="slide-badge">REPLAY</span>
+                <h3>Hand History</h3>
+                <p>Review every hand street-by-street. Find and fix leaks.</p>
+              </div>
+            </div>
+
+            <div className="showcase-slide">
+              <div className="slide-image">
+                <img src="/images/opponents-board.png" alt="Opponent database" />
+              </div>
+              <div className="slide-info">
+                <span className="slide-badge">8,825</span>
+                <h3>Opponent Database</h3>
+                <p>Track every player with VPIP, PFR, 3-Bet and more stats</p>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="showcase-indicators">
+          <div className="indicator active"></div>
+          <div className="indicator"></div>
+          <div className="indicator"></div>
+          <div className="indicator"></div>
+          <div className="indicator"></div>
+          <div className="indicator"></div>
         </div>
       </section>
 
