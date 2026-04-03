@@ -151,62 +151,18 @@ function Home() {
         </div>
 
         <div className="preview-showcase">
-          {/* Main Feature - Live Tables */}
+          {/* Main Feature - Profit Tracker */}
           <div className="preview-main">
             <div className="preview-card featured">
               <div className="preview-card-header">
-                <span className="preview-badge live">● LIVE</span>
-                <span className="preview-title">Multi-Table Dashboard</span>
+                <span className="preview-badge tracker">📊</span>
+                <span className="preview-title">Profit Tracker</span>
               </div>
-              <div className="preview-image-placeholder">
-                <div className="mock-dashboard">
-                  <div className="mock-header">
-                    <div className="mock-tabs">
-                      <span className="mock-tab active">Live Tables</span>
-                      <span className="mock-tab">Opponents</span>
-                      <span className="mock-tab">Tracker</span>
-                    </div>
-                    <div className="mock-status">
-                      <span className="live-dot"></span>
-                      <span>6 tables</span>
-                    </div>
-                  </div>
-                  <div className="mock-stats-row">
-                    <div className="mock-stat">
-                      <span className="mock-stat-label">TABLES</span>
-                      <span className="mock-stat-value">6</span>
-                    </div>
-                    <div className="mock-stat">
-                      <span className="mock-stat-label">HANDS</span>
-                      <span className="mock-stat-value">142</span>
-                    </div>
-                    <div className="mock-stat highlight">
-                      <span className="mock-stat-label">SESSION</span>
-                      <span className="mock-stat-value green">+226 BB</span>
-                    </div>
-                  </div>
-                  <div className="mock-tables-grid">
-                    <div className="mock-table">
-                      <span className="table-id">T1</span>
-                      <span className="table-cards">9♠ Q♠</span>
-                      <span className="table-action bet">BET 16.1 BB</span>
-                    </div>
-                    <div className="mock-table">
-                      <span className="table-id">T2</span>
-                      <span className="table-cards">4♠ A♣</span>
-                      <span className="table-action fold">FOLD</span>
-                    </div>
-                    <div className="mock-table">
-                      <span className="table-id">T3</span>
-                      <span className="table-cards">5♣ 3♣</span>
-                      <span className="table-action">--</span>
-                    </div>
-                  </div>
-                </div>
+              <div className="preview-image-container">
+                <img src="/images/profit-tracker.png" alt="Profit Tracker showing +9449 BB profit" className="preview-screenshot" />
               </div>
               <p className="preview-description">
-                Track up to 6 tables simultaneously. Get instant GTO recommendations for every decision.
-                See your session profit in real-time.
+                Track your results with beautiful graphs. See profit, all-in EV, win rate, and more — all in real-time.
               </p>
             </div>
           </div>
@@ -215,51 +171,61 @@ function Home() {
           <div className="preview-grid">
             <div className="preview-card">
               <div className="preview-card-header">
-                <span className="preview-badge tracker">📊</span>
-                <span className="preview-title">Profit Tracker</span>
+                <span className="preview-badge calendar">📅</span>
+                <span className="preview-title">Daily P/L Calendar</span>
               </div>
-              <div className="preview-mini-chart">
-                <svg viewBox="0 0 200 60" className="profit-line">
-                  <path d="M0,50 Q30,45 50,40 T100,25 T150,15 T200,5"
-                        fill="none" stroke="url(#profitGradient)" strokeWidth="3"/>
-                  <defs>
-                    <linearGradient id="profitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#22c55e"/>
-                      <stop offset="100%" stopColor="#d4af37"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="chart-stat">+9,639 BB</div>
+              <div className="preview-image-container">
+                <img src="/images/calendar.png" alt="Calendar showing +19011 BB monthly profit" className="preview-screenshot" />
               </div>
               <p className="preview-description">
-                Beautiful graphs showing your profit over time. Track BB/100, all-in EV, and more.
+                See your winning and losing days at a glance. Track monthly performance and identify patterns.
               </p>
             </div>
 
             <div className="preview-card">
               <div className="preview-card-header">
-                <span className="preview-badge calendar">📅</span>
-                <span className="preview-title">Session Calendar</span>
+                <span className="preview-badge live">🎯</span>
+                <span className="preview-title">Hand Replay</span>
               </div>
-              <div className="preview-mini-calendar">
-                <div className="cal-row">
-                  <span className="cal-day green">+1016</span>
-                  <span className="cal-day green">+721</span>
-                  <span className="cal-day red">-267</span>
-                  <span className="cal-day green">+482</span>
-                  <span className="cal-day green">+160</span>
-                </div>
-                <div className="cal-row">
-                  <span className="cal-day green">+1595</span>
-                  <span className="cal-day green">+784</span>
-                  <span className="cal-day green">+1432</span>
-                  <span className="cal-day green">+1259</span>
-                  <span className="cal-day green">+253</span>
-                </div>
+              <div className="preview-image-container">
+                <img src="/images/hand-replay.png" alt="Hand replay showing detailed action log" className="preview-screenshot" />
               </div>
               <p className="preview-description">
-                Daily P/L calendar view. See your winning and losing days at a glance.
+                Review every hand street-by-street. Analyze your decisions and find leaks in your game.
               </p>
+            </div>
+          </div>
+
+          {/* More Features Row */}
+          <div className="preview-grid three-col">
+            <div className="preview-card compact">
+              <div className="preview-card-header">
+                <span className="preview-badge">👥</span>
+                <span className="preview-title">Opponent Stats</span>
+              </div>
+              <div className="preview-image-container">
+                <img src="/images/opponents-board.png" alt="Opponent tracking with 8825 players" className="preview-screenshot" />
+              </div>
+            </div>
+
+            <div className="preview-card compact">
+              <div className="preview-card-header">
+                <span className="preview-badge">📋</span>
+                <span className="preview-title">Activity Feed</span>
+              </div>
+              <div className="preview-image-container">
+                <img src="/images/activity-feeds.png" alt="Live activity feeds and system events" className="preview-screenshot" />
+              </div>
+            </div>
+
+            <div className="preview-card compact">
+              <div className="preview-card-header">
+                <span className="preview-badge">⚡</span>
+                <span className="preview-title">97% Success Rate</span>
+              </div>
+              <div className="preview-image-container">
+                <img src="/images/activity-metrics.png" alt="Execution metrics showing 97% success" className="preview-screenshot" />
+              </div>
             </div>
           </div>
         </div>
