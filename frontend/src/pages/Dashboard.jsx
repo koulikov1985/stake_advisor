@@ -13,6 +13,7 @@ const plans = [
 
 function Dashboard() {
   const [user, setUser] = useState(null);
+  const [affiliateStats, setAffiliateStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
@@ -33,7 +34,13 @@ function Dashboard() {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error();
-      setUser(await res.json());
+      const userData = await res.json();
+      setUser(userData);
+
+      // Fetch affiliate stats if user has active subscription
+      if (userData.isActive) {
+        fetchAffiliateStats(token);
+      }
     } catch {
       localStorage.clear();
       navigate('/login');
@@ -42,13 +49,55 @@ function Dashboard() {
     }
   };
 
+  const fetchAffiliateStats = async (token) => {
+    try {
+      const res = await fetch(`${API_URL}/api/affiliate/stats`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setAffiliateStats(await res.json());
+      }
+    } catch (err) {
+      console.error('Failed to fetch affiliate stats:', err);
+    }
+  };
+
+  const generateReferralCode = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`${API_URL}/api/affiliate/code`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAffiliateStats(prev => ({
+          ...prev,
+          referralCode: data.referralCode,
+          referralLink: data.referralLink
+        }));
+        return data.referralLink;
+      }
+    } catch (err) {
+      console.error('Failed to generate referral code:', err);
+    }
+    return null;
+  };
+
   const handlePurchase = async (planId) => {
     setPurchasing(planId);
     try {
+      // Get referral code from localStorage if valid
+      let referralCode = null;
+      const storedCode = localStorage.getItem('referralCode');
+      const expiresAt = localStorage.getItem('referralCodeExpires');
+      if (storedCode && expiresAt && Date.now() < parseInt(expiresAt)) {
+        referralCode = storedCode;
+      }
+
       const res = await fetch(`${API_URL}/api/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planId, email: user?.email })
+        body: JSON.stringify({ plan: planId, email: user?.email, referralCode })
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
@@ -63,17 +112,20 @@ function Dashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const copyReferralLink = () => {
-    const referralCode = user?.referralCode || user?.id?.toString().slice(-6) || 'REF';
-    const link = `${window.location.origin}/?ref=${referralCode}`;
-    navigator.clipboard.writeText(link);
-    setCopiedRef(true);
-    setTimeout(() => setCopiedRef(false), 2000);
+  const copyReferralLink = async () => {
+    let link = affiliateStats?.referralLink;
+    if (!link) {
+      link = await generateReferralCode();
+    }
+    if (link) {
+      navigator.clipboard.writeText(link);
+      setCopiedRef(true);
+      setTimeout(() => setCopiedRef(false), 2000);
+    }
   };
 
   const getReferralLink = () => {
-    const referralCode = user?.referralCode || user?.id?.toString().slice(-6) || 'REF';
-    return `${window.location.origin}/?ref=${referralCode}`;
+    return affiliateStats?.referralLink || 'Click to generate your referral link';
   };
 
   const handleManageSubscription = async () => {
@@ -306,12 +358,12 @@ function Dashboard() {
                 <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1rem' }}>
                   <div>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
-                    <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{user?.referralCount || 0}</div>
+                    <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{affiliateStats?.totalReferrals || 0}</div>
                   </div>
                   <div>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Earnings</span>
                     <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--gold)' }}>
-                      ${(user?.referralEarnings || 0).toFixed(2)}
+                      ${(affiliateStats?.totalEarned || 0).toFixed(2)}
                     </div>
                   </div>
                   <Link to="/affiliate" style={{

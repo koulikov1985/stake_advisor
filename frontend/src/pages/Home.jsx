@@ -16,6 +16,17 @@ function Home() {
       setShowCanceled(true);
       window.history.replaceState({}, '', '/');
     }
+
+    // Capture referral code from URL and store it
+    const refCode = searchParams.get('ref');
+    if (refCode) {
+      // Store referral code in localStorage for 30 days
+      const expiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000);
+      localStorage.setItem('referralCode', refCode.toUpperCase());
+      localStorage.setItem('referralCodeExpires', expiresAt.toString());
+      // Clean up URL
+      window.history.replaceState({}, '', '/');
+    }
   }, [searchParams]);
 
   const token = localStorage.getItem('token');

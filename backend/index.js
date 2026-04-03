@@ -11,6 +11,7 @@ const adminRoutes = require('./routes/admin');
 const { router: userRoutes } = require('./routes/user');
 const licenseRoutes = require('./routes/license');
 const downloadRoutes = require('./routes/download');
+const { router: affiliateRoutes } = require('./routes/affiliate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -65,6 +66,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api', licenseRoutes);  // v1 license activation/deactivation
 app.use('/api', downloadRoutes);  // Protected download routes
+app.use('/api/affiliate', affiliateRoutes);  // Affiliate program routes
 
 // 404 handler
 app.use((req, res) => {

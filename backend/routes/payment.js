@@ -4,6 +4,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const crypto = require('crypto');
 const pool = require('../db/pool');
 const { checkoutLimiter } = require('../middleware/rateLimit');
+const { recordReferralCommission, linkReferral } = require('./affiliate');
 
 // Plan configurations
 const PLANS = {
@@ -36,7 +37,7 @@ const PLANS = {
 // Create Stripe Checkout Session
 router.post('/create-checkout-session', checkoutLimiter, async (req, res) => {
   try {
-    const { plan, email } = req.body;
+    const { plan, email, referralCode } = req.body;
 
     if (!plan || !PLANS[plan]) {
       return res.status(400).json({ error: 'Invalid plan selected' });
@@ -60,6 +61,10 @@ router.post('/create-checkout-session', checkoutLimiter, async (req, res) => {
           plan: plan,
           duration_days: planConfig.duration
         }
+      },
+      metadata: {
+        plan: plan,
+        referral_code: referralCode || ''
       }
     };
 
@@ -111,6 +116,7 @@ async function handleCheckoutComplete(session) {
     const email = session.customer_email || session.customer_details?.email;
     const customerId = session.customer;
     const newSubscriptionId = session.subscription;
+    const referralCode = session.metadata?.referral_code;
 
     if (!email) {
       console.error('Missing email in session:', session.id);
@@ -154,14 +160,20 @@ async function handleCheckoutComplete(session) {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + durationDays);
 
+    // Get payment amount for commission calculation
+    const paymentAmount = PLANS[plan]?.price || 0;
+
     // Check if user already exists
     const existingUser = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
+    let userId;
+
     if (existingUser.rows.length > 0) {
       const user = existingUser.rows[0];
+      userId = user.id;
 
       // Cancel old subscription if exists and different from new one
       if (user.stripe_subscription_id && user.stripe_subscription_id !== newSubscriptionId) {
@@ -188,15 +200,32 @@ async function handleCheckoutComplete(session) {
         [expiresAt, plan, customerId, session.id, newSubscriptionId, licenseKey, email.toLowerCase()]
       );
       console.log(`Updated license for ${email} with ${plan} plan until ${expiresAt}`);
+
+      // Link referral if this is a new referred user (only on first purchase)
+      if (!user.referred_by && referralCode) {
+        await linkReferral(email, referralCode);
+      }
     } else {
       // Create new license with generated key
       const licenseKey = crypto.randomUUID();
-      await pool.query(
+      const result = await pool.query(
         `INSERT INTO users (email, license_key, plan, expires_at, active, stripe_customer_id, stripe_session_id, stripe_subscription_id)
-         VALUES ($1, $2, $3, $4, true, $5, $6, $7)`,
+         VALUES ($1, $2, $3, $4, true, $5, $6, $7)
+         RETURNING id`,
         [email.toLowerCase(), licenseKey, plan, expiresAt, customerId, session.id, newSubscriptionId]
       );
+      userId = result.rows[0].id;
       console.log(`Created new license for ${email} until ${expiresAt}`);
+
+      // Link referral for new user
+      if (referralCode) {
+        await linkReferral(email, referralCode);
+      }
+    }
+
+    // Record referral commission (15% recurring)
+    if (userId && paymentAmount > 0) {
+      await recordReferralCommission(userId, paymentAmount, session.id);
     }
   } catch (error) {
     console.error('Error handling checkout completion:', error);

@@ -85,3 +85,57 @@ END $$;
 
 -- Index for device lookups
 CREATE INDEX IF NOT EXISTS idx_users_device_id ON users(device_id);
+
+-- ============================================
+-- AFFILIATE SYSTEM
+-- ============================================
+
+-- Migration: Add affiliate columns to users table
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'referral_code') THEN
+        ALTER TABLE users ADD COLUMN referral_code VARCHAR(20) UNIQUE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'users' AND column_name = 'referred_by') THEN
+        ALTER TABLE users ADD COLUMN referred_by INTEGER REFERENCES users(id);
+    END IF;
+END $$;
+
+-- Index for referral code lookups
+CREATE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code);
+CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by);
+
+-- Referrals table: tracks each referral and commission
+CREATE TABLE IF NOT EXISTS referrals (
+    id SERIAL PRIMARY KEY,
+    referrer_id INTEGER NOT NULL REFERENCES users(id),
+    referred_id INTEGER NOT NULL REFERENCES users(id),
+    stripe_payment_id VARCHAR(255),
+    payment_amount DECIMAL(10, 2) NOT NULL,
+    commission_rate DECIMAL(4, 3) DEFAULT 0.15,
+    commission_amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'paid', 'cancelled')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    paid_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(referred_id, stripe_payment_id)
+);
+
+-- Indexes for referrals
+CREATE INDEX IF NOT EXISTS idx_referrals_referrer_id ON referrals(referrer_id);
+CREATE INDEX IF NOT EXISTS idx_referrals_referred_id ON referrals(referred_id);
+CREATE INDEX IF NOT EXISTS idx_referrals_status ON referrals(status);
+
+-- Affiliate payouts table: tracks commission payouts
+CREATE TABLE IF NOT EXISTS affiliate_payouts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    amount DECIMAL(10, 2) NOT NULL,
+    payout_method VARCHAR(50),
+    payout_details JSONB,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE INDEX IF NOT EXISTS idx_affiliate_payouts_user_id ON affiliate_payouts(user_id);
+CREATE INDEX IF NOT EXISTS idx_affiliate_payouts_status ON affiliate_payouts(status);

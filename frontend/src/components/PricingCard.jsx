@@ -11,12 +11,20 @@ function PricingCard({ plan, name, price, duration, features, popular }) {
     setError(null);
 
     try {
+      // Get referral code from localStorage if valid
+      let referralCode = null;
+      const storedCode = localStorage.getItem('referralCode');
+      const expiresAt = localStorage.getItem('referralCodeExpires');
+      if (storedCode && expiresAt && Date.now() < parseInt(expiresAt)) {
+        referralCode = storedCode;
+      }
+
       const response = await fetch(`${API_URL}/api/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, referralCode }),
       });
 
       const data = await response.json();
