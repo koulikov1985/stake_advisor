@@ -427,11 +427,11 @@
 }
 
 .scroll-track.scroll-left {
-  animation: scrollLeft 40s linear infinite;
+  animation: scrollLeft 50s linear infinite;
 }
 
 .scroll-track.scroll-right {
-  animation: scrollRight 40s linear infinite;
+  animation: scrollRight 50s linear infinite;
 }
 
 .scroll-track:hover {
@@ -450,7 +450,7 @@
 
 .scroll-item {
   flex: 0 0 auto;
-  width: 380px;
+  width: 500px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
@@ -461,58 +461,31 @@
 
 .scroll-item:hover {
   border-color: var(--gold);
-  transform: scale(1.03);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(212, 175, 55, 0.1);
+  transform: scale(1.02);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(212, 175, 55, 0.15);
   z-index: 10;
 }
 
 .scroll-item img {
   width: 100%;
-  height: 220px;
+  height: 320px;
   object-fit: cover;
   object-position: top center;
   display: block;
 }
 
-.scroll-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: var(--bg-elevated);
-  border-top: 1px solid var(--border-subtle);
+/* Large variant for single row */
+.scroll-item.large {
+  width: 600px;
+  border-radius: 20px;
 }
 
-.label-badge {
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
+.scroll-item.large img {
+  height: 400px;
 }
 
-.label-badge.live {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-}
-
-.label-badge.gold {
-  background: rgba(212, 175, 55, 0.2);
-  color: var(--gold);
-}
-
-.label-badge.success {
-  background: rgba(34, 197, 94, 0.2);
-  color: var(--success);
-}
-
-.scroll-label span:last-child {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.95rem;
+.scroll-row.large {
+  padding: 2rem 0;
 }
 
 /* ============================================

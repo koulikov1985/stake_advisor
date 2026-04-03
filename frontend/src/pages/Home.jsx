@@ -150,128 +150,44 @@ function Home() {
           </h2>
         </div>
 
-        {/* First row - scrolls left */}
-        <div className="scroll-row">
+        <div className="scroll-row large">
           <div className="scroll-track scroll-left">
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/live-tables.png" alt="Live tables dashboard" />
-              <div className="scroll-label">
-                <span className="label-badge live">LIVE</span>
-                <span>6 Tables</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/profit-tracker.png" alt="Profit tracker" />
-              <div className="scroll-label">
-                <span className="label-badge gold">+9.4K BB</span>
-                <span>Profit Tracker</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/calendar.png" alt="P/L Calendar" />
-              <div className="scroll-label">
-                <span className="label-badge success">96%</span>
-                <span>Win Rate</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
+              <img src="/images/hand-replay.png" alt="Hand replay" />
+            </div>
+            <div className="scroll-item large">
+              <img src="/images/opponents-board.png" alt="Opponent tracking" />
+            </div>
+            <div className="scroll-item large">
               <img src="/images/activity-metrics.png" alt="Execution metrics" />
-              <div className="scroll-label">
-                <span className="label-badge success">97%</span>
-                <span>Execution</span>
-              </div>
             </div>
             {/* Duplicates for seamless loop */}
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/live-tables.png" alt="Live tables dashboard" />
-              <div className="scroll-label">
-                <span className="label-badge live">LIVE</span>
-                <span>6 Tables</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/profit-tracker.png" alt="Profit tracker" />
-              <div className="scroll-label">
-                <span className="label-badge gold">+9.4K BB</span>
-                <span>Profit Tracker</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
               <img src="/images/calendar.png" alt="P/L Calendar" />
-              <div className="scroll-label">
-                <span className="label-badge success">96%</span>
-                <span>Win Rate</span>
-              </div>
             </div>
-            <div className="scroll-item">
+            <div className="scroll-item large">
+              <img src="/images/hand-replay.png" alt="Hand replay" />
+            </div>
+            <div className="scroll-item large">
+              <img src="/images/opponents-board.png" alt="Opponent tracking" />
+            </div>
+            <div className="scroll-item large">
               <img src="/images/activity-metrics.png" alt="Execution metrics" />
-              <div className="scroll-label">
-                <span className="label-badge success">97%</span>
-                <span>Execution</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Second row - scrolls right */}
-        <div className="scroll-row">
-          <div className="scroll-track scroll-right">
-            <div className="scroll-item">
-              <img src="/images/hand-replay.png" alt="Hand replay" />
-              <div className="scroll-label">
-                <span className="label-badge">REPLAY</span>
-                <span>Hand History</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/opponents-board.png" alt="Opponent tracking" />
-              <div className="scroll-label">
-                <span className="label-badge">8,825</span>
-                <span>Opponents</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/activity-feeds.png" alt="Activity feed" />
-              <div className="scroll-label">
-                <span className="label-badge live">LIVE</span>
-                <span>Activity</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/opponents-table.png" alt="Player stats table" />
-              <div className="scroll-label">
-                <span className="label-badge">STATS</span>
-                <span>Player Data</span>
-              </div>
-            </div>
-            {/* Duplicates for seamless loop */}
-            <div className="scroll-item">
-              <img src="/images/hand-replay.png" alt="Hand replay" />
-              <div className="scroll-label">
-                <span className="label-badge">REPLAY</span>
-                <span>Hand History</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/opponents-board.png" alt="Opponent tracking" />
-              <div className="scroll-label">
-                <span className="label-badge">8,825</span>
-                <span>Opponents</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/activity-feeds.png" alt="Activity feed" />
-              <div className="scroll-label">
-                <span className="label-badge live">LIVE</span>
-                <span>Activity</span>
-              </div>
-            </div>
-            <div className="scroll-item">
-              <img src="/images/opponents-table.png" alt="Player stats table" />
-              <div className="scroll-label">
-                <span className="label-badge">STATS</span>
-                <span>Player Data</span>
-              </div>
             </div>
           </div>
         </div>
