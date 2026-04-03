@@ -1,0 +1,69 @@
+import uuid
+import secrets
+import enum
+from datetime import datetime
+from sqlalchemy import String, Boolean, DateTime, Integer, Numeric, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
+
+from app.database import Base
+
+
+def generate_affiliate_code() -> str:
+    """Generate a unique affiliate code."""
+    return secrets.token_urlsafe(8).upper()[:10]
+
+
+class AffiliateStatus(str, enum.Enum):
+    PENDING = "pending"
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    REJECTED = "rejected"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+    paddle_customer_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    # Affiliate fields
+    is_affiliate: Mapped[bool] = mapped_column(Boolean, default=False)
+    affiliate_code: Mapped[str | None] = mapped_column(
+        String(20), unique=True, nullable=True, index=True
+    )
+    affiliate_status: Mapped[str] = mapped_column(String(20), default="pending")
+    custom_commission_rate: Mapped[int | None] = mapped_column(Integer, nullable=True)  # Percentage 0-100
+    referred_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
+    )
+
+    # Relationships
+    licenses: Mapped[list["License"]] = relationship(
+        "License", back_populates="user", lazy="selectin"
+    )
+    subscriptions: Mapped[list["Subscription"]] = relationship(
+        "Subscription", back_populates="user", lazy="selectin"
+    )
+    referred_by: Mapped["User"] = relationship(
+        "User", remote_side=[id], foreign_keys=[referred_by_id], lazy="selectin"
+    )
+    referrals: Mapped[list["Referral"]] = relationship(
+        "Referral", back_populates="affiliate", foreign_keys="Referral.affiliate_id", lazy="selectin"
+    )
+
+    def __repr__(self) -> str:
+        return f"<User {self.email}>"
+
+    def get_commission_rate(self, default_rate: int = 20) -> int:
+        """Get effective commission rate."""
+        return self.custom_commission_rate if self.custom_commission_rate is not None else default_rate

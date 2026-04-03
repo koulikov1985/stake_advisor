@@ -1,0 +1,80 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/stakeadvisor
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-32-chars}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@stakeadvisor.app}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-change-this-password}
+      - PADDLE_API_KEY=${PADDLE_API_KEY:-}
+      - PADDLE_WEBHOOK_SECRET=${PADDLE_WEBHOOK_SECRET:-}
+      - PADDLE_SANDBOX=${PADDLE_SANDBOX:-true}
+      - DEBUG=${DEBUG:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./app:/app/app
+    restart: unless-stopped
+
+  celery:
+    build: .
+    command: celery -A app.tasks.celery_app worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/stakeadvisor
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-32-chars}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  celery-beat:
+    build: .
+    command: celery -A app.tasks.celery_app beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/stakeadvisor
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production-32-chars}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=stakeadvisor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
