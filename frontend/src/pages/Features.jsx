@@ -38,23 +38,23 @@ const features = [
 const technicalFeatures = [
   {
     icon: '🖥️',
-    title: 'Native Desktop App',
-    description: 'Built for performance. Runs natively on macOS and Windows with minimal resource usage.'
+    title: 'Mac & Windows',
+    description: 'Native desktop app that runs smoothly on both macOS and Windows with minimal resource usage.'
   },
   {
-    icon: '🌐',
-    title: 'Browser Integration',
-    description: 'Seamlessly connects to your Chrome browser. Works with Stake.us poker tables.'
+    icon: '⚡',
+    title: 'Lightning Fast',
+    description: 'Get advice in milliseconds. No lag, no delay - just instant GTO decisions when you need them.'
   },
   {
-    icon: '💾',
-    title: 'Local Database',
-    description: 'All your hands stored locally in SQLite. Fast queries and complete privacy.'
+    icon: '🔒',
+    title: 'Complete Privacy',
+    description: 'All your data stays on your computer. Nothing is sent to external servers except license validation.'
   },
   {
-    icon: '🔑',
-    title: 'License Management',
-    description: 'Simple license activation. Use on any device, bound to your account.'
+    icon: '📱',
+    title: 'Use Anywhere',
+    description: 'One license works on any device. Log in on your desktop, laptop, or both - seamlessly.'
   }
 ];
 
@@ -122,12 +122,12 @@ function Features() {
         </div>
       </section>
 
-      {/* Technical Features */}
+      {/* Platform Features */}
       <section className="landing-features" style={{ background: 'var(--bg-surface)', margin: '0 -100vw', padding: '6rem calc(50vw - 600px)' }}>
         <div className="features-header">
-          <span className="section-tag">Technical</span>
-          <h2>Built Right</h2>
-          <p>Modern architecture for reliable performance</p>
+          <span className="section-tag">Platform</span>
+          <h2>Designed for Performance</h2>
+          <p>A seamless experience on any device</p>
         </div>
         <div className="features-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
           {technicalFeatures.map((feature, index) => (
@@ -146,12 +146,12 @@ function Features() {
       <section className="landing-cta">
         <div className="cta-card">
           <h2>Ready to Level Up Your Game?</h2>
-          <p>Download PokerSharkScope and start making better decisions at the tables.</p>
+          <p>Sign up and get 200 hands free to see the difference for yourself.</p>
           <div className="cta-buttons">
-            <Link to="/download" className="btn-hero-primary">
-              Download Now
+            <Link to="/signup" className="btn-hero-primary">
+              Get 200 Hands Free
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
             <Link to="/pricing" className="btn-hero-secondary">

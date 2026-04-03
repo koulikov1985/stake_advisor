@@ -57,8 +57,8 @@ const faqs = [
         answer: 'We accept all major credit cards, debit cards, and popular payment methods through our secure Stripe payment processor.'
       },
       {
-        question: 'Is there a free trial?',
-        answer: 'We offer a 1-Day Pass for just $5 so you can try all features before committing to a longer plan.'
+        question: 'Can I try it before buying?',
+        answer: 'Yes! Sign up and get 200 hands free to try out the software. You can also get the 1-Day Pass for just $5 to test all features.'
       }
     ]
   },

@@ -45,7 +45,7 @@ function Home() {
           ) : (
             <>
               <Link to="/login" className="nav-btn-ghost">Login</Link>
-              <Link to="/signup" className="nav-btn-primary">Start Free Trial</Link>
+              <Link to="/signup" className="nav-btn-primary">Get Started</Link>
             </>
           )}
         </nav>
@@ -84,7 +84,7 @@ function Home() {
 
           <div className="hero-cta-group">
             <Link to="/signup" className="btn-cta-primary">
-              <span>Start 7-Day Free Trial</span>
+              <span>Get 200 Hands Free</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
@@ -96,12 +96,12 @@ function Home() {
 
           <div className="hero-trust-badges">
             <div className="trust-item">
-              <span className="trust-icon">🔒</span>
-              <span>100% Private</span>
+              <span className="trust-icon">🎁</span>
+              <span>200 Free Hands</span>
             </div>
             <div className="trust-item">
-              <span className="trust-icon">💳</span>
-              <span>No Card Required</span>
+              <span className="trust-icon">🔒</span>
+              <span>100% Private</span>
             </div>
             <div className="trust-item">
               <span className="trust-icon">⚡</span>
@@ -241,60 +241,70 @@ function Home() {
           </h2>
         </div>
 
-        <div className="features-grid-ultra">
-          <div className="feature-card-ultra">
-            <div className="feature-icon-ultra">
-              <span>⚡</span>
+        <div className="features-with-screenshots">
+          {/* Feature 1 - Profit Tracker */}
+          <div className="feature-row">
+            <div className="feature-text">
+              <div className="feature-icon-ultra"><span>📊</span></div>
+              <h3>Advanced Profit Tracking</h3>
+              <p>Beautiful graphs showing your profit over time. Track BB/100, all-in adjusted EV, luck factor, and identify your true win rate vs variance.</p>
+              <div className="feature-highlight">10,000+ hands analyzed</div>
             </div>
-            <h3>Real-Time GTO Advice</h3>
-            <p>Instant preflop and postflop recommendations. Know the optimal play before the time bank runs out.</p>
-            <div className="feature-highlight">Sub-second response time</div>
+            <div className="feature-image">
+              <img src="/images/profit-tracker.png" alt="Profit tracking graph" />
+            </div>
           </div>
 
-          <div className="feature-card-ultra featured">
-            <div className="feature-badge">MOST POPULAR</div>
-            <div className="feature-icon-ultra">
-              <span>🎯</span>
+          {/* Feature 2 - Calendar */}
+          <div className="feature-row reverse">
+            <div className="feature-text">
+              <div className="feature-icon-ultra"><span>📅</span></div>
+              <h3>Daily P/L Calendar</h3>
+              <p>See your results day by day with color-coded wins and losses. Track monthly performance, best/worst days, and total hands played.</p>
+              <div className="feature-highlight">24 winning days, 1 losing day</div>
             </div>
-            <h3>6-Table Multi-Tabling</h3>
-            <p>Track all your tables in one dashboard. Get advice on whichever table needs your attention.</p>
-            <div className="feature-highlight">6x more volume</div>
+            <div className="feature-image">
+              <img src="/images/calendar.png" alt="Daily P/L calendar" />
+            </div>
           </div>
 
-          <div className="feature-card-ultra">
-            <div className="feature-icon-ultra">
-              <span>👥</span>
+          {/* Feature 3 - Opponents */}
+          <div className="feature-row">
+            <div className="feature-text">
+              <div className="feature-icon-ultra"><span>👥</span></div>
+              <h3>Opponent Database</h3>
+              <p>Track every player you've faced. See VPIP, PFR, 3-Bet, and more. Filter by hands played and identify the fish at your tables.</p>
+              <div className="feature-highlight">8,825 opponents tracked</div>
             </div>
-            <h3>Opponent HUD Stats</h3>
-            <p>VPIP, PFR, 3-Bet, Aggression Factor. Know exactly who you're up against at every table.</p>
-            <div className="feature-highlight">Auto-tracked stats</div>
+            <div className="feature-image">
+              <img src="/images/opponents-board.png" alt="Opponent tracking stats" />
+            </div>
           </div>
 
-          <div className="feature-card-ultra">
-            <div className="feature-icon-ultra">
-              <span>📊</span>
+          {/* Feature 4 - Hand Replay */}
+          <div className="feature-row reverse">
+            <div className="feature-text">
+              <div className="feature-icon-ultra"><span>🔄</span></div>
+              <h3>Hand Replay & Analysis</h3>
+              <p>Review every hand street-by-street. See your hole cards, community cards, and complete action log. Find leaks and improve your game.</p>
+              <div className="feature-highlight">Full hand history database</div>
             </div>
-            <h3>Advanced Analytics</h3>
-            <p>Profit graphs, EV analysis, session tracking. See your progress and find leaks in your game.</p>
-            <div className="feature-highlight">10,000+ hands analyzed</div>
+            <div className="feature-image">
+              <img src="/images/hand-replay.png" alt="Hand replay viewer" />
+            </div>
           </div>
 
-          <div className="feature-card-ultra">
-            <div className="feature-icon-ultra">
-              <span>📅</span>
+          {/* Feature 5 - Activity */}
+          <div className="feature-row">
+            <div className="feature-text">
+              <div className="feature-icon-ultra"><span>⚡</span></div>
+              <h3>Real-Time Activity Feed</h3>
+              <p>Live feed of all decisions, system events, and hand results. See exactly what's happening across all your tables in real-time.</p>
+              <div className="feature-highlight">97% execution success rate</div>
             </div>
-            <h3>Daily P/L Calendar</h3>
-            <p>Visual calendar showing your results day by day. Track winning streaks and identify patterns.</p>
-            <div className="feature-highlight">Monthly summaries</div>
-          </div>
-
-          <div className="feature-card-ultra">
-            <div className="feature-icon-ultra">
-              <span>🔒</span>
+            <div className="feature-image">
+              <img src="/images/activity-feeds.png" alt="Activity feed" />
             </div>
-            <h3>100% Private & Local</h3>
-            <p>All data stays on your computer. Your hands, stats, and information never leave your machine.</p>
-            <div className="feature-highlight">Zero cloud storage</div>
           </div>
         </div>
       </section>
@@ -372,7 +382,7 @@ function Home() {
             <div className="hiw-step-number">1</div>
             <div className="hiw-step-content">
               <h3>Create Account</h3>
-              <p>Sign up free. No credit card required to start your 7-day trial.</p>
+              <p>Create your account and choose a plan to get started.</p>
             </div>
             <div className="hiw-step-visual">
               <div className="step-icon">📧</div>
@@ -444,7 +454,7 @@ function Home() {
         </div>
 
         <p className="pricing-note">
-          All plans include full access to every feature. Start with a 7-day free trial.
+          All plans include full access to every feature. Cancel anytime.
         </p>
       </section>
 
@@ -461,13 +471,13 @@ function Home() {
           </p>
           <div className="final-cta-buttons">
             <Link to="/signup" className="btn-cta-primary large">
-              <span>Start Your Free Trial</span>
+              <span>Get Started Now</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
           </div>
-          <p className="cta-subtext">No credit card required • Cancel anytime • Instant access</p>
+          <p className="cta-subtext">Instant access • Cancel anytime • Secure payment</p>
         </div>
       </section>
 
