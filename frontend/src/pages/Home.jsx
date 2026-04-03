@@ -140,103 +140,145 @@ function Home() {
         </div>
       </section>
 
-      {/* App Preview Section - Modern Slider */}
-      <section className="app-showcase">
+      {/* Auto-Scrolling Screenshot Showcase */}
+      <section className="auto-showcase">
         <div className="showcase-header">
           <span className="section-tag-pro">See It In Action</span>
           <h2 className="section-title-pro">
-            Professional-Grade Analytics<br/>
-            <span className="gradient-text-ultra">At Your Fingertips</span>
+            Professional-Grade Dashboard<br/>
+            <span className="gradient-text-ultra">Built For Winners</span>
           </h2>
-          <p className="showcase-hint">
-            <span className="scroll-icon">←</span>
-            Scroll to explore
-            <span className="scroll-icon">→</span>
-          </p>
         </div>
 
-        <div className="showcase-slider">
-          <div className="showcase-track">
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/live-tables.png" alt="Live 6-table dashboard" />
-              </div>
-              <div className="slide-info">
-                <span className="slide-badge live">LIVE</span>
-                <h3>6 Tables Simultaneously</h3>
-                <p>Track all your tables in real-time with GTO advice on every hand</p>
+        {/* First row - scrolls left */}
+        <div className="scroll-row">
+          <div className="scroll-track scroll-left">
+            <div className="scroll-item">
+              <img src="/images/live-tables.png" alt="Live tables dashboard" />
+              <div className="scroll-label">
+                <span className="label-badge live">LIVE</span>
+                <span>6 Tables</span>
               </div>
             </div>
-
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/profit-tracker.png" alt="Profit tracking graph" />
-              </div>
-              <div className="slide-info">
-                <span className="slide-badge gold">+9,449 BB</span>
-                <h3>Profit Tracker</h3>
-                <p>Beautiful graphs showing profit, EV, and win rate over time</p>
+            <div className="scroll-item">
+              <img src="/images/profit-tracker.png" alt="Profit tracker" />
+              <div className="scroll-label">
+                <span className="label-badge gold">+9.4K BB</span>
+                <span>Profit Tracker</span>
               </div>
             </div>
-
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/calendar.png" alt="Monthly P/L calendar" />
-              </div>
-              <div className="slide-info">
-                <span className="slide-badge success">24-1</span>
-                <h3>Daily P/L Calendar</h3>
-                <p>See winning and losing days at a glance. Track monthly results.</p>
+            <div className="scroll-item">
+              <img src="/images/calendar.png" alt="P/L Calendar" />
+              <div className="scroll-label">
+                <span className="label-badge success">96%</span>
+                <span>Win Rate</span>
               </div>
             </div>
-
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/activity-metrics.png" alt="97% execution rate" />
-              </div>
-              <div className="slide-info">
-                <span className="slide-badge success">97%</span>
-                <h3>Execution Rate</h3>
-                <p>Industry-leading accuracy on every GTO recommendation</p>
+            <div className="scroll-item">
+              <img src="/images/activity-metrics.png" alt="Execution metrics" />
+              <div className="scroll-label">
+                <span className="label-badge success">97%</span>
+                <span>Execution</span>
               </div>
             </div>
-
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/hand-replay.png" alt="Hand replay viewer" />
-              </div>
-              <div className="slide-info">
-                <span className="slide-badge">REPLAY</span>
-                <h3>Hand History</h3>
-                <p>Review every hand street-by-street. Find and fix leaks.</p>
+            {/* Duplicates for seamless loop */}
+            <div className="scroll-item">
+              <img src="/images/live-tables.png" alt="Live tables dashboard" />
+              <div className="scroll-label">
+                <span className="label-badge live">LIVE</span>
+                <span>6 Tables</span>
               </div>
             </div>
-
-            <div className="showcase-slide">
-              <div className="slide-image">
-                <img src="/images/opponents-board.png" alt="Opponent database" />
+            <div className="scroll-item">
+              <img src="/images/profit-tracker.png" alt="Profit tracker" />
+              <div className="scroll-label">
+                <span className="label-badge gold">+9.4K BB</span>
+                <span>Profit Tracker</span>
               </div>
-              <div className="slide-info">
-                <span className="slide-badge">8,825</span>
-                <h3>Opponent Database</h3>
-                <p>Track every player with VPIP, PFR, 3-Bet and more stats</p>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/calendar.png" alt="P/L Calendar" />
+              <div className="scroll-label">
+                <span className="label-badge success">96%</span>
+                <span>Win Rate</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/activity-metrics.png" alt="Execution metrics" />
+              <div className="scroll-label">
+                <span className="label-badge success">97%</span>
+                <span>Execution</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="showcase-indicators">
-          <div className="indicator active"></div>
-          <div className="indicator"></div>
-          <div className="indicator"></div>
-          <div className="indicator"></div>
-          <div className="indicator"></div>
-          <div className="indicator"></div>
+        {/* Second row - scrolls right */}
+        <div className="scroll-row">
+          <div className="scroll-track scroll-right">
+            <div className="scroll-item">
+              <img src="/images/hand-replay.png" alt="Hand replay" />
+              <div className="scroll-label">
+                <span className="label-badge">REPLAY</span>
+                <span>Hand History</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/opponents-board.png" alt="Opponent tracking" />
+              <div className="scroll-label">
+                <span className="label-badge">8,825</span>
+                <span>Opponents</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/activity-feeds.png" alt="Activity feed" />
+              <div className="scroll-label">
+                <span className="label-badge live">LIVE</span>
+                <span>Activity</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/opponents-table.png" alt="Player stats table" />
+              <div className="scroll-label">
+                <span className="label-badge">STATS</span>
+                <span>Player Data</span>
+              </div>
+            </div>
+            {/* Duplicates for seamless loop */}
+            <div className="scroll-item">
+              <img src="/images/hand-replay.png" alt="Hand replay" />
+              <div className="scroll-label">
+                <span className="label-badge">REPLAY</span>
+                <span>Hand History</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/opponents-board.png" alt="Opponent tracking" />
+              <div className="scroll-label">
+                <span className="label-badge">8,825</span>
+                <span>Opponents</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/activity-feeds.png" alt="Activity feed" />
+              <div className="scroll-label">
+                <span className="label-badge live">LIVE</span>
+                <span>Activity</span>
+              </div>
+            </div>
+            <div className="scroll-item">
+              <img src="/images/opponents-table.png" alt="Player stats table" />
+              <div className="scroll-label">
+                <span className="label-badge">STATS</span>
+                <span>Player Data</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-ultra">
+      {/* Features Grid - Clean Icons Only */}
+      <section className="features-grid-section">
         <div className="features-header-ultra">
           <span className="section-tag-pro">Why Players Switch</span>
           <h2 className="section-title-pro">
@@ -245,70 +287,37 @@ function Home() {
           </h2>
         </div>
 
-        <div className="features-with-screenshots">
-          {/* Feature 1 - Profit Tracker */}
-          <div className="feature-row">
-            <div className="feature-text">
-              <div className="feature-icon-ultra"><span>📊</span></div>
-              <h3>Advanced Profit Tracking</h3>
-              <p>Beautiful graphs showing your profit over time. Track BB/100, all-in adjusted EV, luck factor, and identify your true win rate vs variance.</p>
-              <div className="feature-highlight">10,000+ hands analyzed</div>
-            </div>
-            <div className="feature-image">
-              <img src="/images/profit-tracker.png" alt="Profit tracking graph" />
-            </div>
+        <div className="features-bento">
+          <div className="bento-item large">
+            <div className="bento-icon">⚡</div>
+            <h3>Real-Time GTO</h3>
+            <p>Instant advice on every decision. Preflop and postflop.</p>
+            <div className="bento-stat">{"<"}1s response</div>
           </div>
-
-          {/* Feature 2 - Calendar */}
-          <div className="feature-row reverse">
-            <div className="feature-text">
-              <div className="feature-icon-ultra"><span>📅</span></div>
-              <h3>Daily P/L Calendar</h3>
-              <p>See your results day by day with color-coded wins and losses. Track monthly performance, best/worst days, and total hands played.</p>
-              <div className="feature-highlight">24 winning days, 1 losing day</div>
-            </div>
-            <div className="feature-image">
-              <img src="/images/calendar.png" alt="Daily P/L calendar" />
-            </div>
+          <div className="bento-item">
+            <div className="bento-icon">🎯</div>
+            <h3>6 Tables</h3>
+            <p>Multi-table without sacrificing accuracy</p>
           </div>
-
-          {/* Feature 3 - Opponents */}
-          <div className="feature-row">
-            <div className="feature-text">
-              <div className="feature-icon-ultra"><span>👥</span></div>
-              <h3>Opponent Database</h3>
-              <p>Track every player you've faced. See VPIP, PFR, 3-Bet, and more. Filter by hands played and identify the fish at your tables.</p>
-              <div className="feature-highlight">8,825 opponents tracked</div>
-            </div>
-            <div className="feature-image">
-              <img src="/images/opponents-board.png" alt="Opponent tracking stats" />
-            </div>
+          <div className="bento-item">
+            <div className="bento-icon">👥</div>
+            <h3>8,825+ Opponents</h3>
+            <p>Full HUD stats on every player</p>
           </div>
-
-          {/* Feature 4 - Hand Replay */}
-          <div className="feature-row reverse">
-            <div className="feature-text">
-              <div className="feature-icon-ultra"><span>🔄</span></div>
-              <h3>Hand Replay & Analysis</h3>
-              <p>Review every hand street-by-street. See your hole cards, community cards, and complete action log. Find leaks and improve your game.</p>
-              <div className="feature-highlight">Full hand history database</div>
-            </div>
-            <div className="feature-image">
-              <img src="/images/hand-replay.png" alt="Hand replay viewer" />
-            </div>
+          <div className="bento-item">
+            <div className="bento-icon">📊</div>
+            <h3>Profit Tracking</h3>
+            <p>Beautiful graphs and daily P/L calendar</p>
           </div>
-
-          {/* Feature 5 - Activity */}
-          <div className="feature-row">
-            <div className="feature-text">
-              <div className="feature-icon-ultra"><span>⚡</span></div>
-              <h3>Real-Time Activity Feed</h3>
-              <p>Live feed of all decisions, system events, and hand results. See exactly what's happening across all your tables in real-time.</p>
-              <div className="feature-highlight">97% execution success rate</div>
-            </div>
-            <div className="feature-image">
-              <img src="/images/activity-feeds.png" alt="Activity feed" />
-            </div>
+          <div className="bento-item">
+            <div className="bento-icon">🔄</div>
+            <h3>Hand Replay</h3>
+            <p>Review every hand street-by-street</p>
+          </div>
+          <div className="bento-item accent">
+            <div className="bento-icon">🔒</div>
+            <h3>100% Private</h3>
+            <p>All data stays on your computer</p>
           </div>
         </div>
       </section>
