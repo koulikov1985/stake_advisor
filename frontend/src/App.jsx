@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
+import Affiliate from './pages/Affiliate';
 
 function AppContent() {
   return (
@@ -27,6 +28,7 @@ function AppContent() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/affiliate" element={<Affiliate />} />
       </Routes>
     </div>
   );

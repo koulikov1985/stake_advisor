@@ -15,6 +15,7 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedRef, setCopiedRef] = useState(false);
   const [purchasing, setPurchasing] = useState(null);
   const [managingSubscription, setManagingSubscription] = useState(false);
   const navigate = useNavigate();
@@ -60,6 +61,19 @@ function Dashboard() {
     navigator.clipboard.writeText(user?.licenseKey);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copyReferralLink = () => {
+    const referralCode = user?.referralCode || user?.id?.toString().slice(-6) || 'REF';
+    const link = `${window.location.origin}/?ref=${referralCode}`;
+    navigator.clipboard.writeText(link);
+    setCopiedRef(true);
+    setTimeout(() => setCopiedRef(false), 2000);
+  };
+
+  const getReferralLink = () => {
+    const referralCode = user?.referralCode || user?.id?.toString().slice(-6) || 'REF';
+    return `${window.location.origin}/?ref=${referralCode}`;
   };
 
   const handleManageSubscription = async () => {
@@ -253,6 +267,64 @@ function Dashboard() {
                       <small>Windows 10+</small>
                     </span>
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Affiliate Card - Only show if active subscription */}
+          {hasActiveSubscription && (
+            <div className="dash-card affiliate-card full-width">
+              <div className="card-icon" style={{ background: 'rgba(34, 197, 94, 0.1)' }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ stroke: '#22c55e' }}>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div className="card-content">
+                <h3>Refer & Earn 15%</h3>
+                <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                  Share your link and earn 15% of every payment your referrals make
+                </p>
+                <div className="license-key-box">
+                  <code style={{ fontSize: '0.8rem' }}>{getReferralLink()}</code>
+                  <button className="copy-btn" onClick={copyReferralLink}>
+                    {copiedRef ? (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1rem' }}>
+                  <div>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
+                    <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{user?.referralCount || 0}</div>
+                  </div>
+                  <div>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Earnings</span>
+                    <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--gold)' }}>
+                      ${(user?.referralEarnings || 0).toFixed(2)}
+                    </div>
+                  </div>
+                  <Link to="/affiliate" style={{
+                    marginLeft: 'auto',
+                    color: 'var(--gold)',
+                    textDecoration: 'none',
+                    fontSize: '0.9rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem'
+                  }}>
+                    Learn more →
+                  </Link>
                 </div>
               </div>
             </div>

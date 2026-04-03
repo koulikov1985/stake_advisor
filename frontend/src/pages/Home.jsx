@@ -419,6 +419,39 @@ function Home() {
         </p>
       </section>
 
+      {/* Affiliate Section */}
+      <section className="affiliate-promo">
+        <div className="affiliate-promo-content">
+          <div className="affiliate-promo-text">
+            <span className="section-tag-pro">Earn Money</span>
+            <h2 className="section-title-pro">
+              Refer Friends.<br/>
+              <span className="gradient-text-ultra">Earn 15% Forever.</span>
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7', marginTop: '1rem' }}>
+              Know other poker players? Share PokerSharkScope and earn 15% of every payment they make — for as long as they stay subscribed.
+            </p>
+            <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
+              <div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>15%</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Recurring</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$11+</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Monthly Referral</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$105</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Yearly Referral</div>
+              </div>
+            </div>
+            <Link to="/affiliate" className="btn-cta-secondary" style={{ marginTop: '2rem', display: 'inline-flex' }}>
+              Learn About Affiliate Program →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="final-cta-ultra">
         <div className="final-cta-bg">

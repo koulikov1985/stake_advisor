@@ -2290,3 +2290,35 @@
     font-size: 2rem;
   }
 }
+
+
+/* Affiliate Promo Section */
+.affiliate-promo {
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-primary) 100%);
+}
+
+.affiliate-promo-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.affiliate-promo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.affiliate-promo-text > div {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .affiliate-promo-text > div {
+    gap: 1.5rem;
+  }
+}
+
