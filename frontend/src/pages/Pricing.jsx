@@ -79,8 +79,7 @@ function Pricing() {
             </svg>
             <span>Discord</span>
           </a>
-          <Link to="/features">Features</Link>
-          <Link to="/pricing">Pricing</Link>
+                    <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -184,8 +183,7 @@ function Pricing() {
           <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
         </div>
         <div className="footer-links">
-          <Link to="/features">Features</Link>
-          <Link to="/pricing">Pricing</Link>
+                    <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <a href="https://discord.gg/pokersharkscope" target="_blank" rel="noopener noreferrer" className="footer-discord">Discord</a>
