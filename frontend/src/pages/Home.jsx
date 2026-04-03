@@ -153,7 +153,8 @@ function Home() {
         <div className="preview-showcase">
           {/* Main Feature - Profit Tracker */}
           <div className="preview-main">
-            <div className="preview-card featured">
+            <div className="preview-card featured animate-scale-in">
+              <div className="preview-card-glow"></div>
               <div className="preview-card-header">
                 <span className="preview-badge tracker">📊</span>
                 <span className="preview-title">Profit Tracker</span>
@@ -169,7 +170,8 @@ function Home() {
 
           {/* Secondary Features */}
           <div className="preview-grid">
-            <div className="preview-card">
+            <div className="preview-card animate-slide-up">
+              <div className="preview-card-glow"></div>
               <div className="preview-card-header">
                 <span className="preview-badge calendar">📅</span>
                 <span className="preview-title">Daily P/L Calendar</span>
@@ -182,7 +184,8 @@ function Home() {
               </p>
             </div>
 
-            <div className="preview-card">
+            <div className="preview-card animate-slide-up delay-1">
+              <div className="preview-card-glow"></div>
               <div className="preview-card-header">
                 <span className="preview-badge live">🎯</span>
                 <span className="preview-title">Hand Replay</span>
@@ -198,17 +201,17 @@ function Home() {
 
           {/* More Features Row */}
           <div className="preview-grid three-col">
-            <div className="preview-card compact">
+            <div className="preview-card compact animate-float">
               <div className="preview-card-header">
-                <span className="preview-badge">👥</span>
-                <span className="preview-title">Opponent Stats</span>
+                <span className="preview-badge live">🎮</span>
+                <span className="preview-title">6 Tables Live</span>
               </div>
               <div className="preview-image-container">
-                <img src="/images/opponents-board.png" alt="Opponent tracking with 8825 players" className="preview-screenshot" />
+                <img src="/images/live-tables.png" alt="Live dashboard tracking 6 poker tables" className="preview-screenshot" />
               </div>
             </div>
 
-            <div className="preview-card compact">
+            <div className="preview-card compact animate-float delay-1">
               <div className="preview-card-header">
                 <span className="preview-badge">📋</span>
                 <span className="preview-title">Activity Feed</span>
@@ -218,10 +221,10 @@ function Home() {
               </div>
             </div>
 
-            <div className="preview-card compact">
+            <div className="preview-card compact animate-float delay-2">
               <div className="preview-card-header">
-                <span className="preview-badge">⚡</span>
-                <span className="preview-title">97% Success Rate</span>
+                <span className="preview-badge success">⚡</span>
+                <span className="preview-title">97% Execution</span>
               </div>
               <div className="preview-image-container">
                 <img src="/images/activity-metrics.png" alt="Execution metrics showing 97% success" className="preview-screenshot" />

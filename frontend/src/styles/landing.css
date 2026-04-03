@@ -538,6 +538,159 @@
   }
 }
 
+/* ============================================
+   PROFESSIONAL ANIMATIONS
+   ============================================ */
+
+/* Floating Animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes floatSubtle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(0.5deg); }
+}
+
+/* Scale In Animation */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide Up Animation */
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glow Pulse Animation */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
+  }
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float.delay-1 {
+  animation-delay: 0.5s;
+}
+
+.animate-float.delay-2 {
+  animation-delay: 1s;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-slide-up.delay-1 {
+  animation-delay: 0.15s;
+  opacity: 0;
+}
+
+.animate-slide-up.delay-2 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+/* Preview Card Glow Effect */
+.preview-card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.preview-card {
+  position: relative;
+}
+
+.preview-card:hover .preview-card-glow {
+  opacity: 1;
+}
+
+.preview-card.featured {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* Success Badge Color */
+.preview-badge.success {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--success);
+}
+
+/* Enhanced hover effects */
+.preview-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-6px);
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(212, 175, 55, 0.1);
+}
+
+/* Screenshot shimmer on hover */
+.preview-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.preview-card:hover .preview-image-container::after {
+  left: 150%;
+}
+
 @media (max-width: 600px) {
   .preview-grid.three-col {
     grid-template-columns: 1fr;
@@ -871,17 +1024,46 @@
 }
 
 .feature-image {
+  position: relative;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(212, 175, 55, 0);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: floatSubtle 5s ease-in-out infinite;
+}
+
+.feature-row:nth-child(odd) .feature-image {
+  animation-delay: 0s;
+}
+
+.feature-row:nth-child(even) .feature-image {
+  animation-delay: 1.5s;
+}
+
+.feature-image::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), transparent, rgba(212, 175, 55, 0.3));
+  border-radius: 18px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
 }
 
 .feature-image:hover {
-  border-color: var(--border-gold);
-  transform: scale(1.02);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  border-color: var(--gold);
+  transform: scale(1.03) translateY(-4px);
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(212, 175, 55, 0.15);
+}
+
+.feature-image:hover::before {
+  opacity: 1;
 }
 
 .feature-image img {
