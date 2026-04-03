@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import '../styles/dashboard.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const plans = [
-  { plan: 'daily', name: '1 Day', price: 5, desc: 'Perfect for trying out' },
-  { plan: 'weekly', name: '1 Week', price: 25, desc: 'Great for casual players' },
-  { plan: 'monthly', name: '1 Month', price: 75, desc: 'Best for regular grinders', popular: true },
-  { plan: 'yearly', name: '1 Year', price: 699, desc: 'Maximum savings', savings: '62%' }
+  { plan: 'daily', name: '1 Day', price: 5 },
+  { plan: 'weekly', name: '1 Week', price: 25 },
+  { plan: 'monthly', name: '1 Month', price: 75, popular: true },
+  { plan: 'yearly', name: '1 Year', price: 699, savings: '62%' }
 ];
 
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [purchasing, setPurchasing] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [purchasing, setPurchasing] = useState(null);
   const [managingSubscription, setManagingSubscription] = useState(false);
   const navigate = useNavigate();
 
@@ -72,166 +72,216 @@ function Dashboard() {
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch (err) {
-      alert('Could not open subscription manager');
+    } catch {
       setManagingSubscription(false);
     }
   };
 
+  const handleDownload = (platform) => {
+    const token = localStorage.getItem('token');
+    // Create a temporary link with auth
+    const link = document.createElement('a');
+    link.href = `${API_URL}/api/download/${platform}`;
+    link.click();
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
-  if (loading) return <div className="pro-dash"><div className="pro-loading"><div className="spinner"></div></div></div>;
+  if (loading) {
+    return (
+      <div className="dash">
+        <div className="dash-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const hasSubscription = user?.plan && user?.licenseKey;
+  const hasActiveSubscription = user?.isActive && user?.licenseKey;
 
   return (
-    <div className="pro-dash">
-      {/* Sidebar */}
-      <aside className="pro-sidebar">
-        <div className="pro-brand">
-          <span className="brand-icon">🦈</span>
-          <span className="brand-text">SharkScope Pro</span>
-        </div>
-
-        <nav className="pro-nav">
-          <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Overview
-          </button>
-          <button className={activeTab === 'subscription' ? 'active' : ''} onClick={() => setActiveTab('subscription')}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><circle cx="18" cy="12" r="2"/></svg>
-            Subscription
-          </button>
-          <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            Settings
-          </button>
-        </nav>
-
-        <div className="pro-sidebar-footer">
-          <div className="user-info">
-            <div className="user-avatar">{user?.email?.[0]?.toUpperCase()}</div>
-            <div className="user-details">
-              <span className="user-email">{user?.email}</span>
-              <button onClick={() => { localStorage.clear(); window.location.href = '/login'; }}>Sign out</button>
-            </div>
+    <div className="dash">
+      {/* Header */}
+      <header className="dash-header">
+        <Link to="/" className="dash-logo">
+          <span className="logo-icon">♠</span>
+          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+        </Link>
+        <div className="dash-header-right">
+          <a href="https://discord.gg/pokersharkscope" target="_blank" rel="noopener noreferrer" className="dash-discord">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+            Discord
+          </a>
+          <div className="dash-user">
+            <span className="user-email">{user?.email}</span>
+            <button className="logout-btn" onClick={handleLogout}>Log out</button>
           </div>
         </div>
-      </aside>
+      </header>
 
-      {/* Main Content */}
-      <main className="pro-main">
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="pro-content">
-            <header className="pro-header">
-              <div>
-                <h1>Welcome back</h1>
-                <p>Here's your account overview</p>
-              </div>
-            </header>
+      <main className="dash-main">
+        {/* Welcome Section */}
+        <div className="dash-welcome">
+          <h1>Welcome back!</h1>
+          <p>Manage your subscription and download the app</p>
+        </div>
 
-            <div className="pro-cards">
-              {/* Status Card */}
-              <div className="pro-card status-card">
-                <div className="card-header">
-                  <span className="card-label">Subscription Status</span>
-                  {hasSubscription && (
-                    <span className={`status-pill ${user.isActive ? 'active' : 'expired'}`}>
-                      {user.isActive ? 'Active' : 'Expired'}
-                    </span>
-                  )}
-                </div>
-                {hasSubscription ? (
-                  <div className="card-body">
-                    <div className="big-stat">{user.daysRemaining || 0}</div>
-                    <div className="stat-label">days remaining</div>
-                    <div className="stat-meta">
-                      {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)} plan · Expires {formatDate(user.expiresAt)}
+        {/* Main Grid */}
+        <div className="dash-grid">
+          {/* Subscription Status Card */}
+          <div className="dash-card status-card">
+            <div className="card-icon">
+              {hasActiveSubscription ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              )}
+            </div>
+            <div className="card-content">
+              <h3>Subscription</h3>
+              {hasActiveSubscription ? (
+                <>
+                  <div className="status-active">
+                    <span className="status-dot"></span>
+                    Active
+                  </div>
+                  <div className="status-details">
+                    <div className="detail-row">
+                      <span>Plan</span>
+                      <strong>{user.plan?.charAt(0).toUpperCase() + user.plan?.slice(1)}</strong>
+                    </div>
+                    <div className="detail-row">
+                      <span>Days Left</span>
+                      <strong className="gold">{user.daysRemaining || 0}</strong>
+                    </div>
+                    <div className="detail-row">
+                      <span>Expires</span>
+                      <strong>{formatDate(user.expiresAt)}</strong>
                     </div>
                   </div>
-                ) : (
-                  <div className="card-body empty">
-                    <p>No active subscription</p>
-                    <button className="pro-btn primary" onClick={() => setActiveTab('subscription')}>
-                      Get Started
+                  <button
+                    className="manage-btn"
+                    onClick={handleManageSubscription}
+                    disabled={managingSubscription}
+                  >
+                    {managingSubscription ? 'Opening...' : 'Manage Subscription'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="status-inactive">No Active Plan</div>
+                  <p className="status-hint">Choose a plan below to get started</p>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* License Key Card */}
+          <div className="dash-card license-card">
+            <div className="card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+              </svg>
+            </div>
+            <div className="card-content">
+              <h3>License Key</h3>
+              {user?.licenseKey ? (
+                <>
+                  <div className="license-key-box">
+                    <code>{user.licenseKey}</code>
+                    <button className="copy-btn" onClick={copyKey}>
+                      {copied ? (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      ) : (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="9" y="9" width="13" height="13" rx="2"/>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                      )}
                     </button>
                   </div>
-                )}
-              </div>
+                  <p className="license-hint">Enter this key when you open the app</p>
+                </>
+              ) : (
+                <p className="no-license">Purchase a plan to get your license key</p>
+              )}
+            </div>
+          </div>
 
-              {/* License Card */}
-              <div className="pro-card license-card">
-                <div className="card-header">
-                  <span className="card-label">License Key</span>
+          {/* Download Card - Only show if active subscription */}
+          {hasActiveSubscription && (
+            <div className="dash-card download-card full-width">
+              <div className="card-icon download-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </div>
+              <div className="card-content">
+                <h3>Download App</h3>
+                <p>Get PokerSharkScope for your platform</p>
+                <div className="download-buttons">
+                  <button className="download-btn mac" onClick={() => handleDownload('mac')}>
+                    <span className="platform-icon">🍎</span>
+                    <span className="platform-info">
+                      <strong>macOS</strong>
+                      <small>10.15 or later</small>
+                    </span>
+                  </button>
+                  <button className="download-btn windows" onClick={() => handleDownload('windows')}>
+                    <span className="platform-icon">🪟</span>
+                    <span className="platform-info">
+                      <strong>Windows</strong>
+                      <small>Windows 10+</small>
+                    </span>
+                  </button>
                 </div>
-                {user?.licenseKey ? (
-                  <div className="card-body">
-                    <div className="license-display">
-                      <code>{user.licenseKey}</code>
-                      <button className="copy-btn" onClick={copyKey}>
-                        {copied ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        )}
-                      </button>
-                    </div>
-                    <p className="license-hint">Use this key to activate SharkScope Pro</p>
-                  </div>
-                ) : (
-                  <div className="card-body empty">
-                    <p>Purchase a plan to get your license key</p>
-                  </div>
-                )}
               </div>
             </div>
+          )}
+        </div>
 
-            {/* Quick Actions */}
-            {hasSubscription && !user.isActive && (
-              <div className="pro-alert warning">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div>
-                  <strong>Your subscription has expired</strong>
-                  <p>Renew now to continue using Stake Advisor</p>
-                </div>
-                <button className="pro-btn primary" onClick={() => setActiveTab('subscription')}>Renew</button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Subscription Tab */}
-        {activeTab === 'subscription' && (
-          <div className="pro-content">
-            <header className="pro-header">
-              <div>
-                <h1>Choose your plan</h1>
-                <p>Select the perfect plan for your needs</p>
-              </div>
-            </header>
-
-            <div className="pro-plans">
+        {/* Pricing Section - Show if no active subscription */}
+        {!hasActiveSubscription && (
+          <div className="dash-pricing">
+            <h2>Choose Your Plan</h2>
+            <p>Start crushing the tables today</p>
+            <div className="pricing-grid">
               {plans.map((p) => (
-                <div key={p.plan} className={`pro-plan ${p.popular ? 'featured' : ''}`}>
-                  {p.popular && <div className="plan-badge">Most Popular</div>}
-                  {p.savings && <div className="plan-savings">Save {p.savings}</div>}
-                  <div className="plan-header">
-                    <h3>{p.name}</h3>
-                    <p>{p.desc}</p>
-                  </div>
-                  <div className="plan-price">
+                <div key={p.plan} className={`pricing-card ${p.popular ? 'popular' : ''}`}>
+                  {p.popular && <div className="popular-badge">Best Value</div>}
+                  {p.savings && <div className="savings-badge">Save {p.savings}</div>}
+                  <h3>{p.name}</h3>
+                  <div className="price">
                     <span className="currency">$</span>
                     <span className="amount">{p.price}</span>
                   </div>
-                  <ul className="plan-features">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Real-time hand analysis</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>All stake levels</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>GTO recommendations</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+                  <ul>
+                    <li>Real-time GTO advice</li>
+                    <li>6 tables simultaneously</li>
+                    <li>Opponent tracking</li>
+                    <li>Hand replay</li>
                   </ul>
                   <button
-                    className={`pro-btn ${p.popular ? 'primary' : 'secondary'}`}
+                    className={`buy-btn ${p.popular ? 'primary' : ''}`}
                     onClick={() => handlePurchase(p.plan)}
                     disabled={purchasing === p.plan}
                   >
@@ -240,83 +290,34 @@ function Dashboard() {
                 </div>
               ))}
             </div>
-
-            <div className="pro-guarantee">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <div>
-                <strong>Secure Payment</strong>
-                <p>All transactions are encrypted and processed securely via Stripe</p>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Settings Tab */}
-        {activeTab === 'settings' && (
-          <div className="pro-content">
-            <header className="pro-header">
-              <div>
-                <h1>Account Settings</h1>
-                <p>Manage your account preferences</p>
-              </div>
-            </header>
-
-            <div className="pro-settings">
-              <div className="settings-section">
-                <h3>Profile</h3>
-                <div className="settings-row">
-                  <div>
-                    <label>Email address</label>
-                    <span>{user?.email}</span>
-                  </div>
-                </div>
-                <div className="settings-row">
-                  <div>
-                    <label>Member since</label>
-                    <span>{formatDate(user?.createdAt)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="settings-section">
-                <h3>Subscription</h3>
-                <div className="settings-row">
-                  <div>
-                    <label>Current plan</label>
-                    <span>{user?.plan ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1) : 'None'}</span>
-                  </div>
-                </div>
-                <div className="settings-row">
-                  <div>
-                    <label>Status</label>
-                    <span className={user?.isActive ? 'text-success' : 'text-error'}>
-                      {user?.plan ? (user.isActive ? 'Active' : 'Expired') : 'No subscription'}
-                    </span>
-                  </div>
-                </div>
-                {user?.expiresAt && (
-                  <div className="settings-row">
-                    <div>
-                      <label>Expires</label>
-                      <span>{formatDate(user.expiresAt)}</span>
-                    </div>
-                  </div>
-                )}
-                {user?.plan && (
-                  <div className="settings-row" style={{ marginTop: '1rem' }}>
-                    <button
-                      className="pro-btn secondary"
-                      onClick={handleManageSubscription}
-                      disabled={managingSubscription}
-                    >
-                      {managingSubscription ? 'Opening...' : 'Manage Subscription'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Quick Links */}
+        <div className="dash-links">
+          <Link to="/faq" className="quick-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            FAQ
+          </Link>
+          <a href="https://discord.gg/pokersharkscope" target="_blank" rel="noopener noreferrer" className="quick-link">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.36-.698.772-1.362 1.225-1.993a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+            Join Discord
+          </a>
+          <Link to="/download" className="quick-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Setup Guide
+          </Link>
+        </div>
       </main>
     </div>
   );
