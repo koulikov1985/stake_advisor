@@ -153,40 +153,88 @@ function Home() {
           <div className="scroll-track scroll-left">
             <div className="scroll-item large">
               <img src="/images/live-tables.png" alt="Live tables dashboard" />
+              <div className="scroll-caption">
+                <h4>6 Tables at Once</h4>
+                <p>GTO advice on every hand, every table</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/profit-tracker.png" alt="Profit tracker" />
+              <div className="scroll-caption">
+                <h4>Track Your Profits</h4>
+                <p>Beautiful graphs. Real results.</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/calendar.png" alt="P/L Calendar" />
+              <div className="scroll-caption">
+                <h4>Daily P/L Calendar</h4>
+                <p>24 winning days. 1 losing day.</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/hand-replay.png" alt="Hand replay" />
+              <div className="scroll-caption">
+                <h4>Hand Replay</h4>
+                <p>Review every decision street-by-street</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/opponents-board.png" alt="Opponent tracking" />
+              <div className="scroll-caption">
+                <h4>8,825 Opponents Tracked</h4>
+                <p>Know your competition inside out</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/activity-metrics.png" alt="Execution metrics" />
+              <div className="scroll-caption">
+                <h4>97% Execution Rate</h4>
+                <p>Industry-leading accuracy</p>
+              </div>
             </div>
             {/* Duplicates for seamless loop */}
             <div className="scroll-item large">
               <img src="/images/live-tables.png" alt="Live tables dashboard" />
+              <div className="scroll-caption">
+                <h4>6 Tables at Once</h4>
+                <p>GTO advice on every hand, every table</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/profit-tracker.png" alt="Profit tracker" />
+              <div className="scroll-caption">
+                <h4>Track Your Profits</h4>
+                <p>Beautiful graphs. Real results.</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/calendar.png" alt="P/L Calendar" />
+              <div className="scroll-caption">
+                <h4>Daily P/L Calendar</h4>
+                <p>24 winning days. 1 losing day.</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/hand-replay.png" alt="Hand replay" />
+              <div className="scroll-caption">
+                <h4>Hand Replay</h4>
+                <p>Review every decision street-by-street</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/opponents-board.png" alt="Opponent tracking" />
+              <div className="scroll-caption">
+                <h4>8,825 Opponents Tracked</h4>
+                <p>Know your competition inside out</p>
+              </div>
             </div>
             <div className="scroll-item large">
               <img src="/images/activity-metrics.png" alt="Execution metrics" />
+              <div className="scroll-caption">
+                <h4>97% Execution Rate</h4>
+                <p>Industry-leading accuracy</p>
+              </div>
             </div>
           </div>
         </div>

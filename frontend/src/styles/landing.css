@@ -468,9 +468,7 @@
 
 .scroll-item img {
   width: 100%;
-  height: 320px;
-  object-fit: cover;
-  object-position: top center;
+  height: auto;
   display: block;
 }
 
@@ -481,11 +479,33 @@
 }
 
 .scroll-item.large img {
-  height: 400px;
+  width: 100%;
+  height: auto;
 }
 
 .scroll-row.large {
   padding: 2rem 0;
+}
+
+/* Captions under screenshots */
+.scroll-caption {
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.scroll-caption h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.35rem;
+}
+
+.scroll-caption p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 /* ============================================
