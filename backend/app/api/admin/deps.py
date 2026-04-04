@@ -38,10 +38,6 @@ async def get_admin_session(
     admin_token: Optional[str] = Cookie(default=None),
 ) -> AdminSession:
     """Get current admin session from cookie."""
-    # Local development bypass
-    if is_local_dev():
-        return None  # Will be handled by get_current_admin
-
     if not admin_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -62,14 +58,10 @@ async def get_admin_session(
 
 async def get_current_admin(
     request: Request,
-    admin_session: Optional[AdminSession] = Depends(get_admin_session),
+    admin_session: AdminSession = Depends(get_admin_session),
     session: AsyncSession = Depends(get_session),
 ) -> AdminUser:
     """Get current admin user from session."""
-    # Local development bypass - return fake admin
-    if is_local_dev():
-        return FakeAdminUser()
-
     admin_service = AdminService(session)
     admin = await admin_service.get_admin_by_id(admin_session.admin_user_id)
 

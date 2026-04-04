@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../styles/admin.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const IS_LOCAL = API_URL.includes('localhost');
 
 function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(IS_LOCAL);
-  const [admin, setAdmin] = useState(IS_LOCAL ? { email: 'admin@local' } : null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [admin, setAdmin] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -67,11 +66,7 @@ function Admin() {
 
   // Auth check on mount
   useEffect(() => {
-    if (!IS_LOCAL) {
-      checkAuth();
-    } else {
-      loadDashboard();
-    }
+    checkAuth();
   }, []);
 
   const checkAuth = async () => {
