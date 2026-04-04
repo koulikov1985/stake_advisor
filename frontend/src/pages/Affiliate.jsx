@@ -6,8 +6,8 @@ function Affiliate() {
   const earnings = [
     { plan: '1 Day', price: 5, commission: 0.75 },
     { plan: '1 Week', price: 25, commission: 3.75 },
-    { plan: '1 Month', price: 75, commission: 11.25 },
-    { plan: '1 Year', price: 699, commission: 104.85 }
+    { plan: '1 Month', price: 60, commission: 9.00 },
+    { plan: '1 Year', price: 549, commission: 82.35 }
   ];
 
   return (
@@ -28,6 +28,7 @@ function Affiliate() {
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
+          <Link to="/affiliate">Affiliate</Link>
           <Link to="/login" className="nav-btn-ghost">Login</Link>
           <Link to="/signup" className="nav-btn-primary">Get Started</Link>
         </nav>

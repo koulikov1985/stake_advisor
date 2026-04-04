@@ -50,6 +50,7 @@ function Home() {
                     <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
+          <Link to="/affiliate">Affiliate</Link>
           {isLoggedIn ? (
             <Link to="/dashboard" className="nav-btn-primary">Dashboard</Link>
           ) : (
@@ -410,15 +411,15 @@ function Home() {
           <div className="price-card-mini featured">
             <div className="price-popular-badge">MOST POPULAR</div>
             <div className="price-name">Monthly</div>
-            <div className="price-amount">$75</div>
+            <div className="price-amount">$60</div>
             <div className="price-period">per month</div>
-            <div className="price-savings">Save 50%</div>
+            <div className="price-savings">Save 40%</div>
             <Link to="/signup" className="price-btn primary">Get Started</Link>
           </div>
 
           <div className="price-card-mini">
             <div className="price-name">Yearly</div>
-            <div className="price-amount">$699</div>
+            <div className="price-amount">$549</div>
             <div className="price-period">per year</div>
             <div className="price-savings">Best Value</div>
             <Link to="/signup" className="price-btn">Get Started</Link>
@@ -448,11 +449,11 @@ function Home() {
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Recurring</div>
               </div>
               <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$11+</div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$9+</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Monthly Referral</div>
               </div>
               <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$105</div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$82</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Yearly Referral</div>
               </div>
             </div>
