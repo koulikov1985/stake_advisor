@@ -411,17 +411,17 @@ function Home() {
           <div className="price-card-mini featured">
             <div className="price-popular-badge">MOST POPULAR</div>
             <div className="price-name">Monthly</div>
-            <div className="price-amount">$60</div>
+            <div className="price-amount">$85</div>
             <div className="price-period">per month</div>
-            <div className="price-savings">Save 40%</div>
+            <div className="price-savings">Save 15%</div>
             <Link to="/signup" className="price-btn primary">Get Started</Link>
           </div>
 
           <div className="price-card-mini">
             <div className="price-name">Yearly</div>
-            <div className="price-amount">$549</div>
+            <div className="price-amount">$799</div>
             <div className="price-period">per year</div>
-            <div className="price-savings">Best Value</div>
+            <div className="price-savings">Best Value - Save 39%</div>
             <Link to="/signup" className="price-btn">Get Started</Link>
           </div>
         </div>
@@ -449,11 +449,11 @@ function Home() {
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Recurring</div>
               </div>
               <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$9+</div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$12+</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Monthly Referral</div>
               </div>
               <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$82</div>
+                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$120</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Yearly Referral</div>
               </div>
             </div>
