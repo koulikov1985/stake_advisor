@@ -54,7 +54,7 @@ async def list_audit_logs(
             ip_address=log.ip_address,
             old_values=log.old_values,
             new_values=log.new_values,
-            metadata=log.metadata,
+            extra_data=log.extra_data,
             created_at=log.created_at,
         )
         for log in logs

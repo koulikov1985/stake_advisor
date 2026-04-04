@@ -52,7 +52,7 @@ class AuditLogResponse(BaseModel):
     ip_address: Optional[str] = None
     old_values: Optional[dict] = None
     new_values: Optional[dict] = None
-    metadata: Optional[dict] = None
+    extra_data: Optional[dict] = None
     created_at: datetime
 
     class Config:

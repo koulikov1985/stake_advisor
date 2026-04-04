@@ -108,7 +108,7 @@ class AuditLog(Base):
     user_agent: Mapped[str | None] = mapped_column(String(512), nullable=True)
     old_values: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     new_values: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    extra_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
 
     def __repr__(self) -> str:

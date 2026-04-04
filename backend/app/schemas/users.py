@@ -148,7 +148,7 @@ class ActivityLogResponse(BaseModel):
     activity_type: str
     description: Optional[str] = None
     ip_address: Optional[str] = None
-    metadata: Optional[dict] = None
+    extra_data: Optional[dict] = None
     created_at: datetime
 
     class Config:

@@ -329,7 +329,7 @@ class UserService:
                 activity_type=log.activity_type,
                 description=log.description,
                 ip_address=log.ip_address,
-                metadata=log.metadata,
+                extra_data=log.extra_data,
                 created_at=log.created_at,
             )
             for log in logs
