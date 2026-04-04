@@ -36,14 +36,8 @@ def upgrade() -> None:
     )
     op.create_index('ix_admin_sessions_session_token', 'admin_sessions', ['session_token'], unique=True)
 
-    # Add new columns to audit_logs
-    op.add_column('audit_logs', sa.Column('actor_email', sa.String(255), nullable=True))
-    op.add_column('audit_logs', sa.Column('ip_address', sa.String(45), nullable=True))
-    op.add_column('audit_logs', sa.Column('user_agent', sa.String(512), nullable=True))
+    # Add metadata column to audit_logs (actor_email, ip_address, user_agent, indexes are in 001)
     op.add_column('audit_logs', sa.Column('metadata', postgresql.JSONB(), nullable=True))
-    op.create_index('ix_audit_logs_entity_type', 'audit_logs', ['entity_type'])
-    op.create_index('ix_audit_logs_action', 'audit_logs', ['action'])
-    op.create_index('ix_audit_logs_actor_id', 'audit_logs', ['actor_id'])
 
     # Create revenue_transactions table
     op.create_table('revenue_transactions',
@@ -239,14 +233,8 @@ def downgrade() -> None:
     op.drop_column('users', 'affiliate_code')
     op.drop_column('users', 'is_affiliate')
 
-    # Remove columns from audit_logs
-    op.drop_index('ix_audit_logs_actor_id', table_name='audit_logs')
-    op.drop_index('ix_audit_logs_action', table_name='audit_logs')
-    op.drop_index('ix_audit_logs_entity_type', table_name='audit_logs')
+    # Remove metadata column from audit_logs (actor_email, ip_address, user_agent, indexes are in 001)
     op.drop_column('audit_logs', 'metadata')
-    op.drop_column('audit_logs', 'user_agent')
-    op.drop_column('audit_logs', 'ip_address')
-    op.drop_column('audit_logs', 'actor_email')
 
     # Remove columns from admin_users
     op.drop_column('admin_users', 'last_login_at')
