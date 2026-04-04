@@ -56,13 +56,13 @@ async def login(
         user_agent=get_user_agent(request),
     )
 
-    # Set httpOnly cookie
+    # Set httpOnly cookie (samesite=none for cross-domain)
     response.set_cookie(
         key="admin_token",
         value=admin_session.session_token,
         httponly=True,
         secure=True,
-        samesite="lax",
+        samesite="none",
         max_age=86400,  # 24 hours
     )
 
