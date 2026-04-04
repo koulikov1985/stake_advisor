@@ -47,7 +47,7 @@ const plans = [
   {
     plan: 'monthly',
     name: 'Monthly',
-    price: '85',
+    price: '60',
     duration: 'month',
     features: [
       'Full real-time GTO advisor',
@@ -61,7 +61,7 @@ const plans = [
   {
     plan: '6month',
     name: '6 Months',
-    price: '450',
+    price: '315',
     duration: '6 months',
     features: [
       'Full real-time GTO advisor',
@@ -69,14 +69,14 @@ const plans = [
       'Opponent tracking',
       'P/L tracking',
       'Priority support',
-      'Save 31%'
+      'Save 25%'
     ],
     popular: false
   },
   {
     plan: 'yearly',
     name: 'Yearly',
-    price: '799',
+    price: '549',
     duration: 'year',
     features: [
       'Full real-time GTO advisor',

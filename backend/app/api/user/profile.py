@@ -243,10 +243,12 @@ async def get_payments(
 
     # Map tiers to prices (in cents)
     tier_prices = {
-        "day": 299,
-        "week": 999,
-        "month": 2999,
-        "year": 19999,
+        "trial": 0,
+        "day": 500,
+        "week": 2500,
+        "month": 6000,
+        "6month": 31500,
+        "year": 54900,
     }
 
     return {
