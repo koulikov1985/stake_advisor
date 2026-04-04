@@ -1,49 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import '../styles/admin.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const IS_LOCAL = API_URL.includes('localhost');
 
 function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [admin, setAdmin] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(IS_LOCAL);
+  const [admin, setAdmin] = useState(IS_LOCAL ? { email: 'admin@local' } : null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   // Login state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   // Dashboard state
-  const [dashboardStats, setDashboardStats] = useState(null);
+  const [stats, setStats] = useState({
+    totalLicenses: 0,
+    activeLicenses: 0,
+    totalUsers: 0,
+    revenueToday: 0,
+    revenueMonth: 0
+  });
+
+  // Licenses state
+  const [licenses, setLicenses] = useState([]);
+  const [licenseSearch, setLicenseSearch] = useState('');
+  const [showCreateLicense, setShowCreateLicense] = useState(false);
+  const [newLicense, setNewLicense] = useState({
+    email: '',
+    tier: 'month',
+    days: 30,
+    password: ''
+  });
 
   // Users state
   const [users, setUsers] = useState([]);
-  const [usersTotal, setUsersTotal] = useState(0);
-  const [usersPage, setUsersPage] = useState(1);
   const [userSearch, setUserSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
-  const [userNotes, setUserNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
-
-  // Affiliates state
-  const [affiliates, setAffiliates] = useState([]);
-  const [affiliatesTotal, setAffiliatesTotal] = useState(0);
-  const [commissions, setCommissions] = useState([]);
-  const [commissionsTotal, setCommissionsTotal] = useState(0);
-  const [payouts, setPayouts] = useState([]);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   // Settings state
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState({
+    pricing: {
+      day_price: 500,
+      week_price: 2500,
+      month_price: 6000,
+      sixmonth_price: 31500,
+      year_price: 54900,
+      currency: 'USD'
+    },
+    downloads: {
+      windows_url: '',
+      mac_url: '',
+      version: '1.0.0',
+      release_notes: ''
+    },
+    license: {
+      max_devices: 2,
+      allow_device_reset: true
+    }
+  });
 
-  // Audit state
-  const [auditLogs, setAuditLogs] = useState([]);
-  const [auditTotal, setAuditTotal] = useState(0);
-
-  // Check auth on mount
+  // Auth check on mount
   useEffect(() => {
-    checkAuth();
+    if (!IS_LOCAL) {
+      checkAuth();
+    } else {
+      loadDashboard();
+    }
   }, []);
 
   const checkAuth = async () => {
@@ -101,19 +129,39 @@ function Admin() {
     setAdmin(null);
   };
 
-  // Data loading functions
+  // Load functions
   const loadDashboard = async () => {
-    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/admin/analytics/dashboard`, {
         credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
-        setDashboardStats(data);
+        setStats({
+          totalLicenses: data.active_licenses || 0,
+          activeLicenses: data.active_licenses || 0,
+          totalUsers: data.total_users || 0,
+          revenueToday: data.revenue?.daily || 0,
+          revenueMonth: data.revenue?.monthly || 0
+        });
       }
     } catch (err) {
       console.error('Failed to load dashboard');
+    }
+  };
+
+  const loadLicenses = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/licenses?search=${licenseSearch}`, {
+        credentials: 'include'
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLicenses(data.items || []);
+      }
+    } catch (err) {
+      console.error('Failed to load licenses');
     }
     setLoading(false);
   };
@@ -121,143 +169,17 @@ function Admin() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/admin/users?page=${usersPage}&search=${userSearch}`, {
+      const res = await fetch(`${API_URL}/api/admin/users?search=${userSearch}`, {
         credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
-        setUsers(data.items);
-        setUsersTotal(data.total);
+        setUsers(data.items || []);
       }
     } catch (err) {
       console.error('Failed to load users');
     }
     setLoading(false);
-  };
-
-  const loadUserDetail = async (userId) => {
-    try {
-      const res = await fetch(`${API_URL}/api/admin/users/${userId}`, {
-        credentials: 'include'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSelectedUser(data);
-        loadUserNotes(userId);
-      }
-    } catch (err) {
-      console.error('Failed to load user');
-    }
-  };
-
-  const loadUserNotes = async (userId) => {
-    try {
-      const res = await fetch(`${API_URL}/api/admin/users/${userId}/notes`, {
-        credentials: 'include'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUserNotes(data.items);
-      }
-    } catch (err) {
-      console.error('Failed to load notes');
-    }
-  };
-
-  const addNote = async () => {
-    if (!newNote.trim() || !selectedUser) return;
-    try {
-      const res = await fetch(`${API_URL}/api/admin/users/${selectedUser.id}/notes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ content: newNote })
-      });
-      if (res.ok) {
-        setNewNote('');
-        loadUserNotes(selectedUser.id);
-      }
-    } catch (err) {
-      alert('Failed to add note');
-    }
-  };
-
-  const resetUserDevices = async (userId) => {
-    if (!confirm('Reset all devices for this user?')) return;
-    try {
-      const res = await fetch(`${API_URL}/api/admin/users/${userId}/devices/reset-all`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      if (res.ok) {
-        alert('Devices reset');
-        loadUserDetail(userId);
-      }
-    } catch (err) {
-      alert('Failed to reset devices');
-    }
-  };
-
-  const loadAffiliates = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/api/admin/affiliates`, {
-        credentials: 'include'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAffiliates(data.items);
-        setAffiliatesTotal(data.total);
-      }
-    } catch (err) {
-      console.error('Failed to load affiliates');
-    }
-    setLoading(false);
-  };
-
-  const loadCommissions = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/admin/affiliates/commissions/all?status=pending`, {
-        credentials: 'include'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setCommissions(data.items);
-        setCommissionsTotal(data.total);
-      }
-    } catch (err) {
-      console.error('Failed to load commissions');
-    }
-  };
-
-  const handleCommissionAction = async (commissionId, action) => {
-    try {
-      const res = await fetch(`${API_URL}/api/admin/affiliates/commissions/${commissionId}/action`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ action })
-      });
-      if (res.ok) {
-        loadCommissions();
-      }
-    } catch (err) {
-      alert('Action failed');
-    }
-  };
-
-  const loadPayouts = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/admin/affiliates/payouts/all`, {
-        credentials: 'include'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setPayouts(data.items);
-      }
-    } catch (err) {
-      console.error('Failed to load payouts');
-    }
   };
 
   const loadSettings = async () => {
@@ -267,26 +189,117 @@ function Admin() {
       });
       if (res.ok) {
         const data = await res.json();
-        setSettings(data);
+        if (data.pricing) setSettings(prev => ({ ...prev, pricing: data.pricing }));
+        if (data.downloads) setSettings(prev => ({ ...prev, downloads: data.downloads }));
+        if (data.license) setSettings(prev => ({ ...prev, license: data.license }));
       }
     } catch (err) {
       console.error('Failed to load settings');
     }
   };
 
-  const loadAuditLogs = async () => {
+  // Actions
+  const createLicense = async () => {
     setLoading(true);
+    setError(null);
     try {
-      const res = await fetch(`${API_URL}/api/admin/audit?per_page=50`, {
+      const res = await fetch(`${API_URL}/api/admin/licenses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(newLicense)
+      });
+      if (res.ok) {
+        setSuccess('License created successfully!');
+        setShowCreateLicense(false);
+        setNewLicense({ email: '', tier: 'month', days: 30 });
+        loadLicenses();
+      } else {
+        const data = await res.json();
+        setError(data.detail || 'Failed to create license');
+      }
+    } catch (err) {
+      setError('Connection failed');
+    }
+    setLoading(false);
+  };
+
+  const revokeLicense = async (licenseId) => {
+    if (!confirm('Are you sure you want to revoke this license?')) return;
+    try {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${licenseId}/revoke`, {
+        method: 'POST',
         credentials: 'include'
       });
       if (res.ok) {
-        const data = await res.json();
-        setAuditLogs(data.items);
-        setAuditTotal(data.total);
+        setSuccess('License revoked');
+        loadLicenses();
       }
     } catch (err) {
-      console.error('Failed to load audit logs');
+      setError('Failed to revoke license');
+    }
+  };
+
+  const extendLicense = async (licenseId, days) => {
+    try {
+      const res = await fetch(`${API_URL}/api/admin/licenses/${licenseId}/extend`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ days })
+      });
+      if (res.ok) {
+        setSuccess(`License extended by ${days} days`);
+        loadLicenses();
+      }
+    } catch (err) {
+      setError('Failed to extend license');
+    }
+  };
+
+  const saveSettings = async (section) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/settings/${section}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(settings[section])
+      });
+      if (res.ok) {
+        setSuccess('Settings saved!');
+      } else {
+        setError('Failed to save settings');
+      }
+    } catch (err) {
+      setError('Connection failed');
+    }
+    setLoading(false);
+  };
+
+  const resetPassword = async (userId) => {
+    if (!newPassword || newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/admin/users/${userId}/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ new_password: newPassword })
+      });
+      if (res.ok) {
+        setSuccess('Password reset successfully!');
+        setShowResetPassword(false);
+        setNewPassword('');
+      } else {
+        const data = await res.json();
+        setError(data.detail || 'Failed to reset password');
+      }
+    } catch (err) {
+      setError('Connection failed');
     }
     setLoading(false);
   };
@@ -294,76 +307,44 @@ function Admin() {
   // Tab change handler
   useEffect(() => {
     if (!isAuthenticated) return;
-
-    switch (activeTab) {
-      case 'dashboard':
-        loadDashboard();
-        break;
-      case 'users':
-        loadUsers();
-        break;
-      case 'affiliates':
-        loadAffiliates();
-        loadCommissions();
-        break;
-      case 'payouts':
-        loadPayouts();
-        break;
-      case 'settings':
-        loadSettings();
-        break;
-      case 'audit':
-        loadAuditLogs();
-        break;
-    }
+    if (activeTab === 'dashboard') loadDashboard();
+    if (activeTab === 'licenses') loadLicenses();
+    if (activeTab === 'users') loadUsers();
+    if (activeTab === 'settings' || activeTab === 'downloads') loadSettings();
   }, [activeTab, isAuthenticated]);
 
+  // Clear messages
   useEffect(() => {
-    if (isAuthenticated && activeTab === 'users') {
-      loadUsers();
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 3000);
+      return () => clearTimeout(timer);
     }
-  }, [usersPage, userSearch]);
-
-  // Format helpers
-  const formatCurrency = (amount) => `$${amount.toFixed(2)}`;
-  const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-  });
+  }, [success]);
 
   // Login screen
   if (!isAuthenticated) {
     return (
-      <div className="admin-login-page">
-        <div className="admin-login-card">
-          <div className="login-header">
-            <span className="login-icon">🛡️</span>
-            <h2>Admin Panel</h2>
-            <p>Enter your credentials to continue</p>
-          </div>
+      <div className="admin-login">
+        <div className="login-box">
+          <h1>Admin Portal</h1>
           <form onSubmit={handleLogin}>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@example.com"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            {error && <p className="error-msg">{error}</p>}
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {error && <div className="error-msg">{error}</div>}
+            <button type="submit" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
         </div>
@@ -371,361 +352,180 @@ function Admin() {
     );
   }
 
-  // Pie chart colors
-  const COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444'];
-
+  // Main admin panel with TOP navigation
   return (
-    <div className="admin-layout">
-      {/* Sidebar */}
-      <aside className="admin-sidebar">
-        <div className="sidebar-header">
-          <span>🦈</span>
-          <span>Admin Panel</span>
+    <div className="admin-container">
+      {/* Top Header */}
+      <header className="admin-header">
+        <div className="header-top">
+          <div className="header-brand">
+            <h1>Admin Portal</h1>
+          </div>
+          <div className="header-user">
+            <span>{admin?.email}</span>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
         </div>
-        <nav className="sidebar-nav">
+        <nav className="tab-nav">
           <button className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>
-            📊 Dashboard
+            Dashboard
+          </button>
+          <button className={activeTab === 'licenses' ? 'active' : ''} onClick={() => setActiveTab('licenses')}>
+            Licenses
           </button>
           <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>
-            👥 Users
+            Users
           </button>
-          <button className={activeTab === 'affiliates' ? 'active' : ''} onClick={() => setActiveTab('affiliates')}>
-            🤝 Affiliates
-          </button>
-          <button className={activeTab === 'payouts' ? 'active' : ''} onClick={() => setActiveTab('payouts')}>
-            💰 Payouts
+          <button className={activeTab === 'downloads' ? 'active' : ''} onClick={() => setActiveTab('downloads')}>
+            Downloads
           </button>
           <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
-            ⚙️ Settings
-          </button>
-          <button className={activeTab === 'audit' ? 'active' : ''} onClick={() => setActiveTab('audit')}>
-            📋 Audit Logs
+            Settings
           </button>
         </nav>
-        <div className="sidebar-footer">
-          <div className="admin-info">
-            <span>{admin?.email}</span>
-            <span className="role-badge">{admin?.role}</span>
-          </div>
-          <button onClick={handleLogout} className="logout-btn">Logout</button>
-        </div>
-      </aside>
+      </header>
 
       {/* Main content */}
       <main className="admin-main">
-        {/* Dashboard Tab */}
+        {success && <div className="success-banner">{success}</div>}
+        {error && <div className="error-banner">{error}</div>}
+
+        {/* Dashboard */}
         {activeTab === 'dashboard' && (
-          <div className="tab-content">
+          <div className="dashboard">
             <h1>Dashboard</h1>
-            {loading ? <div className="loading">Loading...</div> : dashboardStats && (
-              <>
-                <div className="stats-row">
-                  <div className="stat-card">
-                    <span className="stat-value">{formatCurrency(dashboardStats.revenue.daily)}</span>
-                    <span className="stat-label">Today</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-value">{formatCurrency(dashboardStats.revenue.weekly)}</span>
-                    <span className="stat-label">This Week</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-value">{formatCurrency(dashboardStats.revenue.monthly)}</span>
-                    <span className="stat-label">This Month</span>
-                  </div>
-                  <div className="stat-card highlight">
-                    <span className="stat-value">{formatCurrency(dashboardStats.revenue.all_time)}</span>
-                    <span className="stat-label">All Time</span>
-                  </div>
-                </div>
-
-                <div className="cards-row">
-                  <div className="card">
-                    <h3>MRR</h3>
-                    <div className="mrr-value">{formatCurrency(dashboardStats.mrr.mrr)}</div>
-                    <div className={`mrr-change ${dashboardStats.mrr.change_percentage >= 0 ? 'positive' : 'negative'}`}>
-                      {dashboardStats.mrr.change_percentage >= 0 ? '↑' : '↓'} {Math.abs(dashboardStats.mrr.change_percentage)}%
-                    </div>
-                  </div>
-                  <div className="card">
-                    <h3>Subscriptions</h3>
-                    <div className="sub-stats">
-                      <div><span className="num">{dashboardStats.subscriptions.total_active}</span> Active</div>
-                      <div><span className="num green">{dashboardStats.subscriptions.new_this_month}</span> New</div>
-                      <div><span className="num red">{dashboardStats.subscriptions.churned_this_month}</span> Churned</div>
-                    </div>
-                  </div>
-                  <div className="card">
-                    <h3>Overview</h3>
-                    <div className="overview-stats">
-                      <div><span className="num">{dashboardStats.total_users}</span> Users</div>
-                      <div><span className="num">{dashboardStats.active_licenses}</span> Licenses</div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* Users Tab */}
-        {activeTab === 'users' && (
-          <div className="tab-content">
-            <h1>Users</h1>
-
-            {!selectedUser ? (
-              <>
-                <div className="filters-row">
-                  <input
-                    type="text"
-                    placeholder="Search by email..."
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    className="search-input"
-                  />
-                </div>
-
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Email</th>
-                      <th>Name</th>
-                      <th>Status</th>
-                      <th>Affiliate</th>
-                      <th>Created</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(user => (
-                      <tr key={user.id}>
-                        <td>{user.email}</td>
-                        <td>{user.name || '-'}</td>
-                        <td><span className={`badge ${user.is_active ? 'green' : 'red'}`}>{user.is_active ? 'Active' : 'Inactive'}</span></td>
-                        <td>{user.is_affiliate ? '✓' : '-'}</td>
-                        <td>{formatDate(user.created_at)}</td>
-                        <td>
-                          <button className="btn-sm" onClick={() => loadUserDetail(user.id)}>View</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            ) : (
-              <div className="user-detail">
-                <button className="btn-back" onClick={() => setSelectedUser(null)}>← Back to Users</button>
-
-                <div className="detail-header">
-                  <h2>{selectedUser.email}</h2>
-                  <span className={`badge ${selectedUser.is_active ? 'green' : 'red'}`}>
-                    {selectedUser.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-
-                <div className="detail-grid">
-                  <div className="detail-card">
-                    <h4>Info</h4>
-                    <p><strong>Name:</strong> {selectedUser.name || '-'}</p>
-                    <p><strong>Paddle ID:</strong> {selectedUser.paddle_customer_id || '-'}</p>
-                    <p><strong>Created:</strong> {formatDate(selectedUser.created_at)}</p>
-                  </div>
-
-                  <div className="detail-card">
-                    <h4>Licenses ({selectedUser.licenses?.length || 0})</h4>
-                    {selectedUser.licenses?.map(lic => (
-                      <div key={lic.id} className="license-item">
-                        <code>{lic.license_key}</code>
-                        <span className={`badge ${lic.status === 'active' ? 'green' : 'yellow'}`}>{lic.status}</span>
-                        <span>{lic.tier}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="detail-card">
-                    <h4>Tags</h4>
-                    <div className="tags-list">
-                      {selectedUser.tags?.map(tag => (
-                        <span key={tag.id} className="tag" style={{ background: tag.color }}>{tag.name}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="detail-card">
-                    <h4>Actions</h4>
-                    <button className="btn-danger" onClick={() => resetUserDevices(selectedUser.id)}>
-                      Reset All Devices
-                    </button>
-                  </div>
-                </div>
-
-                <div className="notes-section">
-                  <h4>Notes</h4>
-                  <div className="add-note">
-                    <textarea
-                      value={newNote}
-                      onChange={(e) => setNewNote(e.target.value)}
-                      placeholder="Add a note..."
-                    />
-                    <button onClick={addNote}>Add Note</button>
-                  </div>
-                  <div className="notes-list">
-                    {userNotes.map(note => (
-                      <div key={note.id} className="note-item">
-                        <p>{note.content}</p>
-                        <span className="note-meta">{note.admin_email} - {formatDate(note.created_at)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <h3>Active Licenses</h3>
+                <div className="stat-value">{stats.activeLicenses}</div>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* Affiliates Tab */}
-        {activeTab === 'affiliates' && (
-          <div className="tab-content">
-            <h1>Affiliates</h1>
-
-            <div className="section">
-              <h3>Pending Commissions ({commissionsTotal})</h3>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Affiliate</th>
-                    <th>Amount</th>
-                    <th>Rate</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {commissions.map(comm => (
-                    <tr key={comm.id}>
-                      <td>{comm.affiliate_email}</td>
-                      <td>{formatCurrency(comm.amount)}</td>
-                      <td>{comm.commission_rate}%</td>
-                      <td>{formatDate(comm.created_at)}</td>
-                      <td>
-                        <button className="btn-sm green" onClick={() => handleCommissionAction(comm.id, 'approve')}>Approve</button>
-                        <button className="btn-sm red" onClick={() => handleCommissionAction(comm.id, 'reject')}>Reject</button>
-                      </td>
-                    </tr>
-                  ))}
-                  {commissions.length === 0 && (
-                    <tr><td colSpan="5" className="no-data">No pending commissions</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="section">
-              <h3>All Affiliates ({affiliatesTotal})</h3>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Code</th>
-                    <th>Status</th>
-                    <th>Referrals</th>
-                    <th>Earnings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {affiliates.map(aff => (
-                    <tr key={aff.id}>
-                      <td>{aff.email}</td>
-                      <td><code>{aff.affiliate_code}</code></td>
-                      <td><span className={`badge ${aff.affiliate_status === 'active' ? 'green' : 'yellow'}`}>{aff.affiliate_status}</span></td>
-                      <td>{aff.total_referrals} ({aff.converted_referrals} converted)</td>
-                      <td>{formatCurrency(aff.total_earnings)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="stat-card">
+                <h3>Total Users</h3>
+                <div className="stat-value">{stats.totalUsers}</div>
+              </div>
+              <div className="stat-card">
+                <h3>Today's Revenue</h3>
+                <div className="stat-value">${stats.revenueToday.toFixed(2)}</div>
+              </div>
+              <div className="stat-card">
+                <h3>Monthly Revenue</h3>
+                <div className="stat-value">${stats.revenueMonth.toFixed(2)}</div>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Payouts Tab */}
-        {activeTab === 'payouts' && (
-          <div className="tab-content">
-            <h1>Payouts</h1>
+        {/* Licenses */}
+        {activeTab === 'licenses' && (
+          <div className="licenses-page">
+            <div className="page-header">
+              <h1>Licenses</h1>
+              <button className="btn-primary" onClick={() => setShowCreateLicense(true)}>
+                + Create License
+              </button>
+            </div>
+
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search by license key or email..."
+                value={licenseSearch}
+                onChange={(e) => setLicenseSearch(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && loadLicenses()}
+              />
+              <button onClick={loadLicenses}>Search</button>
+            </div>
+
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Affiliate</th>
-                  <th>Amount</th>
+                  <th>License Key</th>
+                  <th>User</th>
+                  <th>Tier</th>
                   <th>Status</th>
-                  <th>Requested</th>
-                  <th>Processed</th>
+                  <th>Expires</th>
+                  <th>Devices</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {payouts.map(payout => (
-                  <tr key={payout.id}>
-                    <td>{payout.affiliate_email}</td>
-                    <td>{formatCurrency(payout.amount)}</td>
-                    <td><span className={`badge ${payout.status === 'completed' ? 'green' : 'yellow'}`}>{payout.status}</span></td>
-                    <td>{formatDate(payout.requested_at)}</td>
-                    <td>{payout.processed_at ? formatDate(payout.processed_at) : '-'}</td>
+                {licenses.map(license => (
+                  <tr key={license.id}>
+                    <td className="license-key">{license.license_key}</td>
+                    <td>{license.user?.email || 'N/A'}</td>
+                    <td><span className={`tier-badge ${license.tier}`}>{license.tier}</span></td>
+                    <td><span className={`status-badge ${license.status}`}>{license.status}</span></td>
+                    <td>{license.expires_at ? new Date(license.expires_at).toLocaleDateString() : 'Never'}</td>
+                    <td>{license.activated_devices}/{license.max_devices}</td>
+                    <td className="actions">
+                      <button onClick={() => extendLicense(license.id, 1)}>+1d</button>
+                      <button onClick={() => extendLicense(license.id, 7)}>+7d</button>
+                      <button onClick={() => extendLicense(license.id, 30)}>+30d</button>
+                      <button className="btn-danger" onClick={() => revokeLicense(license.id)}>Revoke</button>
+                    </td>
                   </tr>
                 ))}
-                {payouts.length === 0 && (
-                  <tr><td colSpan="5" className="no-data">No payouts</td></tr>
+                {licenses.length === 0 && (
+                  <tr><td colSpan="7" className="no-data">No licenses found. Click "Create License" to add one.</td></tr>
                 )}
               </tbody>
             </table>
-          </div>
-        )}
 
-        {/* Settings Tab */}
-        {activeTab === 'settings' && (
-          <div className="tab-content">
-            <h1>Settings</h1>
-            {settings && (
-              <div className="settings-grid">
-                <div className="settings-card">
-                  <h3>Pricing</h3>
-                  <div className="setting-row">
-                    <span>Monthly</span>
-                    <span>{formatCurrency(settings.pricing.monthly_price / 100)}</span>
+            {/* Create License Modal */}
+            {showCreateLicense && (
+              <div className="modal-overlay" onClick={() => setShowCreateLicense(false)}>
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                  <h2>Create New License</h2>
+                  <div className="form-group">
+                    <label>User Email</label>
+                    <input
+                      type="email"
+                      value={newLicense.email}
+                      onChange={(e) => setNewLicense({ ...newLicense, email: e.target.value })}
+                      placeholder="customer@example.com"
+                    />
                   </div>
-                  <div className="setting-row">
-                    <span>Yearly</span>
-                    <span>{formatCurrency(settings.pricing.yearly_price / 100)}</span>
+                  <div className="form-group">
+                    <label>License Tier</label>
+                    <select
+                      value={newLicense.tier}
+                      onChange={(e) => {
+                        const tier = e.target.value;
+                        const daysMap = { day: 1, week: 7, month: 30, year: 365 };
+                        setNewLicense({ ...newLicense, tier, days: daysMap[tier] || 30 });
+                      }}
+                    >
+                      <option value="day">Day Pass (1 day)</option>
+                      <option value="week">Week Pass (7 days)</option>
+                      <option value="month">Monthly (30 days)</option>
+                      <option value="year">Yearly (365 days)</option>
+                    </select>
                   </div>
-                  <div className="setting-row">
-                    <span>Lifetime</span>
-                    <span>{formatCurrency(settings.pricing.lifetime_price / 100)}</span>
+                  <div className="form-group">
+                    <label>Duration (days)</label>
+                    <input
+                      type="number"
+                      value={newLicense.days}
+                      onChange={(e) => setNewLicense({ ...newLicense, days: parseInt(e.target.value) })}
+                    />
                   </div>
-                </div>
-
-                <div className="settings-card">
-                  <h3>Commission</h3>
-                  <div className="setting-row">
-                    <span>Default Rate</span>
-                    <span>{settings.commission.default_rate}%</span>
+                  <div className="form-group">
+                    <label>Password (for new users)</label>
+                    <input
+                      type="password"
+                      value={newLicense.password}
+                      onChange={(e) => setNewLicense({ ...newLicense, password: e.target.value })}
+                      placeholder="Leave empty for existing users"
+                    />
+                    <small style={{ color: '#888', display: 'block', marginTop: '0.25rem' }}>
+                      If user doesn't exist, this password will be set for their account
+                    </small>
                   </div>
-                  <div className="setting-row">
-                    <span>Min Payout</span>
-                    <span>{formatCurrency(settings.commission.minimum_payout / 100)}</span>
-                  </div>
-                </div>
-
-                <div className="settings-card">
-                  <h3>Features</h3>
-                  <div className="setting-row">
-                    <span>Affiliate Program</span>
-                    <span>{settings.features.affiliate_program_enabled ? 'Enabled' : 'Disabled'}</span>
-                  </div>
-                  <div className="setting-row">
-                    <span>Trial Days</span>
-                    <span>{settings.features.free_trial_days}</span>
-                  </div>
-                  <div className="setting-row">
-                    <span>Max Devices</span>
-                    <span>{settings.features.max_devices_per_license}</span>
+                  <div className="modal-actions">
+                    <button onClick={() => setShowCreateLicense(false)}>Cancel</button>
+                    <button className="btn-primary" onClick={createLicense} disabled={loading}>
+                      {loading ? 'Creating...' : 'Create License'}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -733,37 +533,268 @@ function Admin() {
           </div>
         )}
 
-        {/* Audit Logs Tab */}
-        {activeTab === 'audit' && (
-          <div className="tab-content">
-            <div className="section-header">
-              <h1>Audit Logs</h1>
-              <a href={`${API_URL}/api/admin/audit/export`} className="btn-export" target="_blank">
-                Export CSV
-              </a>
+        {/* Users */}
+        {activeTab === 'users' && (
+          <div className="users-page">
+            <h1>Users</h1>
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search by email..."
+                value={userSearch}
+                onChange={(e) => setUserSearch(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && loadUsers()}
+              />
+              <button onClick={loadUsers}>Search</button>
             </div>
+
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Time</th>
-                  <th>Action</th>
-                  <th>Entity</th>
-                  <th>Actor</th>
-                  <th>IP</th>
+                  <th>Email</th>
+                  <th>Name</th>
+                  <th>Licenses</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {auditLogs.map(log => (
-                  <tr key={log.id}>
-                    <td>{formatDate(log.created_at)}</td>
-                    <td><code>{log.action}</code></td>
-                    <td>{log.entity_type}:{log.entity_id.substring(0, 8)}...</td>
-                    <td>{log.actor_email || log.actor_id || '-'}</td>
-                    <td>{log.ip_address || '-'}</td>
+                {users.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.email}</td>
+                    <td>{user.name || '-'}</td>
+                    <td>{user.licenses?.length || 0}</td>
+                    <td>
+                      <span className={`status-badge ${user.is_active ? 'active' : 'inactive'}`}>
+                        {user.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                    <td className="actions">
+                      <button onClick={() => setSelectedUser(user)}>View</button>
+                    </td>
                   </tr>
                 ))}
+                {users.length === 0 && (
+                  <tr><td colSpan="6" className="no-data">No users found</td></tr>
+                )}
               </tbody>
             </table>
+
+            {/* User Detail Modal */}
+            {selectedUser && (
+              <div className="modal-overlay" onClick={() => { setSelectedUser(null); setShowResetPassword(false); setNewPassword(''); }}>
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                  <h2>User Details</h2>
+                  <div className="user-detail">
+                    <p><strong>Email:</strong> {selectedUser.email}</p>
+                    <p><strong>Name:</strong> {selectedUser.name || 'Not set'}</p>
+                    <p><strong>Status:</strong> {selectedUser.is_active ? 'Active' : 'Inactive'}</p>
+                    <p><strong>Joined:</strong> {new Date(selectedUser.created_at).toLocaleString()}</p>
+
+                    {/* Password Reset Section */}
+                    <h3>Password</h3>
+                    {!showResetPassword ? (
+                      <button className="btn-warning" onClick={() => setShowResetPassword(true)}>
+                        Reset Password
+                      </button>
+                    ) : (
+                      <div className="form-group" style={{ marginTop: '0.5rem' }}>
+                        <input
+                          type="password"
+                          placeholder="New password (min 6 chars)"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          style={{ marginBottom: '0.5rem' }}
+                        />
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button className="btn-primary" onClick={() => resetPassword(selectedUser.id)} disabled={loading}>
+                            {loading ? 'Saving...' : 'Save Password'}
+                          </button>
+                          <button onClick={() => { setShowResetPassword(false); setNewPassword(''); }}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <h3>Licenses</h3>
+                    {selectedUser.licenses?.length > 0 ? (
+                      <ul>
+                        {selectedUser.licenses.map(l => (
+                          <li key={l.id}>
+                            {l.license_key} - {l.tier} ({l.status})
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No licenses</p>
+                    )}
+                  </div>
+                  <div className="modal-actions">
+                    <button onClick={() => { setSelectedUser(null); setShowResetPassword(false); setNewPassword(''); }}>Close</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Downloads */}
+        {activeTab === 'downloads' && (
+          <div className="downloads-page">
+            <h1>Software Downloads</h1>
+            <p className="page-desc">Set the download URLs for your software. Paid users will see these links.</p>
+
+            <div className="settings-card">
+              <div className="form-group">
+                <label>Current Version</label>
+                <input
+                  type="text"
+                  value={settings.downloads.version}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    downloads: { ...settings.downloads, version: e.target.value }
+                  })}
+                  placeholder="1.0.0"
+                />
+              </div>
+              <div className="form-group">
+                <label>Windows Download URL</label>
+                <input
+                  type="url"
+                  value={settings.downloads.windows_url}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    downloads: { ...settings.downloads, windows_url: e.target.value }
+                  })}
+                  placeholder="https://example.com/download/app-setup.exe"
+                />
+              </div>
+              <div className="form-group">
+                <label>Mac Download URL</label>
+                <input
+                  type="url"
+                  value={settings.downloads.mac_url}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    downloads: { ...settings.downloads, mac_url: e.target.value }
+                  })}
+                  placeholder="https://example.com/download/app.dmg"
+                />
+              </div>
+              <div className="form-group">
+                <label>Release Notes</label>
+                <textarea
+                  value={settings.downloads.release_notes}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    downloads: { ...settings.downloads, release_notes: e.target.value }
+                  })}
+                  placeholder="What's new in this version..."
+                  rows={4}
+                />
+              </div>
+              <button className="btn-primary" onClick={() => saveSettings('downloads')}>
+                Save Download Settings
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Settings */}
+        {activeTab === 'settings' && (
+          <div className="settings-page">
+            <h1>Settings</h1>
+
+            <div className="settings-card">
+              <h2>Pricing</h2>
+              <div className="pricing-grid">
+                <div className="form-group">
+                  <label>Day Pass ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={(settings.pricing.day_price / 100).toFixed(2)}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      pricing: { ...settings.pricing, day_price: Math.round(parseFloat(e.target.value) * 100) }
+                    })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Week Pass ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={(settings.pricing.week_price / 100).toFixed(2)}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      pricing: { ...settings.pricing, week_price: Math.round(parseFloat(e.target.value) * 100) }
+                    })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Monthly ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={(settings.pricing.month_price / 100).toFixed(2)}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      pricing: { ...settings.pricing, month_price: Math.round(parseFloat(e.target.value) * 100) }
+                    })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Yearly ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={(settings.pricing.year_price / 100).toFixed(2)}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      pricing: { ...settings.pricing, year_price: Math.round(parseFloat(e.target.value) * 100) }
+                    })}
+                  />
+                </div>
+              </div>
+              <button className="btn-primary" onClick={() => saveSettings('pricing')}>
+                Save Pricing
+              </button>
+            </div>
+
+            <div className="settings-card">
+              <h2>License Settings</h2>
+              <div className="form-group">
+                <label>Max Devices per License</label>
+                <input
+                  type="number"
+                  value={settings.license.max_devices}
+                  onChange={(e) => setSettings({
+                    ...settings,
+                    license: { ...settings.license, max_devices: parseInt(e.target.value) }
+                  })}
+                />
+              </div>
+              <div className="form-group checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={settings.license.allow_device_reset}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      license: { ...settings.license, allow_device_reset: e.target.checked }
+                    })}
+                  />
+                  Allow users to reset their devices
+                </label>
+              </div>
+              <button className="btn-primary" onClick={() => saveSettings('license')}>
+                Save License Settings
+              </button>
+            </div>
           </div>
         )}
       </main>

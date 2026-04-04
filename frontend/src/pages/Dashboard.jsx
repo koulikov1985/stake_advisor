@@ -2,23 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/dashboard.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const plans = [
-  { plan: 'daily', name: '1 Day', price: 5 },
-  { plan: 'weekly', name: '1 Week', price: 25 },
-  { plan: 'monthly', name: '1 Month', price: 75, popular: true },
-  { plan: 'yearly', name: '1 Year', price: 699, savings: '62%' }
+  { plan: 'trial', name: 'Free Trial', price: 0, label: '200 Hands Free' },
+  { plan: 'day', name: '1 Day', price: 5 },
+  { plan: 'week', name: '1 Week', price: 25, savings: '50%' },
+  { plan: 'month', name: '1 Month', price: 60, popular: true, savings: '60%' },
+  { plan: '6month', name: '6 Months', price: 315, savings: '65%' },
+  { plan: 'year', name: '1 Year', price: 549, savings: '70%' }
 ];
 
 function Dashboard() {
   const [user, setUser] = useState(null);
+  const [license, setLicense] = useState(null);
+  const [devices, setDevices] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [affiliateStats, setAffiliateStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
   const [purchasing, setPurchasing] = useState(null);
-  const [managingSubscription, setManagingSubscription] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +32,10 @@ function Dashboard() {
 
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
-    if (!token) { navigate('/login'); return; }
+    if (!token) {
+      navigate('/login');
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/api/user/me`, {
@@ -37,8 +45,19 @@ function Dashboard() {
       const userData = await res.json();
       setUser(userData);
 
-      // Fetch affiliate stats if user has active subscription
-      if (userData.isActive) {
+      // Fetch license info
+      if (userData.license_id) {
+        fetchLicense(token, userData.license_id);
+      }
+
+      // Fetch devices
+      fetchDevices(token);
+
+      // Fetch payment history
+      fetchPayments(token);
+
+      // Fetch affiliate stats if user is affiliate
+      if (userData.is_affiliate) {
         fetchAffiliateStats(token);
       }
     } catch {
@@ -46,6 +65,47 @@ function Dashboard() {
       navigate('/login');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchLicense = async (token, licenseId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/user/license`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setLicense(await res.json());
+      }
+    } catch (err) {
+      console.error('Failed to fetch license:', err);
+    }
+  };
+
+  const fetchDevices = async (token) => {
+    try {
+      const res = await fetch(`${API_URL}/api/user/devices`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDevices(data.devices || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch devices:', err);
+    }
+  };
+
+  const fetchPayments = async (token) => {
+    try {
+      const res = await fetch(`${API_URL}/api/user/payments`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPayments(data.payments || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch payments:', err);
     }
   };
 
@@ -62,42 +122,33 @@ function Dashboard() {
     }
   };
 
-  const generateReferralCode = async () => {
+  const removeDevice = async (deviceId) => {
+    if (!confirm('Remove this device? It will need to be re-activated.')) return;
+
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_URL}/api/affiliate/code`, {
+      const res = await fetch(`${API_URL}/api/user/devices/${deviceId}`, {
+        method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
-        const data = await res.json();
-        setAffiliateStats(prev => ({
-          ...prev,
-          referralCode: data.referralCode,
-          referralLink: data.referralLink
-        }));
-        return data.referralLink;
+        setDevices(devices.filter(d => d.id !== deviceId));
       }
     } catch (err) {
-      console.error('Failed to generate referral code:', err);
+      console.error('Failed to remove device:', err);
     }
-    return null;
   };
 
   const handlePurchase = async (planId) => {
     setPurchasing(planId);
     try {
-      // Get referral code from localStorage if valid
-      let referralCode = null;
-      const storedCode = localStorage.getItem('referralCode');
-      const expiresAt = localStorage.getItem('referralCodeExpires');
-      if (storedCode && expiresAt && Date.now() < parseInt(expiresAt)) {
-        referralCode = storedCode;
-      }
-
-      const res = await fetch(`${API_URL}/api/create-checkout-session`, {
+      const res = await fetch(`${API_URL}/api/checkout/create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planId, email: user?.email, referralCode })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ plan: planId })
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
@@ -107,48 +158,23 @@ function Dashboard() {
   };
 
   const copyKey = () => {
-    navigator.clipboard.writeText(user?.licenseKey);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (license?.license_key) {
+      navigator.clipboard.writeText(license.license_key);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
-  const copyReferralLink = async () => {
-    let link = affiliateStats?.referralLink;
-    if (!link) {
-      link = await generateReferralCode();
-    }
-    if (link) {
-      navigator.clipboard.writeText(link);
+  const copyReferralLink = () => {
+    if (affiliateStats?.referral_link) {
+      navigator.clipboard.writeText(affiliateStats.referral_link);
       setCopiedRef(true);
       setTimeout(() => setCopiedRef(false), 2000);
     }
   };
 
-  const getReferralLink = () => {
-    return affiliateStats?.referralLink || 'Click to generate your referral link';
-  };
-
-  const handleManageSubscription = async () => {
-    setManagingSubscription(true);
-    try {
-      const res = await fetch(`${API_URL}/api/create-portal-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user?.email })
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch {
-      setManagingSubscription(false);
-    }
-  };
-
   const handleDownload = (platform) => {
-    const token = localStorage.getItem('token');
-    // Create a temporary link with auth
-    const link = document.createElement('a');
-    link.href = `${API_URL}/api/download/${platform}`;
-    link.click();
+    window.location.href = `${API_URL}/api/download/${platform}`;
   };
 
   const handleLogout = () => {
@@ -157,6 +183,14 @@ function Dashboard() {
   };
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+  const getDaysRemaining = () => {
+    if (!license?.expires_at) return 0;
+    const now = new Date();
+    const expires = new Date(license.expires_at);
+    const diff = Math.ceil((expires - now) / (1000 * 60 * 60 * 24));
+    return Math.max(0, diff);
+  };
 
   if (loading) {
     return (
@@ -169,7 +203,7 @@ function Dashboard() {
     );
   }
 
-  const hasActiveSubscription = user?.isActive && user?.licenseKey;
+  const hasActiveSubscription = license?.status === 'active';
 
   return (
     <div className="dash">
@@ -197,191 +231,270 @@ function Dashboard() {
         {/* Welcome Section */}
         <div className="dash-welcome">
           <h1>Welcome back!</h1>
-          <p>Manage your subscription and download the app</p>
+          <p>Manage your subscription, devices, and downloads</p>
         </div>
 
-        {/* Main Grid */}
-        <div className="dash-grid">
-          {/* Subscription Status Card */}
-          <div className="dash-card status-card">
-            <div className="card-icon">
-              {hasActiveSubscription ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                  <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="8" x2="12" y2="12"/>
-                  <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-              )}
-            </div>
-            <div className="card-content">
-              <h3>Subscription</h3>
-              {hasActiveSubscription ? (
-                <>
-                  <div className="status-active">
-                    <span className="status-dot"></span>
-                    Active
-                  </div>
-                  <div className="status-details">
-                    <div className="detail-row">
-                      <span>Plan</span>
-                      <strong>{user.plan?.charAt(0).toUpperCase() + user.plan?.slice(1)}</strong>
-                    </div>
-                    <div className="detail-row">
-                      <span>Days Left</span>
-                      <strong className="gold">{user.daysRemaining || 0}</strong>
-                    </div>
-                    <div className="detail-row">
-                      <span>Expires</span>
-                      <strong>{formatDate(user.expiresAt)}</strong>
-                    </div>
-                  </div>
-                  <button
-                    className="manage-btn"
-                    onClick={handleManageSubscription}
-                    disabled={managingSubscription}
-                  >
-                    {managingSubscription ? 'Opening...' : 'Manage Subscription'}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="status-inactive">No Active Plan</div>
-                  <p className="status-hint">Choose a plan below to get started</p>
-                </>
-              )}
-            </div>
+        {/* Section Tabs */}
+        {hasActiveSubscription && (
+          <div className="dash-tabs">
+            <button
+              className={`dash-tab ${activeSection === 'overview' ? 'active' : ''}`}
+              onClick={() => setActiveSection('overview')}
+            >
+              Overview
+            </button>
+            <button
+              className={`dash-tab ${activeSection === 'devices' ? 'active' : ''}`}
+              onClick={() => setActiveSection('devices')}
+            >
+              Devices ({devices.length})
+            </button>
+            <button
+              className={`dash-tab ${activeSection === 'payments' ? 'active' : ''}`}
+              onClick={() => setActiveSection('payments')}
+            >
+              Payment History
+            </button>
           </div>
+        )}
 
-          {/* License Key Card */}
-          <div className="dash-card license-card">
-            <div className="card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3>License Key</h3>
-              {user?.licenseKey ? (
-                <>
-                  <div className="license-key-box">
-                    <code>{user.licenseKey}</code>
-                    <button className="copy-btn" onClick={copyKey}>
-                      {copied ? (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="9" y="9" width="13" height="13" rx="2"/>
-                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  <p className="license-hint">Enter this key when you open the app</p>
-                </>
-              ) : (
-                <p className="no-license">Purchase a plan to get your license key</p>
-              )}
-            </div>
-          </div>
-
-          {/* Download Card - Only show if active subscription */}
-          {hasActiveSubscription && (
-            <div className="dash-card download-card full-width">
-              <div className="card-icon download-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-              </div>
-              <div className="card-content">
-                <h3>Download App</h3>
-                <p>Get PokerSharkScope for your platform</p>
-                <div className="download-buttons">
-                  <button className="download-btn mac" onClick={() => handleDownload('mac')}>
-                    <span className="platform-icon">🍎</span>
-                    <span className="platform-info">
-                      <strong>macOS</strong>
-                      <small>10.15 or later</small>
-                    </span>
-                  </button>
-                  <button className="download-btn windows" onClick={() => handleDownload('windows')}>
-                    <span className="platform-icon">🪟</span>
-                    <span className="platform-info">
-                      <strong>Windows</strong>
-                      <small>Windows 10+</small>
-                    </span>
-                  </button>
+        {/* Overview Section */}
+        {activeSection === 'overview' && (
+          <>
+            {/* Main Grid */}
+            <div className="dash-grid">
+              {/* Subscription Status Card */}
+              <div className="dash-card status-card">
+                <div className="card-icon">
+                  {hasActiveSubscription ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="8" x2="12" y2="12"/>
+                      <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                  )}
+                </div>
+                <div className="card-content">
+                  <h3>Subscription</h3>
+                  {hasActiveSubscription ? (
+                    <>
+                      <div className="status-active">
+                        <span className="status-dot"></span>
+                        Active
+                      </div>
+                      <div className="status-details">
+                        <div className="detail-row">
+                          <span>Plan</span>
+                          <strong>{license.tier?.toUpperCase()}</strong>
+                        </div>
+                        <div className="detail-row">
+                          <span>Days Left</span>
+                          <strong className="gold">{getDaysRemaining()}</strong>
+                        </div>
+                        <div className="detail-row">
+                          <span>Expires</span>
+                          <strong>{formatDate(license.expires_at)}</strong>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="status-inactive">No Active Plan</div>
+                      <p className="status-hint">Choose a plan below to get started</p>
+                    </>
+                  )}
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Affiliate Card - Only show if active subscription */}
-          {hasActiveSubscription && (
-            <div className="dash-card affiliate-card full-width">
-              <div className="card-icon" style={{ background: 'rgba(34, 197, 94, 0.1)' }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ stroke: '#22c55e' }}>
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
+              {/* License Key Card */}
+              <div className="dash-card license-card">
+                <div className="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                  </svg>
+                </div>
+                <div className="card-content">
+                  <h3>License Key</h3>
+                  {license?.license_key ? (
+                    <>
+                      <div className="license-key-box">
+                        <code>{license.license_key}</code>
+                        <button className="copy-btn" onClick={copyKey}>
+                          {copied ? (
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="9" y="9" width="13" height="13" rx="2"/>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                      <p className="license-hint">Enter this key when you open the app</p>
+                    </>
+                  ) : (
+                    <p className="no-license">Purchase a plan to get your license key</p>
+                  )}
+                </div>
               </div>
-              <div className="card-content">
-                <h3>Refer & Earn 15%</h3>
-                <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                  Share your link and earn 15% of every payment your referrals make
-                </p>
-                <div className="license-key-box">
-                  <code style={{ fontSize: '0.8rem' }}>{getReferralLink()}</code>
-                  <button className="copy-btn" onClick={copyReferralLink}>
-                    {copiedRef ? (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="20 6 9 17 4 12"/>
-                      </svg>
-                    ) : (
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="9" y="9" width="13" height="13" rx="2"/>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                      </svg>
+
+              {/* Download Card - Only show if active subscription */}
+              {hasActiveSubscription && (
+                <div className="dash-card download-card full-width">
+                  <div className="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                  </div>
+                  <div className="card-content">
+                    <h3>Download App</h3>
+                    <p>Get PokerSharkScope for your platform</p>
+                    <div className="download-buttons">
+                      <button className="download-btn mac" onClick={() => handleDownload('mac')}>
+                        <span className="platform-icon">🍎</span>
+                        <span className="platform-info">
+                          <strong>macOS</strong>
+                          <small>10.15 or later</small>
+                        </span>
+                      </button>
+                      <button className="download-btn windows" onClick={() => handleDownload('windows')}>
+                        <span className="platform-icon">🪟</span>
+                        <span className="platform-info">
+                          <strong>Windows</strong>
+                          <small>Windows 10+</small>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Affiliate Card - Only show if active subscription */}
+              {hasActiveSubscription && user?.is_affiliate && (
+                <div className="dash-card affiliate-card full-width">
+                  <div className="card-icon" style={{ background: 'rgba(0, 217, 126, 0.15)' }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ stroke: '#00d97e' }}>
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                  </div>
+                  <div className="card-content">
+                    <h3>Refer & Earn 15%</h3>
+                    <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                      Share your link and earn 15% of every payment your referrals make
+                    </p>
+                    {affiliateStats?.referral_link && (
+                      <div className="license-key-box">
+                        <code style={{ fontSize: '0.85rem' }}>{affiliateStats.referral_link}</code>
+                        <button className="copy-btn" onClick={copyReferralLink}>
+                          {copiedRef ? (
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="9" y="9" width="13" height="13" rx="2"/>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
                     )}
-                  </button>
-                </div>
-                <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1rem' }}>
-                  <div>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
-                    <div style={{ fontSize: '1.25rem', fontWeight: '600' }}>{affiliateStats?.totalReferrals || 0}</div>
-                  </div>
-                  <div>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Earnings</span>
-                    <div style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--gold)' }}>
-                      ${(affiliateStats?.totalEarned || 0).toFixed(2)}
+                    <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
+                        <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{affiliateStats?.total_referrals || 0}</div>
+                      </div>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Earnings</span>
+                        <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-green)' }}>
+                          ${(affiliateStats?.total_earned || 0).toFixed(2)}
+                        </div>
+                      </div>
+                      <Link to="/affiliate" style={{
+                        marginLeft: 'auto',
+                        color: 'var(--accent-blue)',
+                        textDecoration: 'none',
+                        fontSize: '0.95rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.25rem'
+                      }}>
+                        Learn more →
+                      </Link>
                     </div>
                   </div>
-                  <Link to="/affiliate" style={{
-                    marginLeft: 'auto',
-                    color: 'var(--gold)',
-                    textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem'
-                  }}>
-                    Learn more →
-                  </Link>
                 </div>
-              </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
+
+        {/* Devices Section */}
+        {activeSection === 'devices' && (
+          <div className="dash-card devices-card" style={{ display: 'block' }}>
+            <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Activated Devices</h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+              You can activate up to {license?.max_devices || 2} devices. Remove a device to activate on a new one.
+            </p>
+            <div className="devices-list">
+              {devices.length > 0 ? devices.map(device => (
+                <div key={device.id} className="device-item">
+                  <div className="device-info">
+                    <span className="device-icon">
+                      {device.platform?.toLowerCase().includes('mac') ? '🍎' :
+                       device.platform?.toLowerCase().includes('win') ? '🪟' : '💻'}
+                    </span>
+                    <div className="device-details">
+                      <span className="device-name">{device.device_name || device.platform || 'Unknown Device'}</span>
+                      <span className="device-date">Activated {formatDate(device.activated_at)}</span>
+                    </div>
+                  </div>
+                  <button className="device-remove" onClick={() => removeDevice(device.id)}>
+                    Remove
+                  </button>
+                </div>
+              )) : (
+                <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+                  No devices activated yet. Download and activate the app to see your devices here.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Payment History Section */}
+        {activeSection === 'payments' && (
+          <div className="dash-card history-card" style={{ display: 'block' }}>
+            <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Payment History</h3>
+            <div className="history-list">
+              {payments.length > 0 ? payments.map((payment, idx) => (
+                <div key={idx} className="history-item">
+                  <div>
+                    <span className="history-desc">{payment.description || `${payment.tier} subscription`}</span>
+                    <span className="history-date"> - {formatDate(payment.created_at)}</span>
+                  </div>
+                  <span className="history-amount">${(payment.amount / 100).toFixed(2)}</span>
+                </div>
+              )) : (
+                <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+                  No payment history yet.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Pricing Section - Show if no active subscription */}
         {!hasActiveSubscription && (

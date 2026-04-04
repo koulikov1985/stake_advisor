@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
@@ -440,3 +441,49 @@ async def reset_all_devices(
     )
 
     return {"message": f"{count} devices reset successfully"}
+
+
+# Password reset
+class PasswordResetRequest(BaseModel):
+    new_password: str
+
+
+@router.post("/{user_id}/reset-password", status_code=status.HTTP_200_OK)
+async def reset_user_password(
+    user_id: UUID,
+    request: Request,
+    data: PasswordResetRequest,
+    admin: AdminUser = Depends(require_write_permission),
+    session: AsyncSession = Depends(get_session),
+):
+    """Reset a user's password."""
+    from app.models import User
+    from sqlalchemy import select
+
+    # Get user
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+
+    # Set new password
+    user.set_password(data.new_password)
+    await session.commit()
+
+    # Log the action
+    audit = AuditService(session)
+    await audit.log(
+        entity_type="user",
+        entity_id=str(user_id),
+        action="password_reset",
+        actor_type="admin",
+        actor_id=str(admin.id),
+        actor_email=admin.email,
+        ip_address=get_client_ip(request),
+        user_agent=get_user_agent(request),
+    )
+
+    return {"message": "Password reset successfully"}

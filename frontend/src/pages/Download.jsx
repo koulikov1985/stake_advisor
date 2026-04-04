@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/landing.css';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function Download() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasLicense, setHasLicense] = useState(false);
+  const [downloading, setDownloading] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
 
     if (token) {
-      fetch('/api/user/license', {
+      fetch(`${API_URL}/api/user/license`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
         .then(res => res.json())
         .then(data => {
-          if (data.license && data.license.active) {
+          if (data.license_key && data.status === 'active') {
             setHasLicense(true);
           }
         })
@@ -24,21 +28,36 @@ function Download() {
     }
   }, []);
 
-  const handleDownload = (platform) => {
+  const handleDownload = async (platform) => {
     if (!isLoggedIn) {
-      window.location.href = '/login?redirect=/download';
+      navigate('/login?redirect=/download');
       return;
     }
     if (!hasLicense) {
-      window.location.href = '/pricing';
+      navigate('/pricing');
       return;
     }
 
-    if (platform === 'mac') {
-      window.location.href = '/api/download/mac';
-    } else if (platform === 'windows') {
-      window.location.href = '/api/download/windows';
+    const token = localStorage.getItem('token');
+    setDownloading(platform);
+
+    try {
+      const res = await fetch(`${API_URL}/api/user/download/${platform}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        redirect: 'follow'
+      });
+
+      if (res.ok) {
+        // Get the final URL after redirect and open it
+        window.location.href = res.url;
+      } else {
+        const data = await res.json();
+        alert(data.detail || 'Download failed. Please try again.');
+      }
+    } catch (err) {
+      alert('Download failed. Please try again.');
     }
+    setDownloading(null);
   };
 
   return (
@@ -96,8 +115,9 @@ function Download() {
               onClick={() => handleDownload('mac')}
               className="btn-hero-primary"
               style={{ width: '100%', justifyContent: 'center' }}
+              disabled={downloading === 'mac'}
             >
-              Download for Mac
+              {downloading === 'mac' ? 'Preparing...' : 'Download for Mac'}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '18px', height: '18px' }}>
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
@@ -115,8 +135,9 @@ function Download() {
               onClick={() => handleDownload('windows')}
               className="btn-hero-primary"
               style={{ width: '100%', justifyContent: 'center' }}
+              disabled={downloading === 'windows'}
             >
-              Download for Windows
+              {downloading === 'windows' ? 'Preparing...' : 'Download for Windows'}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '18px', height: '18px' }}>
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>

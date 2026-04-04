@@ -10,10 +10,10 @@ from app.database import Base
 
 
 class LicenseTier(str, enum.Enum):
-    FREE_TRIAL = "free_trial"
-    MONTHLY = "monthly"
-    YEARLY = "yearly"
-    LIFETIME = "lifetime"
+    DAY = "day"
+    WEEK = "week"
+    MONTH = "month"
+    YEAR = "year"
 
 
 class LicenseStatus(str, enum.Enum):
@@ -42,7 +42,7 @@ class License(Base):
         String(24), unique=True, nullable=False, index=True, default=generate_license_key
     )
     tier: Mapped[LicenseTier] = mapped_column(
-        Enum(LicenseTier), default=LicenseTier.FREE_TRIAL
+        Enum(LicenseTier), default=LicenseTier.MONTH
     )
     status: Mapped[LicenseStatus] = mapped_column(
         Enum(LicenseStatus), default=LicenseStatus.ACTIVE

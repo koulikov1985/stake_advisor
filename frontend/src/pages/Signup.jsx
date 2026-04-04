@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import '../styles/landing.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -37,7 +38,7 @@ function Signup() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Signup failed');
+        throw new Error(data.detail || 'Signup failed');
       }
 
       localStorage.setItem('token', data.token);
@@ -51,55 +52,167 @@ function Signup() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2>Create Account</h2>
-        <p className="auth-subtitle">Sign up to get started</p>
+    <div className="landing" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <header className="landing-header" style={{ position: 'relative' }}>
+        <Link to="/" className="landing-logo">
+          <span className="logo-icon">♠</span>
+          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+        </Link>
+        <nav className="landing-nav">
+          <Link to="/login" className="nav-btn-ghost">Login</Link>
+        </nav>
+      </header>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-            />
-          </div>
+      {/* Auth Form */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem'
+      }}>
+        <div style={{
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-subtle)',
+          borderRadius: '16px',
+          padding: '2.5rem',
+          width: '100%',
+          maxWidth: '400px'
+        }}>
+          <h2 style={{
+            fontSize: '1.75rem',
+            marginBottom: '0.5rem',
+            color: 'var(--text-primary)'
+          }}>Create Account</h2>
+          <p style={{
+            color: 'var(--text-secondary)',
+            marginBottom: '2rem'
+          }}>Sign up to get started</p>
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-primary)',
+                fontWeight: '500',
+                fontSize: '0.95rem'
+              }}>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
 
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-primary)',
+                fontWeight: '500',
+                fontSize: '0.95rem'
+              }}>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="At least 6 characters"
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
 
-          {error && <p className="error-message">{error}</p>}
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-primary)',
+                fontWeight: '500',
+                fontSize: '0.95rem'
+              }}>Confirm Password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
 
-          <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+            {error && (
+              <p style={{
+                color: 'var(--error)',
+                fontSize: '0.875rem',
+                marginBottom: '1rem',
+                textAlign: 'center'
+              }}>{error}</p>
+            )}
 
-        <p className="auth-footer">
-          Already have an account? <Link to="/login">Sign in</Link>
-        </p>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                background: 'var(--gold)',
+                color: '#000',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.7 : 1,
+                marginTop: '0.5rem'
+              }}
+            >
+              {loading ? 'Creating account...' : 'Create Account'}
+            </button>
+          </form>
+
+          <p style={{
+            textAlign: 'center',
+            marginTop: '1.5rem',
+            color: 'var(--text-secondary)'
+          }}>
+            Already have an account?{' '}
+            <Link to="/login" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: '500' }}>
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

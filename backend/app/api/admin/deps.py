@@ -1,3 +1,5 @@
+import os
+import uuid
 from typing import Optional
 from fastapi import Depends, HTTPException, status, Request, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -5,6 +7,29 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_session
 from app.models import AdminUser, AdminSession
 from app.services.admin_service import AdminService
+from app.config import get_settings
+
+
+def is_local_dev() -> bool:
+    """Check if running in local development mode."""
+    settings = get_settings()
+    return settings.debug or os.getenv("DEBUG", "").lower() in ("true", "1", "yes")
+
+
+class FakeAdminUser:
+    """Fake admin user for local development."""
+    def __init__(self):
+        self.id = uuid.UUID("00000000-0000-0000-0000-000000000001")
+        self.email = "admin@local"
+        self.name = "Local Admin"
+        self.role = "super_admin"
+        self.is_active = True
+
+    def can_write(self) -> bool:
+        return True
+
+    def is_super_admin(self) -> bool:
+        return True
 
 
 async def get_admin_session(
@@ -13,6 +38,10 @@ async def get_admin_session(
     admin_token: Optional[str] = Cookie(default=None),
 ) -> AdminSession:
     """Get current admin session from cookie."""
+    # Local development bypass
+    if is_local_dev():
+        return None  # Will be handled by get_current_admin
+
     if not admin_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -32,10 +61,15 @@ async def get_admin_session(
 
 
 async def get_current_admin(
-    admin_session: AdminSession = Depends(get_admin_session),
+    request: Request,
+    admin_session: Optional[AdminSession] = Depends(get_admin_session),
     session: AsyncSession = Depends(get_session),
 ) -> AdminUser:
     """Get current admin user from session."""
+    # Local development bypass - return fake admin
+    if is_local_dev():
+        return FakeAdminUser()
+
     admin_service = AdminService(session)
     admin = await admin_service.get_admin_by_id(admin_session.admin_user_id)
 

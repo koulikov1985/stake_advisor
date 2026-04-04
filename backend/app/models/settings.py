@@ -26,23 +26,30 @@ class SystemSetting(Base):
 # Default settings keys
 DEFAULT_SETTINGS = {
     "pricing": {
-        "monthly_price": 999,  # $9.99 in cents
-        "yearly_price": 7999,  # $79.99 in cents
-        "lifetime_price": 19999,  # $199.99 in cents
+        "day_price": 299,      # $2.99 in cents
+        "week_price": 999,     # $9.99 in cents
+        "month_price": 2999,   # $29.99 in cents
+        "year_price": 19999,   # $199.99 in cents
         "currency": "USD",
-    },
-    "commission": {
-        "default_rate": 20,  # 20%
-        "minimum_payout": 5000,  # $50.00 in cents
     },
     "downloads": {
         "windows_url": "",
         "mac_url": "",
-        "linux_url": "",
+        "version": "1.0.0",
+        "release_notes": "",
+    },
+    "license": {
+        "max_devices": 2,
+        "allow_device_reset": True,
+    },
+    "commission": {
+        "default_rate": 10.0,  # 10% default commission rate
+        "min_payout": 50.0,    # Minimum payout threshold
+        "payment_method": "paypal",
     },
     "features": {
-        "affiliate_program_enabled": True,
-        "free_trial_days": 7,
-        "max_devices_per_license": 2,
+        "allow_registrations": True,
+        "maintenance_mode": False,
+        "enable_affiliates": True,
     },
 }

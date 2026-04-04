@@ -22,9 +22,12 @@ settings = get_settings()
 
 
 PADDLE_TIER_MAP = {
-    "pri_monthly": LicenseTier.MONTHLY,
-    "pri_yearly": LicenseTier.YEARLY,
-    "pri_lifetime": LicenseTier.LIFETIME,
+    "pri_day": LicenseTier.DAY,
+    "pri_week": LicenseTier.WEEK,
+    "pri_monthly": LicenseTier.MONTH,
+    "pri_month": LicenseTier.MONTH,
+    "pri_yearly": LicenseTier.YEAR,
+    "pri_year": LicenseTier.YEAR,
 }
 
 
@@ -124,7 +127,7 @@ class PaddleService:
         items = data.get("items", [])
 
         # Get tier from price ID
-        tier = LicenseTier.MONTHLY
+        tier = LicenseTier.MONTH
         features = {"basic_advisor": True}
 
         for item in items:
@@ -148,12 +151,14 @@ class PaddleService:
         )
 
         # Set expiration based on tier
-        if tier == LicenseTier.MONTHLY:
-            license.expires_at = datetime.utcnow() + timedelta(days=31)
-        elif tier == LicenseTier.YEARLY:
-            license.expires_at = datetime.utcnow() + timedelta(days=366)
-        elif tier == LicenseTier.LIFETIME:
-            license.expires_at = None  # Never expires
+        if tier == LicenseTier.DAY:
+            license.expires_at = datetime.utcnow() + timedelta(days=1)
+        elif tier == LicenseTier.WEEK:
+            license.expires_at = datetime.utcnow() + timedelta(days=7)
+        elif tier == LicenseTier.MONTH:
+            license.expires_at = datetime.utcnow() + timedelta(days=30)
+        elif tier == LicenseTier.YEAR:
+            license.expires_at = datetime.utcnow() + timedelta(days=365)
 
         self.session.add(license)
         await self.session.flush()
@@ -269,11 +274,15 @@ class PaddleService:
 
         # Extend license expiration
         license = await self.session.get(License, subscription.license_id)
-        if license and license.tier != LicenseTier.LIFETIME:
-            if license.tier == LicenseTier.MONTHLY:
-                license.expires_at = datetime.utcnow() + timedelta(days=31)
-            elif license.tier == LicenseTier.YEARLY:
-                license.expires_at = datetime.utcnow() + timedelta(days=366)
+        if license:
+            if license.tier == LicenseTier.DAY:
+                license.expires_at = datetime.utcnow() + timedelta(days=1)
+            elif license.tier == LicenseTier.WEEK:
+                license.expires_at = datetime.utcnow() + timedelta(days=7)
+            elif license.tier == LicenseTier.MONTH:
+                license.expires_at = datetime.utcnow() + timedelta(days=30)
+            elif license.tier == LicenseTier.YEAR:
+                license.expires_at = datetime.utcnow() + timedelta(days=365)
 
             license.status = LicenseStatus.ACTIVE
 

@@ -13,6 +13,7 @@ from app.database import engine, init_db
 from app.api.v1 import router as v1_router
 from app.api.webhooks import router as webhooks_router
 from app.api.admin import router as admin_api_router
+from app.api.user import router as user_router
 from app.admin import setup_admin
 from app.admin.auth import create_admin_user
 
@@ -66,6 +67,7 @@ app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 app.include_router(v1_router)
 app.include_router(webhooks_router)
 app.include_router(admin_api_router)
+app.include_router(user_router)
 
 # Setup admin
 setup_admin(app, engine)

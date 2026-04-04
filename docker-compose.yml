@@ -1,6 +1,7 @@
 services:
   api:
-    build: .
+    build: ./backend
+    container_name: stakeadvisor-api
     ports:
       - "8000:8000"
     environment:
@@ -19,23 +20,26 @@ services:
       redis:
         condition: service_started
     volumes:
-      - ./app:/app/app
+      - ./backend/app:/app/app
+      - ./backend/downloads:/app/downloads
     restart: unless-stopped
 
   frontend:
-    build: ../frontend
+    build: ./frontend
+    container_name: stakeadvisor-frontend
     ports:
       - "5173:5173"
     environment:
       - VITE_API_URL=http://localhost:8000
     volumes:
-      - ../frontend/src:/app/src
+      - ./frontend/src:/app/src
     depends_on:
       - api
     restart: unless-stopped
 
   db:
     image: postgres:16-alpine
+    container_name: stakeadvisor-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -53,6 +57,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    container_name: stakeadvisor-redis
     volumes:
       - redis_data:/data
     ports:

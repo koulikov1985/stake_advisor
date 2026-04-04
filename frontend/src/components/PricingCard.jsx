@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-function PricingCard({ plan, name, price, duration, features, popular }) {
+function PricingCard({ plan, name, price, label, duration, features, popular }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -46,9 +46,18 @@ function PricingCard({ plan, name, price, duration, features, popular }) {
       {popular && <div className="popular-badge">Most Popular</div>}
       <h3 className="plan-name">{name}</h3>
       <div className="plan-price">
-        <span className="currency">$</span>
-        <span className="amount">{price}</span>
-        <span className="period">/{duration}</span>
+        {plan === 'trial' ? (
+          <>
+            <span className="amount">Free</span>
+            <span className="period">{label}</span>
+          </>
+        ) : (
+          <>
+            <span className="currency">$</span>
+            <span className="amount">{price}</span>
+            <span className="period">/{duration}</span>
+          </>
+        )}
       </div>
       <ul className="plan-features">
         {features.map((feature, index) => (
@@ -64,7 +73,7 @@ function PricingCard({ plan, name, price, duration, features, popular }) {
         onClick={handlePurchase}
         disabled={loading}
       >
-        {loading ? 'Processing...' : 'Get Started'}
+        {loading ? 'Processing...' : (plan === 'trial' ? 'Try it for free' : 'Join Discord')}
       </button>
     </div>
   );

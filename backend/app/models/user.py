@@ -5,8 +5,11 @@ from datetime import datetime
 from sqlalchemy import String, Boolean, DateTime, Integer, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from passlib.context import CryptContext
 
 from app.database import Base
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def generate_affiliate_code() -> str:
@@ -28,6 +31,7 @@ class User(Base):
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+    password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     paddle_customer_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -63,6 +67,16 @@ class User(Base):
 
     def __repr__(self) -> str:
         return f"<User {self.email}>"
+
+    def set_password(self, password: str) -> None:
+        """Hash and set the password."""
+        self.password_hash = pwd_context.hash(password)
+
+    def verify_password(self, password: str) -> bool:
+        """Verify a password against the hash."""
+        if not self.password_hash:
+            return False
+        return pwd_context.verify(password, self.password_hash)
 
     def get_commission_rate(self, default_rate: int = 20) -> int:
         """Get effective commission rate."""
