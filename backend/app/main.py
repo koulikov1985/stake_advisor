@@ -52,6 +52,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://license-keys-frontend.onrender.com",
+        "https://sharkscopepro.onrender.com",
+        "https://pokersharkscope.onrender.com",
         "http://localhost:5173",
         "http://localhost:3000",
     ],
