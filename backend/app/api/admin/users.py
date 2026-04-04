@@ -408,7 +408,7 @@ async def reset_device(
         actor_email=admin.email,
         ip_address=get_client_ip(request),
         user_agent=get_user_agent(request),
-        metadata={"user_id": str(user_id)},
+        extra_data={"user_id": str(user_id)},
     )
 
     return {"message": "Device reset successfully"}
@@ -436,7 +436,7 @@ async def reset_all_devices(
         actor_email=admin.email,
         ip_address=get_client_ip(request),
         user_agent=get_user_agent(request),
-        metadata={"devices_reset": count},
+        extra_data={"devices_reset": count},
     )
 
     return {"message": f"{count} devices reset successfully"}

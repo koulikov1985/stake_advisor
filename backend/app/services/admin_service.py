@@ -178,7 +178,7 @@ class AuditService:
         user_agent: Optional[str] = None,
         old_values: Optional[dict] = None,
         new_values: Optional[dict] = None,
-        metadata: Optional[dict] = None,
+        extra_data: Optional[dict] = None,
     ) -> AuditLog:
         """Create an audit log entry."""
         log = AuditLog(
@@ -192,7 +192,7 @@ class AuditService:
             user_agent=user_agent,
             old_values=old_values,
             new_values=new_values,
-            metadata=metadata,
+            extra_data=extra_data,
         )
         self.session.add(log)
         await self.session.commit()

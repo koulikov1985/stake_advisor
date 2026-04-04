@@ -42,7 +42,7 @@ async def login(
             actor_type="admin",
             ip_address=get_client_ip(request),
             user_agent=get_user_agent(request),
-            metadata={"email": data.email},
+            extra_data={"email": data.email},
         )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
