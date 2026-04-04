@@ -73,7 +73,7 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
         onClick={handlePurchase}
         disabled={loading}
       >
-        {loading ? 'Processing...' : (plan === 'trial' ? 'Try it for free' : 'Join Discord')}
+        {loading ? 'Processing...' : (plan === 'trial' ? 'Try it for free' : 'Get Started')}
       </button>
     </div>
   );
