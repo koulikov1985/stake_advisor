@@ -28,11 +28,13 @@ async def lifespan(app: FastAPI):
     await init_db()
 
     # Create default admin user
-    await create_admin_user(
+    print(f"Creating admin user with email: {settings.admin_email}")
+    admin = await create_admin_user(
         email=settings.admin_email,
         password=settings.admin_password,
         role="super_admin"
     )
+    print(f"Admin user created/updated: {admin.email}, id: {admin.id}")
 
     yield
 
