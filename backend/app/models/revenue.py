@@ -58,7 +58,7 @@ class RevenueTransaction(Base):
 
     # Additional data
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    metadata: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    extra_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     # Timestamps
     transaction_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
