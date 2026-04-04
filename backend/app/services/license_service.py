@@ -1,51 +1,28 @@
-import hashlib
-import hmac
-import time
-from datetime import datetime
-from typing import Any
+"""License validation and activation service."""
 
-import redis.asyncio as redis
+from datetime import datetime
+from typing import Any, Optional
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.config import get_settings
-from app.models import License, DeviceActivation, LicenseStatus
+from app.models import License, DeviceActivation, LicenseStatus, User
 from app.schemas import ValidateRequest, ActivateRequest, DeactivateRequest, LicenseInfo
-
-settings = get_settings()
 
 
 class LicenseService:
-    def __init__(self, session: AsyncSession, redis_client: redis.Redis):
+    """Simplified license service without Redis dependency."""
+
+    def __init__(self, session: AsyncSession):
         self.session = session
-        self.redis = redis_client
-        self.nonce_ttl = 600  # 10 minutes
-
-    def verify_signature(self, request: ValidateRequest | ActivateRequest | DeactivateRequest) -> bool:
-        """Verify HMAC-SHA256 signature from client."""
-        message = f"{request.license_key}:{request.device_id}:{request.timestamp}:{request.nonce}"
-        expected_signature = hmac.new(
-            settings.secret_key.encode(),
-            message.encode(),
-            hashlib.sha256
-        ).hexdigest()
-        return hmac.compare_digest(expected_signature, request.signature)
-
-    def verify_timestamp(self, timestamp: int, tolerance: int = 300) -> bool:
-        """Check if timestamp is within tolerance (default 5 minutes)."""
-        current_time = int(time.time())
-        return abs(current_time - timestamp) <= tolerance
-
-    async def check_nonce(self, nonce: str) -> bool:
-        """Check and store nonce for replay protection. Returns True if nonce is new."""
-        nonce_key = f"nonce:{nonce}"
-        result = await self.redis.set(nonce_key, "1", ex=self.nonce_ttl, nx=True)
-        return result is not None
 
     async def get_license(self, license_key: str) -> License | None:
-        """Get license by key."""
+        """Get license by key with user relationship loaded."""
         result = await self.session.execute(
-            select(License).where(License.license_key == license_key)
+            select(License)
+            .where(License.license_key == license_key)
+            .options(selectinload(License.user))
         )
         return result.scalar_one_or_none()
 
@@ -53,35 +30,23 @@ class LicenseService:
         self, request: ValidateRequest
     ) -> tuple[bool, LicenseInfo | None, str | None]:
         """Validate a license and device."""
-        # Verify signature
-        if not self.verify_signature(request):
-            return False, None, "Invalid signature"
-
-        # Verify timestamp
-        if not self.verify_timestamp(request.timestamp):
-            return False, None, "Request expired"
-
-        # Check nonce for replay protection
-        if not await self.check_nonce(request.nonce):
-            return False, None, "Nonce already used"
-
         # Get license
         license = await self.get_license(request.license_key)
         if not license:
-            return False, None, "License not found"
+            return False, None, "LICENSE_NOT_FOUND"
 
         # Check license status
         if license.status != LicenseStatus.ACTIVE:
-            return False, None, f"License is {license.status.value}"
+            return False, None, "LICENSE_INACTIVE"
 
         # Check expiration
         if license.expires_at and license.expires_at < datetime.utcnow():
-            return False, None, "License expired"
+            return False, None, "LICENSE_EXPIRED"
 
         # Check device activation
         device = await self._get_device_activation(license.id, request.device_id)
         if not device or not device.is_active:
-            return False, None, "Device not activated"
+            return False, None, "DEVICE_NOT_ACTIVATED"
 
         # Update last validated timestamp
         device.last_validated_at = datetime.utcnow()
@@ -90,6 +55,9 @@ class LicenseService:
         return True, LicenseInfo(
             status=license.status.value,
             tier=license.tier.value,
+            license_key=license.license_key,
+            email=license.user.email if license.user else None,
+            device_id=request.device_id,
             expires_at=license.expires_at,
             features=license.features or {}
         ), None
@@ -98,18 +66,6 @@ class LicenseService:
         self, request: ActivateRequest
     ) -> tuple[bool, LicenseInfo | None, str | None]:
         """Activate a device for a license."""
-        # Verify signature
-        if not self.verify_signature(request):
-            return False, None, "Invalid signature"
-
-        # Verify timestamp
-        if not self.verify_timestamp(request.timestamp):
-            return False, None, "Request expired"
-
-        # Check nonce
-        if not await self.check_nonce(request.nonce):
-            return False, None, "Nonce already used"
-
         # Get license
         license = await self.get_license(request.license_key)
         if not license:
@@ -130,6 +86,9 @@ class LicenseService:
                 return True, LicenseInfo(
                     status=license.status.value,
                     tier=license.tier.value,
+                    license_key=license.license_key,
+                    email=license.user.email if license.user else None,
+                    device_id=request.device_id,
                     expires_at=license.expires_at,
                     features=license.features or {}
                 ), None
@@ -143,6 +102,9 @@ class LicenseService:
                 return True, LicenseInfo(
                     status=license.status.value,
                     tier=license.tier.value,
+                    license_key=license.license_key,
+                    email=license.user.email if license.user else None,
+                    device_id=request.device_id,
                     expires_at=license.expires_at,
                     features=license.features or {}
                 ), None
@@ -165,6 +127,9 @@ class LicenseService:
         return True, LicenseInfo(
             status=license.status.value,
             tier=license.tier.value,
+            license_key=license.license_key,
+            email=license.user.email if license.user else None,
+            device_id=request.device_id,
             expires_at=license.expires_at,
             features=license.features or {}
         ), None
@@ -173,18 +138,6 @@ class LicenseService:
         self, request: DeactivateRequest
     ) -> tuple[bool, str | None]:
         """Deactivate a device from a license."""
-        # Verify signature
-        if not self.verify_signature(request):
-            return False, "Invalid signature"
-
-        # Verify timestamp
-        if not self.verify_timestamp(request.timestamp):
-            return False, "Request expired"
-
-        # Check nonce
-        if not await self.check_nonce(request.nonce):
-            return False, "Nonce already used"
-
         # Get license
         license = await self.get_license(request.license_key)
         if not license:

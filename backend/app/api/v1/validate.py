@@ -1,7 +1,8 @@
+"""License validation endpoint."""
+
 from fastapi import APIRouter, Depends, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-import redis.asyncio as redis
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,10 +17,6 @@ settings = get_settings()
 limiter = Limiter(key_func=get_remote_address)
 
 
-async def get_redis() -> redis.Redis:
-    return redis.from_url(settings.redis_url, decode_responses=True)
-
-
 @router.post("/validate", response_model=ValidateResponse)
 @limiter.limit(settings.validate_rate_limit)
 async def validate_license(
@@ -32,15 +29,12 @@ async def validate_license(
 
     Returns license status and features if valid.
     """
-    redis_client = await get_redis()
-    try:
-        service = LicenseService(session, redis_client)
-        success, license_info, error = await service.validate_license(body)
+    service = LicenseService(session)
+    success, license_info, error_code = await service.validate_license(body)
 
-        return ValidateResponse(
-            success=success,
-            license=license_info,
-            error=error
-        )
-    finally:
-        await redis_client.close()
+    return ValidateResponse(
+        success=success,
+        license=license_info,
+        error=error_code if not success else None,
+        error_code=error_code if not success else None
+    )

@@ -68,7 +68,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SessionMiddleware, secret_key=settings.secret_key)
 
 # Include routers
-app.include_router(v1_router)
+app.include_router(v1_router, prefix="/api")  # /api/v1/... for software license validation
 app.include_router(webhooks_router)
 app.include_router(admin_api_router)
 app.include_router(user_router)
