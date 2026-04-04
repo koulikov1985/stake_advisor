@@ -1,88 +1,214 @@
-import aiosmtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+"""Email service using Resend."""
+
+import logging
+from typing import Optional
+
+import resend
 
 from app.config import get_settings
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
+
+# Initialize Resend
+if settings.resend_api_key:
+    resend.api_key = settings.resend_api_key
 
 
 class EmailService:
-    async def send_license_key(self, to_email: str, license_key: str, tier: str) -> bool:
-        """Send license key email to user."""
-        if not settings.smtp_host:
+    """Email service using Resend API."""
+
+    def __init__(self):
+        self.from_email = settings.email_from
+        self.frontend_url = settings.frontend_url
+
+    async def send_email(
+        self,
+        to_email: str,
+        subject: str,
+        html_body: str,
+    ) -> bool:
+        """Send an email using Resend."""
+        if not settings.resend_api_key:
+            logger.warning("Resend API key not configured, skipping email")
             return False
 
-        subject = "Your Stake Advisor License Key"
-        html_body = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; padding: 20px;">
-            <h1>Welcome to Stake Advisor!</h1>
-            <p>Thank you for your purchase. Here is your license key:</p>
-            <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 18px;">
-                {license_key}
-            </div>
-            <p><strong>Plan:</strong> {tier.replace('_', ' ').title()}</p>
-            <h3>How to activate:</h3>
-            <ol>
-                <li>Open Stake Advisor on your computer</li>
-                <li>Go to Settings → License</li>
-                <li>Enter your license key above</li>
-                <li>Click Activate</li>
-            </ol>
-            <p>You can activate this license on up to 2 devices.</p>
-            <hr>
-            <p style="color: #666; font-size: 12px;">
-                If you have any questions, please contact support@stakeadvisor.app
-            </p>
-        </body>
-        </html>
-        """
-
-        return await self._send_email(to_email, subject, html_body)
-
-    async def send_subscription_canceled(self, to_email: str, expires_at: str) -> bool:
-        """Send subscription cancellation notice."""
-        if not settings.smtp_host:
-            return False
-
-        subject = "Your Stake Advisor Subscription Has Been Canceled"
-        html_body = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; padding: 20px;">
-            <h1>Subscription Canceled</h1>
-            <p>Your Stake Advisor subscription has been canceled.</p>
-            <p>Your license will remain active until: <strong>{expires_at}</strong></p>
-            <p>You can resubscribe at any time to continue using all features.</p>
-            <hr>
-            <p style="color: #666; font-size: 12px;">
-                If you have any questions, please contact support@stakeadvisor.app
-            </p>
-        </body>
-        </html>
-        """
-
-        return await self._send_email(to_email, subject, html_body)
-
-    async def _send_email(self, to_email: str, subject: str, html_body: str) -> bool:
-        """Send an email."""
         try:
-            message = MIMEMultipart("alternative")
-            message["From"] = settings.smtp_from
-            message["To"] = to_email
-            message["Subject"] = subject
-
-            html_part = MIMEText(html_body, "html")
-            message.attach(html_part)
-
-            await aiosmtplib.send(
-                message,
-                hostname=settings.smtp_host,
-                port=settings.smtp_port,
-                username=settings.smtp_user,
-                password=settings.smtp_password,
-                start_tls=True,
-            )
+            resend.Emails.send({
+                "from": self.from_email,
+                "to": [to_email],
+                "subject": subject,
+                "html": html_body,
+            })
+            logger.info(f"Email sent to {to_email}: {subject}")
             return True
-        except Exception:
+        except Exception as e:
+            logger.error(f"Failed to send email to {to_email}: {e}")
             return False
+
+    async def send_welcome_email(self, to_email: str, name: Optional[str] = None) -> bool:
+        """Send welcome email after signup."""
+        display_name = name or "there"
+        subject = "Welcome to PokerSharkScope!"
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 40px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 12px; padding: 40px; }}
+                h1 {{ color: #d4af37; margin-bottom: 20px; }}
+                .btn {{ display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #444; color: #888; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Welcome to PokerSharkScope!</h1>
+                <p>Hey {display_name},</p>
+                <p>Thanks for signing up! You're now ready to start crushing the tables with real-time GTO advice.</p>
+                <p>Here's what to do next:</p>
+                <ol>
+                    <li>Choose a subscription plan</li>
+                    <li>Download the app for your platform</li>
+                    <li>Enter your license key and start playing</li>
+                </ol>
+                <a href="{self.frontend_url}/dashboard" class="btn">Go to Dashboard</a>
+                <div class="footer">
+                    <p>Questions? Join our <a href="https://discord.gg/pokersharkscope" style="color: #d4af37;">Discord</a></p>
+                    <p>PokerSharkScope - Play Smarter, Win More</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_body)
+
+    async def send_password_reset_email(self, to_email: str, reset_token: str) -> bool:
+        """Send password reset email."""
+        reset_link = f"{self.frontend_url}/reset-password?token={reset_token}"
+        subject = "Reset Your PokerSharkScope Password"
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 40px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 12px; padding: 40px; }}
+                h1 {{ color: #d4af37; margin-bottom: 20px; }}
+                .btn {{ display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .warning {{ background: #3a3a2a; padding: 15px; border-radius: 8px; margin-top: 20px; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #444; color: #888; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Reset Your Password</h1>
+                <p>We received a request to reset your password. Click the button below to create a new password:</p>
+                <a href="{reset_link}" class="btn">Reset Password</a>
+                <div class="warning">
+                    <p><strong>This link expires in 1 hour.</strong></p>
+                    <p>If you didn't request this, you can safely ignore this email.</p>
+                </div>
+                <div class="footer">
+                    <p>PokerSharkScope - Play Smarter, Win More</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_body)
+
+    async def send_license_key_email(self, to_email: str, license_key: str, tier: str) -> bool:
+        """Send license key email after purchase."""
+        tier_display = tier.replace("_", " ").title()
+        subject = f"Your PokerSharkScope License Key - {tier_display}"
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 40px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 12px; padding: 40px; }}
+                h1 {{ color: #d4af37; margin-bottom: 20px; }}
+                .license-box {{ background: #1a1a1a; border: 2px solid #d4af37; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0; }}
+                .license-key {{ font-family: monospace; font-size: 24px; color: #d4af37; letter-spacing: 2px; }}
+                .btn {{ display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .steps {{ background: #3a3a3a; padding: 20px; border-radius: 8px; margin: 20px 0; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #444; color: #888; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Your License Key</h1>
+                <p>Thank you for your purchase! Here's your license key:</p>
+                <div class="license-box">
+                    <div class="license-key">{license_key}</div>
+                </div>
+                <p><strong>Plan:</strong> {tier_display}</p>
+                <div class="steps">
+                    <h3 style="color: #d4af37; margin-top: 0;">How to activate:</h3>
+                    <ol>
+                        <li>Download the app from your dashboard</li>
+                        <li>Open PokerSharkScope</li>
+                        <li>Enter your license key when prompted</li>
+                        <li>Click Activate and start playing!</li>
+                    </ol>
+                </div>
+                <a href="{self.frontend_url}/dashboard" class="btn">Go to Dashboard</a>
+                <div class="footer">
+                    <p>You can activate this license on up to 2 devices.</p>
+                    <p>Questions? Join our <a href="https://discord.gg/pokersharkscope" style="color: #d4af37;">Discord</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_body)
+
+    async def send_subscription_canceled_email(self, to_email: str, expires_at: str) -> bool:
+        """Send subscription cancellation notice."""
+        subject = "Your PokerSharkScope Subscription Has Been Canceled"
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 40px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 12px; padding: 40px; }}
+                h1 {{ color: #d4af37; margin-bottom: 20px; }}
+                .info-box {{ background: #3a3a3a; padding: 20px; border-radius: 8px; margin: 20px 0; }}
+                .btn {{ display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #444; color: #888; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Subscription Canceled</h1>
+                <p>Your PokerSharkScope subscription has been canceled.</p>
+                <div class="info-box">
+                    <p><strong>Your license remains active until:</strong></p>
+                    <p style="font-size: 20px; color: #d4af37;">{expires_at}</p>
+                </div>
+                <p>You can continue using all features until this date. After that, you can resubscribe at any time.</p>
+                <a href="{self.frontend_url}/pricing" class="btn">View Plans</a>
+                <div class="footer">
+                    <p>We'd love to have you back! If you have any feedback, join our <a href="https://discord.gg/pokersharkscope" style="color: #d4af37;">Discord</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_body)
+
+
+# Global instance
+_email_service: Optional[EmailService] = None
+
+
+def get_email_service() -> EmailService:
+    """Get the global email service instance."""
+    global _email_service
+    if _email_service is None:
+        _email_service = EmailService()
+    return _email_service

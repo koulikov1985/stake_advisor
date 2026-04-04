@@ -32,12 +32,12 @@ class Settings(BaseSettings):
     admin_email: str = "admin@stakeadvisor.app"
     admin_password: str = "change-this-password"
 
-    # Email
-    smtp_host: str = ""
-    smtp_port: int = 587
-    smtp_user: str = ""
-    smtp_password: str = ""
-    smtp_from: str = "noreply@stakeadvisor.app"
+    # Email (Resend)
+    resend_api_key: str = ""
+    email_from: str = "PokerSharkScope <noreply@pokersharkscope.com>"
+
+    # Frontend URL (for email links)
+    frontend_url: str = "https://sharkscopepro.onrender.com"
 
     # App
     debug: bool = False

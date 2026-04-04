@@ -24,8 +24,8 @@ function ResetPassword() {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
 
@@ -35,7 +35,7 @@ function ResetPassword() {
       const response = await fetch(`${API_URL}/api/user/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password })
+        body: JSON.stringify({ token, new_password: password })
       });
 
       const data = await response.json();
@@ -229,7 +229,7 @@ function ResetPassword() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
+                placeholder="At least 8 characters"
                 required
                 style={{
                   width: '100%',

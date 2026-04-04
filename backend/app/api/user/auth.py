@@ -1,10 +1,11 @@
 """User authentication endpoints."""
 
+import logging
 from datetime import datetime, timedelta
 from typing import Optional
 
 from jose import jwt, JWTError
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,13 +13,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_session
 from app.models import User
 from app.config import get_settings
+from app.services.email_service import get_email_service
 
+logger = logging.getLogger(__name__)
 settings = get_settings()
 router = APIRouter(tags=["User Auth"])
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 30
+PASSWORD_RESET_EXPIRE_HOURS = 1
 
 
 class UserLogin(BaseModel):
@@ -37,6 +41,19 @@ class TokenResponse(BaseModel):
     user: dict
 
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+
+class MessageResponse(BaseModel):
+    message: str
+
+
 def create_access_token(user_id: str, email: str) -> str:
     """Create JWT access token."""
     expire = datetime.utcnow() + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
@@ -48,11 +65,33 @@ def create_access_token(user_id: str, email: str) -> str:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
+def create_password_reset_token(email: str) -> str:
+    """Create JWT token for password reset."""
+    expire = datetime.utcnow() + timedelta(hours=PASSWORD_RESET_EXPIRE_HOURS)
+    payload = {
+        "sub": email,
+        "type": "password_reset",
+        "exp": expire,
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
 def verify_token(token: str) -> Optional[dict]:
     """Verify JWT token and return payload."""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
+    except JWTError:
+        return None
+
+
+def verify_password_reset_token(token: str) -> Optional[str]:
+    """Verify password reset token and return email."""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("type") != "password_reset":
+            return None
+        return payload.get("sub")
     except JWTError:
         return None
 
@@ -96,6 +135,7 @@ async def login(
 @router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def signup(
     data: UserSignup,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ):
     """Register a new user."""
@@ -124,6 +164,14 @@ async def signup(
 
     token = create_access_token(str(user.id), user.email)
 
+    # Send welcome email in background
+    email_service = get_email_service()
+    background_tasks.add_task(
+        email_service.send_welcome_email,
+        user.email,
+        user.name
+    )
+
     return TokenResponse(
         token=token,
         user={
@@ -132,3 +180,75 @@ async def signup(
             "name": user.name,
         }
     )
+
+
+@router.post("/forgot-password", response_model=MessageResponse)
+async def forgot_password(
+    data: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
+):
+    """Request password reset email."""
+    result = await session.execute(
+        select(User).where(User.email == data.email)
+    )
+    user = result.scalar_one_or_none()
+
+    # Always return success to prevent email enumeration
+    if not user:
+        logger.info(f"Password reset requested for non-existent email: {data.email}")
+        return MessageResponse(message="If the email exists, a reset link will be sent")
+
+    # Generate reset token
+    reset_token = create_password_reset_token(user.email)
+
+    # Send reset email in background
+    email_service = get_email_service()
+    background_tasks.add_task(
+        email_service.send_password_reset_email,
+        user.email,
+        reset_token
+    )
+
+    logger.info(f"Password reset email sent to: {user.email}")
+    return MessageResponse(message="If the email exists, a reset link will be sent")
+
+
+@router.post("/reset-password", response_model=MessageResponse)
+async def reset_password(
+    data: ResetPasswordRequest,
+    session: AsyncSession = Depends(get_session),
+):
+    """Reset password using token from email."""
+    email = verify_password_reset_token(data.token)
+
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+
+    result = await session.execute(
+        select(User).where(User.email == email)
+    )
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+
+    # Validate new password
+    if len(data.new_password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters"
+        )
+
+    # Update password
+    user.set_password(data.new_password)
+    await session.commit()
+
+    logger.info(f"Password reset successful for: {email}")
+    return MessageResponse(message="Password has been reset successfully")
