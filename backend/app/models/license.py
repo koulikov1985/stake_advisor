@@ -63,10 +63,12 @@ class License(Base):
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="licenses")
     device_activations: Mapped[list["DeviceActivation"]] = relationship(
-        "DeviceActivation", back_populates="license", lazy="selectin"
+        "DeviceActivation", back_populates="license", lazy="selectin",
+        cascade="all, delete-orphan"
     )
     subscription: Mapped["Subscription"] = relationship(
-        "Subscription", back_populates="license", uselist=False
+        "Subscription", back_populates="license", uselist=False,
+        cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
