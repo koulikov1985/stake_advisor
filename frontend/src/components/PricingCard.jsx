@@ -48,8 +48,7 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
       <div className="plan-price">
         {plan === 'trial' ? (
           <>
-            <span className="amount">Free</span>
-            <span className="period">{label}</span>
+            <span className="amount" style={{ fontSize: '1.5rem' }}>Try 200 hands free</span>
           </>
         ) : (
           <>
@@ -70,10 +69,10 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
       {error && <p className="error-message">{error}</p>}
       <button
         className="purchase-btn"
-        onClick={handlePurchase}
-        disabled={loading}
+        onClick={plan === 'trial' ? () => window.open('https://discord.gg/pokersharkscope', '_blank') : handlePurchase}
+        disabled={loading && plan !== 'trial'}
       >
-        {loading ? 'Processing...' : (plan === 'trial' ? 'Try it for free' : 'Get Started')}
+        {loading && plan !== 'trial' ? 'Processing...' : (plan === 'trial' ? 'Join Discord' : 'Get Started')}
       </button>
     </div>
   );
