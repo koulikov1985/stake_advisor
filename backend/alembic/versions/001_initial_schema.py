@@ -125,12 +125,19 @@ def upgrade() -> None:
         sa.Column('action', sa.String(100), nullable=False),
         sa.Column('actor_type', sa.String(50), nullable=False),
         sa.Column('actor_id', sa.String(255), nullable=True),
+        sa.Column('actor_email', sa.String(255), nullable=True),
+        sa.Column('ip_address', sa.String(45), nullable=True),
+        sa.Column('user_agent', sa.String(512), nullable=True),
         sa.Column('old_values', postgresql.JSONB(), nullable=True),
         sa.Column('new_values', postgresql.JSONB(), nullable=True),
+        sa.Column('extra_data', postgresql.JSONB(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint('id'),
     )
     op.create_index('ix_audit_logs_created_at', 'audit_logs', ['created_at'])
+    op.create_index('ix_audit_logs_entity_type', 'audit_logs', ['entity_type'])
+    op.create_index('ix_audit_logs_action', 'audit_logs', ['action'])
+    op.create_index('ix_audit_logs_actor_id', 'audit_logs', ['actor_id'])
 
 
 def downgrade() -> None:
