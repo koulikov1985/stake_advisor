@@ -89,7 +89,8 @@ class Commission(Base):
 
     # Status
     status: Mapped[CommissionStatus] = mapped_column(
-        Enum(CommissionStatus), default=CommissionStatus.PENDING
+        Enum(CommissionStatus, values_callable=lambda x: [e.value for e in x]),
+        default=CommissionStatus.PENDING
     )
 
     # Payout reference
@@ -131,7 +132,8 @@ class AffiliatePayout(Base):
     amount: Mapped[int] = mapped_column(Integer, default=0)  # In cents
     currency: Mapped[str] = mapped_column(String(3), default="USD")
     status: Mapped[PayoutStatus] = mapped_column(
-        Enum(PayoutStatus), default=PayoutStatus.PENDING
+        Enum(PayoutStatus, values_callable=lambda x: [e.value for e in x]),
+        default=PayoutStatus.PENDING
     )
 
     # Payment details

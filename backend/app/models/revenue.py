@@ -43,10 +43,12 @@ class RevenueTransaction(Base):
 
     # Transaction details
     transaction_type: Mapped[TransactionType] = mapped_column(
-        Enum(TransactionType), default=TransactionType.SUBSCRIPTION_PAYMENT
+        Enum(TransactionType, values_callable=lambda x: [e.value for e in x]),
+        default=TransactionType.SUBSCRIPTION_PAYMENT
     )
     status: Mapped[TransactionStatus] = mapped_column(
-        Enum(TransactionStatus), default=TransactionStatus.PENDING
+        Enum(TransactionStatus, values_callable=lambda x: [e.value for e in x]),
+        default=TransactionStatus.PENDING
     )
 
     # Amounts (in cents)

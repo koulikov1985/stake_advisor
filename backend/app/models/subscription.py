@@ -31,7 +31,8 @@ class Subscription(Base):
         String(255), unique=True, nullable=False, index=True
     )
     status: Mapped[SubscriptionStatus] = mapped_column(
-        Enum(SubscriptionStatus), default=SubscriptionStatus.ACTIVE
+        Enum(SubscriptionStatus, values_callable=lambda x: [e.value for e in x]),
+        default=SubscriptionStatus.ACTIVE
     )
     current_period_start: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     current_period_end: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

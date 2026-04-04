@@ -44,10 +44,12 @@ class License(Base):
         String(24), unique=True, nullable=False, index=True, default=generate_license_key
     )
     tier: Mapped[LicenseTier] = mapped_column(
-        Enum(LicenseTier), default=LicenseTier.MONTH
+        Enum(LicenseTier, values_callable=lambda x: [e.value for e in x]),
+        default=LicenseTier.MONTH
     )
     status: Mapped[LicenseStatus] = mapped_column(
-        Enum(LicenseStatus), default=LicenseStatus.ACTIVE
+        Enum(LicenseStatus, values_callable=lambda x: [e.value for e in x]),
+        default=LicenseStatus.ACTIVE
     )
     max_devices: Mapped[int] = mapped_column(Integer, default=2)
     activated_devices: Mapped[int] = mapped_column(Integer, default=0)
