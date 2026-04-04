@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from sqladmin import Admin, ModelView
 
 from app.models import (
@@ -55,6 +57,22 @@ class LicenseAdmin(ModelView, model=License):
     name = "License"
     name_plural = "Licenses"
     icon = "fa-solid fa-key"
+
+    async def on_model_change(self, data, model, is_created, request):
+        """Auto-calculate expiration date based on tier if not set."""
+        if is_created and not data.get("expires_at"):
+            tier = data.get("tier")
+            if tier:
+                tier_days = {
+                    "day": 1,
+                    "week": 7,
+                    "month": 30,
+                    "6month": 180,
+                    "year": 365,
+                }
+                tier_value = tier.value if hasattr(tier, 'value') else str(tier)
+                days = tier_days.get(tier_value, 30)
+                model.expires_at = datetime.utcnow() + timedelta(days=days)
 
 
 class SubscriptionAdmin(ModelView, model=Subscription):
