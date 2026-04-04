@@ -10,9 +10,11 @@ from app.database import Base
 
 
 class LicenseTier(str, enum.Enum):
+    TRIAL = "trial"
     DAY = "day"
     WEEK = "week"
     MONTH = "month"
+    SIXMONTH = "6month"
     YEAR = "year"
 
 

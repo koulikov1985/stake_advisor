@@ -164,9 +164,12 @@ async def create_license(
 
     # Map tier string to enum
     tier_map = {
+        "trial": LicenseTier.TRIAL,
         "day": LicenseTier.DAY,
         "week": LicenseTier.WEEK,
         "month": LicenseTier.MONTH,
+        "6month": LicenseTier.SIXMONTH,
+        "sixmonth": LicenseTier.SIXMONTH,
         "year": LicenseTier.YEAR,
     }
     tier = tier_map.get(data.tier, LicenseTier.MONTH)

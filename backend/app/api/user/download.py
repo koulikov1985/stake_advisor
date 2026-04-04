@@ -1,6 +1,5 @@
 """Download endpoints for the app."""
 
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Depends, status
@@ -10,7 +9,7 @@ from sqlalchemy import select
 
 from app.services.settings_service import SettingsService
 from app.database import get_session
-from app.models import User, License
+from app.models import User, License, LicenseStatus
 from app.api.user.profile import get_current_user
 
 router = APIRouter(tags=["Downloads"])
@@ -29,35 +28,25 @@ async def download_app(
     if platform not in ("mac", "windows"):
         raise HTTPException(status_code=400, detail="Invalid platform. Use 'mac' or 'windows'")
 
-    # Check if user has an active license
-    if not current_user.license_id:
+    # Check if user has any licenses
+    if not current_user.licenses:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You need an active license to download. Please purchase a subscription."
         )
 
-    # Verify license is active
-    result = await session.execute(
-        select(License).where(License.id == current_user.license_id)
-    )
-    license = result.scalar_one_or_none()
+    # Find an active license
+    active_license = None
+    for lic in current_user.licenses:
+        if lic.status == LicenseStatus.ACTIVE:
+            if not lic.expires_at or lic.expires_at >= datetime.now(timezone.utc):
+                active_license = lic
+                break
 
-    if not license:
+    if not active_license:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="License not found. Please purchase a subscription."
-        )
-
-    if license.status != "active":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your license is not active. Please renew your subscription."
-        )
-
-    if license.expires_at and license.expires_at < datetime.now(timezone.utc):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your license has expired. Please renew your subscription."
+            detail="Your license is not active or has expired. Please renew your subscription."
         )
 
     # Check for local file first
