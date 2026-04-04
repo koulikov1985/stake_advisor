@@ -51,7 +51,7 @@ def upgrade() -> None:
         sa.Column('currency', sa.String(3), nullable=True),
         sa.Column('plan_tier', sa.String(50), nullable=True),
         sa.Column('description', sa.Text(), nullable=True),
-        sa.Column('metadata', postgresql.JSONB(), nullable=True),
+        sa.Column('extra_data', postgresql.JSONB(), nullable=True),
         sa.Column('transaction_date', sa.DateTime(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(['subscription_id'], ['subscriptions.id'], ),
@@ -188,7 +188,7 @@ def upgrade() -> None:
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column('ip_address', sa.String(45), nullable=True),
         sa.Column('user_agent', sa.String(512), nullable=True),
-        sa.Column('metadata', postgresql.JSONB(), nullable=True),
+        sa.Column('extra_data', postgresql.JSONB(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
         sa.PrimaryKeyConstraint('id')
