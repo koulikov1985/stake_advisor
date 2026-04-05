@@ -8,6 +8,7 @@ function ResetPassword() {
   const [searchParams] = useSearchParams();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -135,43 +136,48 @@ function ResetPassword() {
         }}>
           <div style={{
             background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
+            border: '1px solid rgba(0, 217, 126, 0.3)',
             borderRadius: '16px',
-            padding: '2.5rem',
+            padding: '3rem 2.5rem',
             width: '100%',
-            maxWidth: '400px',
+            maxWidth: '420px',
             textAlign: 'center'
           }}>
             <div style={{
-              width: '60px',
-              height: '60px',
-              background: 'rgba(212, 175, 55, 0.15)',
-              color: 'var(--gold)',
+              width: '80px',
+              height: '80px',
+              background: 'linear-gradient(135deg, rgba(0, 217, 126, 0.2) 0%, rgba(0, 217, 126, 0.05) 100%)',
+              border: '2px solid rgba(0, 217, 126, 0.4)',
+              color: '#00d97e',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.75rem',
+              fontSize: '2.5rem',
               margin: '0 auto 1.5rem'
             }}>✓</div>
-            <h2 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Password Reset!</h2>
+            <h2 style={{ color: '#00d97e', marginBottom: '0.75rem', fontSize: '1.75rem' }}>Password Reset!</h2>
+            <p style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+              Your password has been updated
+            </p>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-              Your password has been successfully reset. Redirecting to login...
+              You can now sign in with your new password.
             </p>
             <Link to="/login" style={{
               display: 'block',
               width: '100%',
               padding: '1rem',
-              background: 'var(--gold)',
+              background: 'linear-gradient(135deg, var(--gold) 0%, #b8960c 100%)',
               color: '#000',
               border: 'none',
               borderRadius: '8px',
               fontSize: '1rem',
               fontWeight: '600',
               textDecoration: 'none',
-              textAlign: 'center'
+              textAlign: 'center',
+              boxShadow: '0 4px 16px rgba(212,175,55,0.3)'
             }}>
-              Go to Login
+              Sign In Now
             </Link>
           </div>
         </div>
@@ -225,23 +231,44 @@ function ResetPassword() {
                 fontWeight: '500',
                 fontSize: '0.95rem'
               }}>New Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 8 characters"
-                required
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '8px',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: '1rem',
-                  outline: 'none'
-                }}
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 8 characters"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.875rem',
+                    paddingRight: '3rem',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
             <div style={{ marginBottom: '1.25rem' }}>
@@ -253,7 +280,7 @@ function ResetPassword() {
                 fontSize: '0.95rem'
               }}>Confirm Password</label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
