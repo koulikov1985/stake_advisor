@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Depends, status, Query
 from fastapi.responses import FileResponse, RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from jose import jwt, JWTError
 
 from app.services.settings_service import SettingsService
@@ -31,7 +32,7 @@ async def get_user_from_token(token: str, session: AsyncSession) -> User:
             raise HTTPException(status_code=401, detail="Invalid token")
 
         result = await session.execute(
-            select(User).where(User.id == int(user_id))
+            select(User).options(selectinload(User.licenses)).where(User.id == user_id)
         )
         user = result.scalar_one_or_none()
         if not user:
@@ -56,9 +57,6 @@ async def download_app(
         raise HTTPException(status_code=401, detail="Authentication required")
 
     current_user = await get_user_from_token(token, session)
-
-    # Load user's licenses
-    await session.refresh(current_user, ["licenses"])
 
     # Check if user has any licenses
     if not current_user.licenses:
