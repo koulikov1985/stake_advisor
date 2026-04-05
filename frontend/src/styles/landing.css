@@ -3968,3 +3968,334 @@
     top: 2px;
   }
 }
+
+/* ============================================
+   DOWNLOAD PAGE STYLES
+   ============================================ */
+
+/* Download Modal */
+.download-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.download-modal {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+  border: 1px solid var(--ai-green);
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: popupSlide 0.3s ease;
+  box-shadow: 
+    0 0 80px rgba(0, 255, 136, 0.2),
+    0 0 0 1px rgba(0, 255, 136, 0.1);
+}
+
+.download-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-modal-close:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.download-modal-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.download-modal h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.download-modal p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.download-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.download-modal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.download-modal-btn.primary {
+  background: var(--ai-green);
+  color: #000;
+}
+
+.download-modal-btn.primary:hover {
+  background: var(--ai-green-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+}
+
+.download-modal-btn.secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.download-modal-btn.secondary:hover {
+  border-color: var(--ai-green);
+  color: var(--ai-green);
+}
+
+.download-modal-note {
+  font-size: 0.9rem !important;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
+}
+
+.download-modal-note strong {
+  color: var(--ai-green);
+}
+
+/* Download Section */
+.download-section {
+  padding: 2rem 2rem 4rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.download-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.download-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.download-card:hover {
+  border-color: rgba(0, 255, 136, 0.3);
+  transform: translateY(-5px);
+}
+
+.download-card-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.download-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.download-card-version {
+  color: var(--ai-green);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.download-card-req {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.download-card-size {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.download-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  background: var(--ai-green);
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-card-btn:hover:not(:disabled) {
+  background: var(--ai-green-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+}
+
+.download-card-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.download-card-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.download-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.download-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  font-weight: 500;
+}
+
+.download-status.success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--ai-green);
+}
+
+/* Install Section */
+.install-section {
+  padding: 6rem 2rem;
+  background: var(--bg-surface);
+}
+
+.install-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.install-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+.install-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ai-green);
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.install-card ol {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.install-card li {
+  color: var(--text-secondary);
+  line-height: 2.2;
+  font-size: 0.95rem;
+}
+
+.install-note {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 700px;
+  margin: 3rem auto 0;
+}
+
+.install-note-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.install-note strong {
+  color: #ffc107;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.install-note p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .download-cards,
+  .install-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .download-modal {
+    padding: 2rem;
+    margin: 1rem;
+  }
+}

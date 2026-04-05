@@ -8,6 +8,8 @@ function Download() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasLicense, setHasLicense] = useState(false);
   const [downloading, setDownloading] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showLicenseModal, setShowLicenseModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,11 +32,11 @@ function Download() {
 
   const handleDownload = async (platform) => {
     if (!isLoggedIn) {
-      navigate('/login?redirect=/download');
+      setShowAuthModal(true);
       return;
     }
     if (!hasLicense) {
-      navigate('/pricing');
+      setShowLicenseModal(true);
       return;
     }
 
@@ -48,7 +50,6 @@ function Download() {
       });
 
       if (res.ok) {
-        // Get the final URL after redirect and open it
         window.location.href = res.url;
       } else {
         const data = await res.json();
@@ -61,12 +62,57 @@ function Download() {
   };
 
   return (
-    <div className="landing">
+    <div className="landing ai-theme">
+      {/* Auth Required Modal */}
+      {showAuthModal && (
+        <div className="download-modal-overlay" onClick={() => setShowAuthModal(false)}>
+          <div className="download-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="download-modal-close" onClick={() => setShowAuthModal(false)}>×</button>
+            <div className="download-modal-icon">🔐</div>
+            <h3>Authentication Required</h3>
+            <p>Please log in or create an account to download Poker AI.</p>
+            <div className="download-modal-buttons">
+              <Link to="/login?redirect=/download" className="download-modal-btn primary">
+                Log In
+              </Link>
+              <Link to="/signup" className="download-modal-btn secondary">
+                Create Account
+              </Link>
+            </div>
+            <p className="download-modal-note">
+              New users get <strong>200 free hands</strong> to try the AI!
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* License Required Modal */}
+      {showLicenseModal && (
+        <div className="download-modal-overlay" onClick={() => setShowLicenseModal(false)}>
+          <div className="download-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="download-modal-close" onClick={() => setShowLicenseModal(false)}>×</button>
+            <div className="download-modal-icon">🎫</div>
+            <h3>Subscription Required</h3>
+            <p>You need an active subscription to download the Poker AI software.</p>
+            <div className="download-modal-buttons">
+              <Link to="/dashboard" className="download-modal-btn primary">
+                Get Subscription
+              </Link>
+              <button onClick={() => setShowLicenseModal(false)} className="download-modal-btn secondary">
+                Maybe Later
+              </button>
+            </div>
+            <p className="download-modal-note">
+              Plans start at just <strong>$5/day</strong>
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="landing-header">
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="nav-discord">
@@ -75,146 +121,141 @@ function Download() {
             </svg>
             <span>Discord</span>
           </a>
-                    <Link to="/pricing">Pricing</Link>
+          <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
-          <Link to="/affiliate">Affiliate</Link>
-          <Link to="/login" className="nav-btn-ghost">Login</Link>
-          <Link to="/signup" className="nav-btn-primary">Get Started</Link>
+          {isLoggedIn ? (
+            <Link to="/dashboard" className="nav-btn-primary">Dashboard</Link>
+          ) : (
+            <>
+              <Link to="/login" className="nav-btn-ghost">Login</Link>
+              <Link to="/signup" className="nav-btn-primary">Get Started</Link>
+            </>
+          )}
         </nav>
       </header>
 
       {/* Hero */}
-      <section className="landing-hero" style={{ paddingBottom: '2rem' }}>
-        <div className="hero-glow"></div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-icon">⬇</span>
-            <span>Download PokerSharkScope</span>
+      <section className="hero-ai" style={{ minHeight: 'auto', paddingTop: '10rem', paddingBottom: '4rem' }}>
+        <div className="hero-bg-effects">
+          <div className="ai-grid-bg"></div>
+          <div className="ai-glow-orb orb-1"></div>
+        </div>
+        <div className="hero-content-ai">
+          <div className="ai-badge">
+            <span className="ai-pulse"></span>
+            <span className="ai-text">Download</span>
           </div>
-          <h1>
+          <h1 className="hero-title-ai">
             Get The Desktop App<br />
-            <span className="gradient-text">For Mac & Windows</span>
+            <span className="gradient-text-ai">For Mac & Windows</span>
           </h1>
-          <p className="hero-desc">
-            Download the native app for real-time GTO analysis and opponent tracking.
+          <p className="hero-subtitle-ai">
+            Download the native Poker AI app for fully automated play with real-time GTO decisions.
           </p>
         </div>
       </section>
 
       {/* Download Cards */}
-      <section className="landing-features" style={{ paddingTop: '2rem' }}>
-        <div className="platforms-grid" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <section className="download-section">
+        <div className="download-cards">
           {/* macOS Card */}
-          <div className="platform-card" style={{ padding: '2.5rem' }}>
-            <div className="platform-icon">🍎</div>
+          <div className="download-card">
+            <div className="download-card-icon">🍎</div>
             <h3>macOS</h3>
-            <p style={{ color: '#d4af37', fontWeight: '600', marginBottom: '0.25rem' }}>Version 1.0.0</p>
-            <p style={{ marginBottom: '0.25rem' }}>macOS 10.15 Catalina or later</p>
-            <p style={{ marginBottom: '1.5rem', fontSize: '0.85rem' }}>~108 MB</p>
+            <div className="download-card-version">Version 1.0.0</div>
+            <p className="download-card-req">macOS 10.15 Catalina or later</p>
+            <p className="download-card-size">~108 MB</p>
             <button
               onClick={() => handleDownload('mac')}
-              className="btn-hero-primary"
-              style={{ width: '100%', justifyContent: 'center' }}
+              className="download-card-btn"
               disabled={downloading === 'mac'}
             >
-              {downloading === 'mac' ? 'Preparing...' : 'Download for Mac'}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '18px', height: '18px' }}>
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-              </svg>
+              {downloading === 'mac' ? (
+                <>
+                  <span className="download-spinner"></span>
+                  Preparing...
+                </>
+              ) : (
+                <>
+                  Download for Mac
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                </>
+              )}
             </button>
           </div>
 
           {/* Windows Card */}
-          <div className="platform-card" style={{ padding: '2.5rem' }}>
-            <div className="platform-icon">🪟</div>
+          <div className="download-card">
+            <div className="download-card-icon">🪟</div>
             <h3>Windows</h3>
-            <p style={{ color: '#d4af37', fontWeight: '600', marginBottom: '0.25rem' }}>Version 1.0.0</p>
-            <p style={{ marginBottom: '0.25rem' }}>Windows 10 or later</p>
-            <p style={{ marginBottom: '1.5rem', fontSize: '0.85rem' }}>~95 MB</p>
+            <div className="download-card-version">Version 1.0.0</div>
+            <p className="download-card-req">Windows 10 or later</p>
+            <p className="download-card-size">~95 MB</p>
             <button
               onClick={() => handleDownload('windows')}
-              className="btn-hero-primary"
-              style={{ width: '100%', justifyContent: 'center' }}
+              className="download-card-btn"
               disabled={downloading === 'windows'}
             >
-              {downloading === 'windows' ? 'Preparing...' : 'Download for Windows'}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: '18px', height: '18px' }}>
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-              </svg>
+              {downloading === 'windows' ? (
+                <>
+                  <span className="download-spinner"></span>
+                  Preparing...
+                </>
+              ) : (
+                <>
+                  Download for Windows
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Login/License Notice */}
-        {!isLoggedIn && (
-          <div style={{
-            textAlign: 'center',
-            padding: '1.25rem 2rem',
-            background: 'rgba(212, 175, 55, 0.1)',
-            border: '1px solid rgba(212, 175, 55, 0.3)',
-            borderRadius: '12px',
-            maxWidth: '500px',
-            margin: '2rem auto 0'
-          }}>
-            <p style={{ color: '#d4af37', margin: 0 }}>
-              Please <Link to="/login" style={{ color: '#fff', textDecoration: 'underline' }}>log in</Link> or{' '}
-              <Link to="/signup" style={{ color: '#fff', textDecoration: 'underline' }}>sign up</Link> to download.
-            </p>
-          </div>
-        )}
-
-        {isLoggedIn && !hasLicense && (
-          <div style={{
-            textAlign: 'center',
-            padding: '1.25rem 2rem',
-            background: 'rgba(212, 175, 55, 0.1)',
-            border: '1px solid rgba(212, 175, 55, 0.3)',
-            borderRadius: '12px',
-            maxWidth: '500px',
-            margin: '2rem auto 0'
-          }}>
-            <p style={{ color: '#d4af37', margin: 0 }}>
-              You need an active subscription to download.{' '}
-              <Link to="/pricing" style={{ color: '#fff', textDecoration: 'underline' }}>View pricing</Link>
-            </p>
+        {/* Status Badge */}
+        {isLoggedIn && hasLicense && (
+          <div className="download-status success">
+            <span>✓</span> You have an active subscription. Ready to download!
           </div>
         )}
       </section>
 
       {/* Installation Instructions */}
-      <section className="landing-features" style={{ background: 'var(--bg-surface)', margin: '4rem -100vw 0', padding: '5rem calc(50vw - 500px)' }}>
-        <div className="features-header">
-          <span className="section-tag">Setup</span>
-          <h2>Installation Instructions</h2>
+      <section className="install-section">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Setup Guide</span>
+          <h2 className="section-title-ai">
+            Installation<br/>
+            <span className="gradient-text-ai">Instructions</span>
+          </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <div className="install-grid">
           {/* macOS Instructions */}
-          <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '2rem', border: '1px solid var(--border-subtle)' }}>
-            <h3 style={{ color: '#d4af37', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              🍎 macOS
-            </h3>
-            <ol style={{ color: 'var(--text-secondary)', paddingLeft: '1.25rem', lineHeight: '2' }}>
+          <div className="install-card">
+            <h3><span>🍎</span> macOS</h3>
+            <ol>
               <li>Download and extract the ZIP file</li>
-              <li>Drag PokerSharkScope to Applications</li>
+              <li>Drag Poker AI to Applications</li>
               <li>Double-click "Launch Chrome" script</li>
-              <li>Open PokerSharkScope app</li>
+              <li>Open Poker AI app</li>
               <li>Enter your license key when prompted</li>
               <li>Set your Stake.us username in Settings</li>
             </ol>
           </div>
 
           {/* Windows Instructions */}
-          <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '2rem', border: '1px solid var(--border-subtle)' }}>
-            <h3 style={{ color: '#d4af37', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              🪟 Windows
-            </h3>
-            <ol style={{ color: 'var(--text-secondary)', paddingLeft: '1.25rem', lineHeight: '2' }}>
+          <div className="install-card">
+            <h3><span>🪟</span> Windows</h3>
+            <ol>
               <li>Download and extract the ZIP file</li>
               <li>Run "Launch Chrome.bat" first</li>
-              <li>Open PokerSharkScope.exe</li>
-              <li>Click "More info" then "Run anyway" if blocked</li>
+              <li>Open PokerAI.exe</li>
+              <li>Click "More info" → "Run anyway" if blocked</li>
               <li>Enter your license key when prompted</li>
               <li>Set your Stake.us username in Settings</li>
             </ol>
@@ -222,54 +263,47 @@ function Download() {
         </div>
 
         {/* Important Note */}
-        <div style={{
-          background: 'rgba(212, 175, 55, 0.08)',
-          border: '1px solid rgba(212, 175, 55, 0.2)',
-          borderRadius: '12px',
-          padding: '1.5rem',
-          maxWidth: '600px',
-          margin: '2rem auto 0',
-          textAlign: 'center'
-        }}>
-          <p style={{ color: '#d4af37', fontWeight: '600', marginBottom: '0.5rem' }}>
-            Important: Launch Chrome First!
-          </p>
-          <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.95rem' }}>
-            Always use the included "Launch Chrome" script before starting PokerSharkScope.
-            This enables the connection between the app and your browser.
-          </p>
+        <div className="install-note">
+          <div className="install-note-icon">⚠️</div>
+          <div>
+            <strong>Important: Launch Chrome First!</strong>
+            <p>Always use the included "Launch Chrome" script before starting Poker AI. This enables the connection between the app and your browser.</p>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="landing-cta">
-        <div className="cta-card">
+      <section className="final-cta-ai">
+        <div className="cta-bg-ai">
+          <div className="cta-glow-ai"></div>
+        </div>
+        <div className="cta-content-ai">
           <h2>Need Help Getting Started?</h2>
-          <p>Check our FAQ or contact support if you run into any issues.</p>
-          <div className="cta-buttons">
-            <Link to="/faq" className="btn-hero-primary">
-              View FAQ
+          <p>Check our FAQ or join Discord if you run into any issues.</p>
+          <div className="hero-cta-group">
+            <Link to="/faq" className="btn-cta-ai">
+              <span>View FAQ</span>
             </Link>
-            <Link to="/features" className="btn-hero-secondary">
-              See Features
-            </Link>
+            <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="btn-cta-secondary-ai">
+              <span>Join Discord</span>
+            </a>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="landing-footer">
-        <div className="footer-brand">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+      <footer className="landing-footer-ai">
+        <div className="footer-brand-ai">
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
-        <div className="footer-links">
-                    <Link to="/pricing">Pricing</Link>
+        <div className="footer-links-ai">
+          <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
-          <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="footer-discord">Discord</a>
+          <Link to="/affiliate">Affiliate</Link>
+          <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy">© 2024 PokerSharkScope. All rights reserved.</p>
+        <p className="footer-copy-ai">© 2025 Poker AI. All rights reserved.</p>
       </footer>
     </div>
   );
