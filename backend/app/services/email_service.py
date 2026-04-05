@@ -84,6 +84,40 @@ class EmailService:
         """
         return await self.send_email(to_email, subject, html_body)
 
+    async def send_verification_email(self, to_email: str, verification_token: str, name: Optional[str] = None) -> bool:
+        """Send email verification link."""
+        display_name = name or "there"
+        verify_link = f"{self.frontend_url}/verify-email?token={verification_token}"
+        subject = "Verify Your PokerSharkScope Email"
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 40px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: #2a2a2a; border-radius: 12px; padding: 40px; }}
+                h1 {{ color: #d4af37; margin-bottom: 20px; }}
+                .btn {{ display: inline-block; background: #d4af37; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #444; color: #888; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Verify Your Email</h1>
+                <p>Hey {display_name},</p>
+                <p>Thanks for signing up for PokerSharkScope! Please verify your email address by clicking the button below:</p>
+                <a href="{verify_link}" class="btn">Verify Email Address</a>
+                <p style="margin-top: 20px; color: #888;">This link expires in 24 hours.</p>
+                <p style="color: #888;">If you didn't create an account, you can safely ignore this email.</p>
+                <div class="footer">
+                    <p>PokerSharkScope - Play Smarter, Win More</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        return await self.send_email(to_email, subject, html_body)
+
     async def send_password_reset_email(self, to_email: str, reset_token: str) -> bool:
         """Send password reset email."""
         reset_link = f"{self.frontend_url}/reset-password?token={reset_token}"

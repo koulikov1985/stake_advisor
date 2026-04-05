@@ -56,6 +56,7 @@ class UserResponse(BaseModel):
     email: str
     name: Optional[str]
     is_active: bool
+    email_verified: bool
     is_affiliate: bool
     affiliate_code: Optional[str]
     license_id: Optional[str]
@@ -117,6 +118,7 @@ async def get_profile(
         email=user.email,
         name=user.name,
         is_active=user.is_active,
+        email_verified=user.email_verified,
         is_affiliate=user.is_affiliate,
         affiliate_code=user.affiliate_code,
         license_id=str(license.id) if license else None,

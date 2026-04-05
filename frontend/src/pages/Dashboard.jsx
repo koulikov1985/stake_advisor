@@ -24,6 +24,8 @@ function Dashboard() {
   const [copiedRef, setCopiedRef] = useState(false);
   const [purchasing, setPurchasing] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
+  const [resendingVerification, setResendingVerification] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -192,6 +194,25 @@ function Dashboard() {
     }
   };
 
+  const resendVerification = async () => {
+    if (resendingVerification || verificationSent) return;
+    setResendingVerification(true);
+    try {
+      const res = await fetch(`${API_URL}/api/user/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user?.email })
+      });
+      if (res.ok) {
+        setVerificationSent(true);
+      }
+    } catch (err) {
+      console.error('Failed to resend verification:', err);
+    } finally {
+      setResendingVerification(false);
+    }
+  };
+
   const handleDownload = (platform) => {
     const token = localStorage.getItem('token');
     window.location.href = `${API_URL}/api/user/download/${platform}?token=${token}`;
@@ -246,6 +267,45 @@ function Dashboard() {
           </div>
         </div>
       </header>
+
+      {/* Email Verification Banner */}
+      {user && !user.email_verified && (
+        <div style={{
+          background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%)',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+          padding: '0.75rem 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '1rem'
+        }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="2" style={{ width: '20px', height: '20px', flexShrink: 0 }}>
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>
+            Please verify your email address to access all features.
+          </span>
+          <button
+            onClick={resendVerification}
+            disabled={resendingVerification || verificationSent}
+            style={{
+              background: verificationSent ? 'transparent' : 'var(--gold)',
+              color: verificationSent ? 'var(--gold)' : '#000',
+              border: verificationSent ? '1px solid var(--gold)' : 'none',
+              padding: '0.4rem 1rem',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              cursor: verificationSent ? 'default' : 'pointer',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {verificationSent ? 'Email Sent!' : resendingVerification ? 'Sending...' : 'Resend Email'}
+          </button>
+        </div>
+      )}
 
       <main className="dash-main">
         {/* Welcome Section */}

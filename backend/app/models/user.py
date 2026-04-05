@@ -39,6 +39,7 @@ class User(Base):
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Affiliate fields
     is_affiliate: Mapped[bool] = mapped_column(Boolean, default=False)
