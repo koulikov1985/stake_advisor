@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 
 # revision identifiers, used by Alembic.
-revision = '004'
-down_revision = '003'
+revision = '004_add_stripe_support'
+down_revision = '003_add_license_tiers'
 branch_labels = None
 depends_on = None
 
