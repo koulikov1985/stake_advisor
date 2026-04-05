@@ -1,43 +1,18 @@
-import React, { useState } from 'react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function PricingCard({ plan, name, price, label, duration, features, popular }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handlePurchase = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Get referral code from localStorage if valid
-      let referralCode = null;
-      const storedCode = localStorage.getItem('referralCode');
-      const expiresAt = localStorage.getItem('referralCodeExpires');
-      if (storedCode && expiresAt && Date.now() < parseInt(expiresAt)) {
-        referralCode = storedCode;
-      }
-
-      const response = await fetch(`${API_URL}/api/user/payment/create-checkout-session`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ plan, referral_code: referralCode }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      // Redirect to Stripe Checkout
-      window.location.href = data.url;
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+  const handlePurchase = () => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Already logged in, go to dashboard to purchase
+      navigate('/dashboard');
+    } else {
+      // Not logged in, redirect to signup
+      navigate('/signup');
     }
   };
 
@@ -66,13 +41,11 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
           </li>
         ))}
       </ul>
-      {error && <p className="error-message">{error}</p>}
       <button
         className="purchase-btn"
         onClick={plan === 'trial' ? () => window.open('https://discord.gg/NHUjvZXzrR', '_blank') : handlePurchase}
-        disabled={loading && plan !== 'trial'}
       >
-        {loading && plan !== 'trial' ? 'Processing...' : (plan === 'trial' ? 'Join Discord' : 'Get Started')}
+        {plan === 'trial' ? 'Join Discord' : 'Get Started'}
       </button>
     </div>
   );
