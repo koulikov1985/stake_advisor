@@ -56,10 +56,8 @@ function Dashboard() {
       // Fetch payment history
       fetchPayments(token);
 
-      // Fetch affiliate stats if user is affiliate
-      if (userData.is_affiliate) {
-        fetchAffiliateStats(token);
-      }
+      // Fetch affiliate stats for all users with active subscription
+      fetchAffiliateStats(token);
     } catch {
       localStorage.clear();
       navigate('/login');
@@ -379,8 +377,8 @@ function Dashboard() {
                 </div>
               )}
 
-              {/* Affiliate Card - Only show if active subscription */}
-              {hasActiveSubscription && user?.is_affiliate && (
+              {/* Affiliate Card - Show for all active subscribers */}
+              {hasActiveSubscription && (
                 <div className="dash-card affiliate-card full-width">
                   <div className="card-icon" style={{ background: 'rgba(0, 217, 126, 0.15)' }}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ stroke: '#00d97e' }}>

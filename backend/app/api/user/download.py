@@ -67,9 +67,17 @@ async def download_app(
 
     # Find an active license
     active_license = None
+    now = datetime.now(timezone.utc)
     for lic in current_user.licenses:
         if lic.status == LicenseStatus.ACTIVE:
-            if not lic.expires_at or lic.expires_at >= datetime.now(timezone.utc):
+            if not lic.expires_at:
+                active_license = lic
+                break
+            # Make expires_at timezone aware if it's naive
+            exp = lic.expires_at
+            if exp.tzinfo is None:
+                exp = exp.replace(tzinfo=timezone.utc)
+            if exp >= now:
                 active_license = lic
                 break
 
