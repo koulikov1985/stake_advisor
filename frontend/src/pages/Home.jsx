@@ -1,12 +1,94 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/landing.css';
+
+// Animated Counter Hook
+function useCountUp(end, duration = 2000, startOnView = true) {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!startOnView) {
+      animateCount();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasStarted) {
+          setHasStarted(true);
+          animateCount();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  const animateCount = () => {
+    const startTime = Date.now();
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    animate();
+  };
+
+  return { count, ref };
+}
+
+// FAQ Data
+const faqData = [
+  {
+    q: "Is this legal to use?",
+    a: "Poker AI is designed for sweepstakes and social poker sites where real-time assistance tools are permitted. Always check the terms of service of your specific poker site."
+  },
+  {
+    q: "How does the AI read my poker table?",
+    a: "Our AI uses advanced computer vision to capture and analyze your screen in real-time. It detects cards, chips, pot sizes, and player actions with 99.9% accuracy in under 50 milliseconds."
+  },
+  {
+    q: "Will I get detected or banned?",
+    a: "Poker AI operates externally and doesn't modify any game files or inject code. It simply reads your screen like a human would. We've had zero reported bans from our users."
+  },
+  {
+    q: "Can I run multiple tables?",
+    a: "Yes! Poker AI can manage up to 6 tables simultaneously, each running independently with its own AI decision engine. Perfect for maximizing volume and profits."
+  },
+  {
+    q: "What's the difference between this and other poker tools?",
+    a: "Traditional tools give you advice - you still have to make decisions and click buttons. Poker AI is fully autonomous. It reads, decides, and executes automatically. You just watch it win."
+  },
+  {
+    q: "Is there a free trial?",
+    a: "Yes! Every new account gets 200 free hands to test the AI. No credit card required to start."
+  }
+];
 
 function Home() {
   const [searchParams] = useSearchParams();
   const [showCanceled, setShowCanceled] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const [showExitPopup, setShowExitPopup] = useState(false);
+  const [exitPopupShown, setExitPopupShown] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Animated stats
+  const stat1 = useCountUp(91, 2000);
+  const stat2 = useCountUp(6, 1500);
+  const stat3 = useCountUp(69, 2000);
 
   useEffect(() => {
+    // Simulate loading
+    setTimeout(() => setIsLoading(false), 800);
+
     if (searchParams.get('canceled') === 'true') {
       setShowCanceled(true);
       window.history.replaceState({}, '', '/');
@@ -20,13 +102,63 @@ function Home() {
       localStorage.setItem('referralCodeExpires', expiresAt.toString());
       window.history.replaceState({}, '', '/');
     }
-  }, [searchParams]);
+
+    // Exit intent detection
+    const handleMouseLeave = (e) => {
+      if (e.clientY <= 0 && !exitPopupShown) {
+        setShowExitPopup(true);
+        setExitPopupShown(true);
+      }
+    };
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => document.removeEventListener('mouseleave', handleMouseLeave);
+  }, [searchParams, exitPopupShown]);
 
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token;
 
+  // Loading screen
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-logo">
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" />
+        </div>
+        <div className="loading-bar">
+          <div className="loading-progress"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="landing ai-theme">
+    <div className={`landing ai-theme ${darkMode ? 'dark' : 'light'}`}>
+      {/* Exit Intent Popup */}
+      {showExitPopup && (
+        <div className="exit-popup-overlay" onClick={() => setShowExitPopup(false)}>
+          <div className="exit-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="exit-popup-close" onClick={() => setShowExitPopup(false)}>×</button>
+            <div className="exit-popup-content">
+              <span className="exit-popup-emoji">🎁</span>
+              <h3>Wait! Don't Leave Empty Handed</h3>
+              <p>Get <strong>20% OFF</strong> your first month with code:</p>
+              <div className="exit-popup-code">FIRST20</div>
+              <Link to="/signup" className="btn-cta-ai" onClick={() => setShowExitPopup(false)}>
+                Claim My Discount
+              </Link>
+              <button className="exit-popup-dismiss" onClick={() => setShowExitPopup(false)}>
+                No thanks, I'll pay full price
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dark/Light Mode Toggle */}
+      <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+
       {/* Header */}
       <header className="landing-header">
         <Link to="/" className="landing-logo">
@@ -66,7 +198,16 @@ function Home() {
           <div className="ai-grid-bg"></div>
           <div className="ai-glow-orb orb-1"></div>
           <div className="ai-glow-orb orb-2"></div>
-          <div className="ai-particles"></div>
+
+          {/* Floating Poker Cards */}
+          <div className="floating-cards">
+            <div className="floating-card card-1">🂡</div>
+            <div className="floating-card card-2">🂮</div>
+            <div className="floating-card card-3">🃁</div>
+            <div className="floating-card card-4">🃎</div>
+            <div className="floating-card card-5">🂱</div>
+            <div className="floating-card card-6">🃑</div>
+          </div>
         </div>
 
         <div className="hero-content-ai">
@@ -289,23 +430,23 @@ function Home() {
         </div>
       </section>
 
-      {/* Live Stats */}
+      {/* Live Stats - Animated */}
       <section className="stats-showcase-ai">
         <div className="stats-container-ai">
-          <div className="stat-item-ai">
-            <span className="stat-number-ai">+91</span>
+          <div className="stat-item-ai" ref={stat1.ref}>
+            <span className="stat-number-ai">+{stat1.count}</span>
             <span className="stat-unit-ai">BB/100</span>
             <span className="stat-desc-ai">AI Win Rate</span>
           </div>
           <div className="stat-divider-ai"></div>
-          <div className="stat-item-ai">
-            <span className="stat-number-ai">6</span>
+          <div className="stat-item-ai" ref={stat2.ref}>
+            <span className="stat-number-ai">{stat2.count}</span>
             <span className="stat-unit-ai">Tables</span>
             <span className="stat-desc-ai">Simultaneous</span>
           </div>
           <div className="stat-divider-ai"></div>
-          <div className="stat-item-ai">
-            <span className="stat-number-ai">69%</span>
+          <div className="stat-item-ai" ref={stat3.ref}>
+            <span className="stat-number-ai">{stat3.count}%</span>
             <span className="stat-unit-ai">Win Rate</span>
             <span className="stat-desc-ai">All-In Equity</span>
           </div>
@@ -393,7 +534,7 @@ function Home() {
         </div>
       </section>
 
-      {/* Screenshots */}
+      {/* Screenshots with Device Frames */}
       <section className="auto-showcase">
         <div className="showcase-header">
           <span className="section-tag-ai">See It In Action</span>
@@ -413,8 +554,11 @@ function Home() {
               { img: 'opponents-board.png', title: 'Opponent Database', desc: '8,000+ players profiled' },
               { img: 'activity-metrics.png', title: 'AI Metrics', desc: '97% execution accuracy' },
             ].map((item, i) => (
-              <div className="scroll-item large" key={i}>
-                <img src={`/images/${item.img}`} alt={item.title} />
+              <div className="scroll-item large device-frame" key={i}>
+                <div className="device-mockup">
+                  <div className="device-notch"></div>
+                  <img src={`/images/${item.img}`} alt={item.title} />
+                </div>
                 <div className="scroll-caption">
                   <h4>{item.title}</h4>
                   <p>{item.desc}</p>
@@ -430,8 +574,11 @@ function Home() {
               { img: 'opponents-board.png', title: 'Opponent Database', desc: '8,000+ players profiled' },
               { img: 'activity-metrics.png', title: 'AI Metrics', desc: '97% execution accuracy' },
             ].map((item, i) => (
-              <div className="scroll-item large" key={`dup-${i}`}>
-                <img src={`/images/${item.img}`} alt={item.title} />
+              <div className="scroll-item large device-frame" key={`dup-${i}`}>
+                <div className="device-mockup">
+                  <div className="device-notch"></div>
+                  <img src={`/images/${item.img}`} alt={item.title} />
+                </div>
                 <div className="scroll-caption">
                   <h4>{item.title}</h4>
                   <p>{item.desc}</p>
@@ -439,6 +586,35 @@ function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Accordion */}
+      <section className="faq-section-ai">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">FAQ</span>
+          <h2 className="section-title-ai">
+            Common<br/>
+            <span className="gradient-text-ai">Questions</span>
+          </h2>
+        </div>
+
+        <div className="faq-accordion">
+          {faqData.map((faq, index) => (
+            <div
+              className={`faq-item ${openFaq === index ? 'open' : ''}`}
+              key={index}
+              onClick={() => setOpenFaq(openFaq === index ? null : index)}
+            >
+              <div className="faq-question">
+                <span>{faq.q}</span>
+                <span className="faq-toggle">{openFaq === index ? '−' : '+'}</span>
+              </div>
+              <div className="faq-answer">
+                <p>{faq.a}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -587,8 +763,29 @@ function Home() {
           <Link to="/affiliate">Affiliate</Link>
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy-ai">© 2024 Poker AI. All rights reserved.</p>
+        <p className="footer-copy-ai">© 2025 Poker AI. All rights reserved.</p>
       </footer>
+
+      {/* Sticky Mobile CTA */}
+      <div className="sticky-cta-mobile">
+        <Link to="/signup" className="sticky-cta-btn">
+          <span>Start Free Trial</span>
+          <span className="sticky-cta-badge">200 Free Hands</span>
+        </Link>
+      </div>
+
+      {/* Discord Chat Widget */}
+      <a
+        href="https://discord.gg/NHUjvZXzrR"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="chat-widget"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+        <span className="chat-tooltip">Chat on Discord</span>
+      </a>
     </div>
   );
 }
