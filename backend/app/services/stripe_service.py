@@ -96,9 +96,9 @@ class StripeService:
 
         frontend_url = settings.frontend_url
         if not success_url:
-            success_url = f"{frontend_url}/success?session_id={{CHECKOUT_SESSION_ID}}"
+            success_url = f"{frontend_url}/dashboard?payment=success"
         if not cancel_url:
-            cancel_url = f"{frontend_url}/?canceled=true"
+            cancel_url = f"{frontend_url}/dashboard?payment=canceled"
 
         session_params = {
             "payment_method_types": ["card"],

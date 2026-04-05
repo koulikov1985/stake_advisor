@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import '../styles/dashboard.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -12,6 +12,7 @@ const plans = [
 ];
 
 function Dashboard() {
+  const [searchParams] = useSearchParams();
   const [user, setUser] = useState(null);
   const [license, setLicense] = useState(null);
   const [devices, setDevices] = useState([]);
@@ -24,11 +25,22 @@ function Dashboard() {
   const [activeSection, setActiveSection] = useState('overview');
   const [resendingVerification, setResendingVerification] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check for payment status in URL
+    const payment = searchParams.get('payment');
+    if (payment === 'success') {
+      setPaymentStatus('success');
+      // Clear URL params
+      window.history.replaceState({}, '', '/dashboard');
+    } else if (payment === 'canceled') {
+      setPaymentStatus('canceled');
+      window.history.replaceState({}, '', '/dashboard');
+    }
     fetchProfile();
-  }, []);
+  }, [searchParams]);
 
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
@@ -416,6 +428,44 @@ function Dashboard() {
       )}
 
       <main className="dash-main">
+        {/* Payment Success/Canceled Banner */}
+        {paymentStatus === 'success' && (
+          <div style={{
+            background: 'linear-gradient(90deg, rgba(0, 217, 126, 0.15) 0%, rgba(0, 217, 126, 0.05) 100%)',
+            border: '1px solid rgba(0, 217, 126, 0.3)',
+            borderRadius: '12px',
+            padding: '1rem 1.5rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontSize: '1.5rem' }}>✓</span>
+              <span style={{ color: '#00d97e', fontWeight: '600' }}>Payment successful! Your subscription is now active.</span>
+            </div>
+            <button onClick={() => setPaymentStatus(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.25rem' }}>×</button>
+          </div>
+        )}
+        {paymentStatus === 'canceled' && (
+          <div style={{
+            background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '12px',
+            padding: '1rem 1.5rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontSize: '1.5rem' }}>✕</span>
+              <span style={{ color: '#ef4444', fontWeight: '600' }}>Payment was canceled. Feel free to try again when you're ready.</span>
+            </div>
+            <button onClick={() => setPaymentStatus(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.25rem' }}>×</button>
+          </div>
+        )}
+
         {/* Welcome Section */}
         <div className="dash-welcome">
           <h1>Welcome back!</h1>
