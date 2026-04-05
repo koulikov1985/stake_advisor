@@ -408,10 +408,7 @@ function Home() {
               LIVE
             </div>
             <div className="site-logo-wrapper">
-              <img src="/images/stake-logo.png" alt="Stake.us" className="site-logo" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
-              <div className="site-logo-fallback" style={{ display: 'none' }}>
-                <span>♠</span>
-              </div>
+              <span style={{ fontSize: '3rem' }}>🎰</span>
             </div>
             <h3 className="site-name">Stake.us</h3>
             <p className="site-description">Full support for all cash games and tournaments</p>
