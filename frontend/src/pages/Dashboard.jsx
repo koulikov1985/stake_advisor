@@ -109,7 +109,7 @@ function Dashboard() {
 
   const fetchAffiliateStats = async (token) => {
     try {
-      const res = await fetch(`${API_URL}/api/affiliate/stats`, {
+      const res = await fetch(`${API_URL}/api/user/affiliate/stats`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -117,6 +117,27 @@ function Dashboard() {
       }
     } catch (err) {
       console.error('Failed to fetch affiliate stats:', err);
+    }
+  };
+
+  const activateAffiliate = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`${API_URL}/api/user/affiliate/activate`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAffiliateStats(prev => ({
+          ...prev,
+          is_affiliate: true,
+          affiliate_code: data.affiliate_code,
+          referral_link: data.referral_link
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to activate affiliate:', err);
     }
   };
 
@@ -389,50 +410,80 @@ function Dashboard() {
                     </svg>
                   </div>
                   <div className="card-content">
-                    <h3>Refer & Earn 15%</h3>
+                    <h3>Refer & Earn 15% Recurring</h3>
                     <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-                      Share your link and earn 15% of every payment your referrals make
+                      Earn 15% of every payment your referrals make - for as long as they stay subscribed!
                     </p>
-                    {affiliateStats?.referral_link && (
-                      <div className="license-key-box">
-                        <code style={{ fontSize: '0.85rem' }}>{affiliateStats.referral_link}</code>
-                        <button className="copy-btn" onClick={copyReferralLink}>
-                          {copiedRef ? (
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                          ) : (
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="9" y="9" width="13" height="13" rx="2"/>
-                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                          )}
+
+                    {affiliateStats?.is_affiliate ? (
+                      <>
+                        <div className="license-key-box">
+                          <code style={{ fontSize: '0.85rem' }}>{affiliateStats.referral_link}</code>
+                          <button className="copy-btn" onClick={copyReferralLink}>
+                            {copiedRef ? (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                              </svg>
+                            ) : (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+                          <div>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{affiliateStats?.total_referrals || 0}</div>
+                          </div>
+                          <div>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Total Earned</span>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-green)' }}>
+                              ${(affiliateStats?.total_earned || 0).toFixed(2)}
+                            </div>
+                          </div>
+                          <div>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Pending</span>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--gold)' }}>
+                              ${(affiliateStats?.pending_earnings || 0).toFixed(2)}
+                            </div>
+                          </div>
+                          <Link to="/affiliate" style={{
+                            marginLeft: 'auto',
+                            color: 'var(--accent-blue)',
+                            textDecoration: 'none',
+                            fontSize: '0.95rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.25rem'
+                          }}>
+                            View details →
+                          </Link>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <button
+                          onClick={activateAffiliate}
+                          style={{
+                            background: 'linear-gradient(135deg, #00d97e 0%, #00b368 100%)',
+                            color: '#000',
+                            border: 'none',
+                            padding: '0.75rem 1.5rem',
+                            borderRadius: '8px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                          }}
+                        >
+                          Become an Affiliate
                         </button>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                          Get your unique referral link and start earning
+                        </span>
                       </div>
                     )}
-                    <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
-                      <div>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Referrals</span>
-                        <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>{affiliateStats?.total_referrals || 0}</div>
-                      </div>
-                      <div>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Earnings</span>
-                        <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--accent-green)' }}>
-                          ${(affiliateStats?.total_earned || 0).toFixed(2)}
-                        </div>
-                      </div>
-                      <Link to="/affiliate" style={{
-                        marginLeft: 'auto',
-                        color: 'var(--accent-blue)',
-                        textDecoration: 'none',
-                        fontSize: '0.95rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem'
-                      }}>
-                        Learn more →
-                      </Link>
-                    </div>
                   </div>
                 </div>
               )}
