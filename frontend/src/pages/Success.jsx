@@ -23,10 +23,11 @@ function Success() {
 
     const fetchLicense = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/session/${sessionId}`);
+        const response = await fetch(`${API_URL}/api/user/payment/session/${sessionId}`);
         const data = await response.json();
 
-        if (response.status === 202) {
+        // Check if still processing
+        if (data.processing) {
           if (retryCount < 10) {
             setTimeout(() => {
               setRetryCount((prev) => prev + 1);
@@ -39,10 +40,16 @@ function Success() {
         }
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch license');
+          throw new Error(data.detail || 'Failed to fetch license');
         }
 
-        setLicenseData(data);
+        // Map snake_case to camelCase for frontend
+        setLicenseData({
+          licenseKey: data.license_key,
+          plan: data.plan,
+          expiresAt: data.expires_at,
+          email: data.email
+        });
         setLoading(false);
       } catch (err) {
         setError(err.message);

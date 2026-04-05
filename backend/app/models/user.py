@@ -33,6 +33,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     paddle_customer_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    stripe_customer_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(

@@ -34,6 +34,26 @@ class PaddleWebhook(Base):
         return f"<PaddleWebhook {self.event_type} {self.paddle_event_id}>"
 
 
+class StripeWebhook(Base):
+    __tablename__ = "stripe_webhooks"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    stripe_event_id: Mapped[str] = mapped_column(
+        String(255), unique=True, nullable=False, index=True
+    )
+    event_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    payload: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    processed: Mapped[bool] = mapped_column(Boolean, default=False)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"<StripeWebhook {self.event_type} {self.stripe_event_id}>"
+
+
 class AdminUser(Base):
     __tablename__ = "admin_users"
 

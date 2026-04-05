@@ -27,8 +27,11 @@ class Subscription(Base):
     license_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("licenses.id"), nullable=False
     )
-    paddle_subscription_id: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, index=True
+    paddle_subscription_id: Mapped[str | None] = mapped_column(
+        String(255), unique=True, nullable=True, index=True
+    )
+    stripe_subscription_id: Mapped[str | None] = mapped_column(
+        String(255), unique=True, nullable=True, index=True
     )
     status: Mapped[SubscriptionStatus] = mapped_column(
         Enum(SubscriptionStatus, values_callable=lambda x: [e.value for e in x]),

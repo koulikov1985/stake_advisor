@@ -20,10 +20,19 @@ class Settings(BaseSettings):
     # Redis
     redis_url: str = "redis://redis:6379/0"
 
-    # Paddle
+    # Paddle (legacy)
     paddle_api_key: str = ""
     paddle_webhook_secret: str = ""
     paddle_sandbox: bool = True
+
+    # Stripe
+    stripe_secret_key: str = ""
+    stripe_publishable_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_price_daily: str = ""
+    stripe_price_weekly: str = ""
+    stripe_price_monthly: str = ""
+    stripe_price_yearly: str = ""
 
     # Security
     secret_key: str = "change-me-in-production-32-chars"

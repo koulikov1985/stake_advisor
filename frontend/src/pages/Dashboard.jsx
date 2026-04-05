@@ -163,18 +163,33 @@ function Dashboard() {
   const handlePurchase = async (planId) => {
     setPurchasing(planId);
     try {
-      const res = await fetch(`${API_URL}/api/checkout/create`, {
+      const res = await fetch(`${API_URL}/api/user/payment/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ plan: planId })
+        body: JSON.stringify({ plan: planId, email: user?.email })
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
     } catch {
       setPurchasing(null);
+    }
+  };
+
+  const openCustomerPortal = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/user/payment/create-portal-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: user?.email })
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch (err) {
+      console.error('Failed to open portal:', err);
     }
   };
 
@@ -483,6 +498,22 @@ function Dashboard() {
                           <strong>{formatDate(license.expires_at)}</strong>
                         </div>
                       </div>
+                      <button
+                        onClick={openCustomerPortal}
+                        style={{
+                          marginTop: '1rem',
+                          background: 'transparent',
+                          border: '1px solid var(--border-subtle)',
+                          color: 'var(--text-secondary)',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '6px',
+                          fontSize: '0.85rem',
+                          cursor: 'pointer',
+                          width: '100%'
+                        }}
+                      >
+                        Manage Subscription
+                      </button>
                     </>
                   ) : (
                     <>

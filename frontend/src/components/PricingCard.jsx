@@ -19,12 +19,12 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
         referralCode = storedCode;
       }
 
-      const response = await fetch(`${API_URL}/api/create-checkout-session`, {
+      const response = await fetch(`${API_URL}/api/user/payment/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ plan, referralCode }),
+        body: JSON.stringify({ plan, referral_code: referralCode }),
       });
 
       const data = await response.json();

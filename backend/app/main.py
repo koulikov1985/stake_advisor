@@ -56,6 +56,8 @@ app.add_middleware(
         "https://license-keys-frontend.onrender.com",
         "https://sharkscopepro.onrender.com",
         "https://pokersharkscope.onrender.com",
+        "https://www.sharkpokerclub.com",
+        "https://sharkpokerclub.com",
         "http://localhost:5173",
         "http://localhost:3000",
     ],
