@@ -9,6 +9,7 @@ function VerifyEmail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(3);
   const navigate = useNavigate();
 
   const token = searchParams.get('token');
@@ -36,7 +37,16 @@ function VerifyEmail() {
       }
 
       setSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 3000);
+      // Countdown timer
+      let count = 3;
+      const timer = setInterval(() => {
+        count--;
+        setCountdown(count);
+        if (count === 0) {
+          clearInterval(timer);
+          navigate('/dashboard');
+        }
+      }, 1000);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -163,46 +173,80 @@ function VerifyEmail() {
         }}>
           <div style={{
             background: 'var(--bg-card)',
-            border: '1px solid var(--border-subtle)',
+            border: '1px solid rgba(0, 217, 126, 0.3)',
             borderRadius: '16px',
-            padding: '2.5rem',
+            padding: '3rem 2.5rem',
             width: '100%',
-            maxWidth: '400px',
+            maxWidth: '420px',
             textAlign: 'center'
           }}>
             <div style={{
-              width: '60px',
-              height: '60px',
-              background: 'rgba(0, 217, 126, 0.15)',
+              width: '80px',
+              height: '80px',
+              background: 'linear-gradient(135deg, rgba(0, 217, 126, 0.2) 0%, rgba(0, 217, 126, 0.05) 100%)',
+              border: '2px solid rgba(0, 217, 126, 0.4)',
               color: '#00d97e',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.75rem',
-              margin: '0 auto 1.5rem'
+              fontSize: '2.5rem',
+              margin: '0 auto 1.5rem',
+              animation: 'pulse 2s ease-in-out infinite'
             }}>✓</div>
-            <h2 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Email Verified!</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-              Your email has been successfully verified. Redirecting to dashboard...
+            <h2 style={{ color: '#00d97e', marginBottom: '0.75rem', fontSize: '1.75rem' }}>Email Verified!</h2>
+            <p style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+              Welcome to PokerSharkScope
             </p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+              You're all set to start crushing the tables.
+            </p>
+
+            {/* Progress bar */}
+            <div style={{
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '4px',
+              height: '4px',
+              marginBottom: '1rem',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                background: 'linear-gradient(90deg, #00d97e, #00b368)',
+                height: '100%',
+                width: `${((3 - countdown) / 3) * 100}%`,
+                transition: 'width 1s linear'
+              }}></div>
+            </div>
+
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+              Redirecting in {countdown}...
+            </p>
+
             <Link to="/dashboard" style={{
               display: 'block',
               width: '100%',
               padding: '1rem',
-              background: 'var(--gold)',
+              background: 'linear-gradient(135deg, var(--gold) 0%, #b8960c 100%)',
               color: '#000',
               border: 'none',
               borderRadius: '8px',
               fontSize: '1rem',
               fontWeight: '600',
               textDecoration: 'none',
-              textAlign: 'center'
+              textAlign: 'center',
+              boxShadow: '0 4px 16px rgba(212,175,55,0.3)'
             }}>
-              Go to Dashboard
+              Go to Dashboard Now
             </Link>
           </div>
         </div>
+
+        <style>{`
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+          }
+        `}</style>
       </div>
     );
   }

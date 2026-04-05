@@ -5,9 +5,11 @@ import '../styles/landing.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function Signup() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,8 +23,8 @@ function Signup() {
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
 
@@ -32,7 +34,7 @@ function Signup() {
       const response = await fetch(`${API_URL}/api/user/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, name: name || undefined })
       });
 
       const data = await response.json();
@@ -98,6 +100,32 @@ function Signup() {
                 color: 'var(--text-primary)',
                 fontWeight: '500',
                 fontSize: '0.95rem'
+              }}>Name <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>(optional)</span></label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                style={{
+                  width: '100%',
+                  padding: '0.875rem',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '1rem',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={{
+                display: 'block',
+                marginBottom: '0.5rem',
+                color: 'var(--text-primary)',
+                fontWeight: '500',
+                fontSize: '0.95rem'
               }}>Email</label>
               <input
                 type="email"
@@ -126,23 +154,44 @@ function Signup() {
                 fontWeight: '500',
                 fontSize: '0.95rem'
               }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
-                required
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '8px',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: '1rem',
-                  outline: 'none'
-                }}
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 8 characters"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.875rem',
+                    paddingRight: '3rem',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
             <div style={{ marginBottom: '1.25rem' }}>
@@ -154,7 +203,7 @@ function Signup() {
                 fontSize: '0.95rem'
               }}>Confirm Password</label>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm your password"
@@ -201,6 +250,16 @@ function Signup() {
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
+
+          <p style={{
+            textAlign: 'center',
+            marginTop: '1rem',
+            color: 'var(--text-muted)',
+            fontSize: '0.8rem',
+            lineHeight: '1.5'
+          }}>
+            By creating an account, you agree to our terms of service and privacy policy.
+          </p>
 
           <p style={{
             textAlign: 'center',

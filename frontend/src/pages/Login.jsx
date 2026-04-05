@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -114,23 +115,44 @@ function Login() {
                 fontWeight: '500',
                 fontSize: '0.95rem'
               }}>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
-                required
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '8px',
-                  background: 'var(--bg-primary)',
-                  color: 'var(--text-primary)',
-                  fontSize: '1rem',
-                  outline: 'none'
-                }}
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Your password"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.875rem',
+                    paddingRight: '3rem',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: '8px',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
             {error && (
