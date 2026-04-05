@@ -3620,45 +3620,63 @@
   border-color: var(--ai-green);
 }
 
-/* Floating Poker Cards */
-.floating-cards {
-  position: absolute;
-  inset: 0;
+/* Floating Poker Cards - Global (Full Page) */
+.floating-cards-global {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
 
 .floating-card {
   position: absolute;
   font-size: 4rem;
-  opacity: 0.1;
-  animation: floatCard 20s ease-in-out infinite;
+  opacity: 0.08;
+  animation: floatCard 25s ease-in-out infinite;
+  filter: blur(0.5px);
 }
 
-.floating-card.card-1 { top: 10%; left: 5%; animation-delay: 0s; }
-.floating-card.card-2 { top: 20%; right: 10%; animation-delay: -3s; }
-.floating-card.card-3 { top: 60%; left: 8%; animation-delay: -6s; }
-.floating-card.card-4 { top: 70%; right: 5%; animation-delay: -9s; }
-.floating-card.card-5 { top: 40%; left: 3%; animation-delay: -12s; }
-.floating-card.card-6 { top: 80%; right: 15%; animation-delay: -15s; }
+/* Distribute cards across entire page height */
+.floating-card.card-1 { top: 5%; left: 3%; animation-delay: 0s; }
+.floating-card.card-2 { top: 15%; right: 5%; animation-delay: -2s; }
+.floating-card.card-3 { top: 25%; left: 8%; animation-delay: -4s; }
+.floating-card.card-4 { top: 35%; right: 10%; animation-delay: -6s; }
+.floating-card.card-5 { top: 45%; left: 2%; animation-delay: -8s; }
+.floating-card.card-6 { top: 55%; right: 3%; animation-delay: -10s; }
+.floating-card.card-7 { top: 65%; left: 6%; animation-delay: -12s; }
+.floating-card.card-8 { top: 75%; right: 8%; animation-delay: -14s; }
+.floating-card.card-9 { top: 85%; left: 4%; animation-delay: -16s; }
+.floating-card.card-10 { top: 92%; right: 6%; animation-delay: -18s; }
 
 @keyframes floatCard {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg); 
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.06;
+  }
+  25% {
+    transform: translateY(-40px) rotate(8deg);
     opacity: 0.1;
   }
-  25% { 
-    transform: translateY(-30px) rotate(5deg); 
-    opacity: 0.15;
+  50% {
+    transform: translateY(-15px) rotate(-5deg);
+    opacity: 0.12;
   }
-  50% { 
-    transform: translateY(-10px) rotate(-3deg); 
-    opacity: 0.2;
+  75% {
+    transform: translateY(-30px) rotate(5deg);
+    opacity: 0.08;
   }
-  75% { 
-    transform: translateY(-20px) rotate(3deg); 
-    opacity: 0.15;
-  }
+}
+
+/* Legacy floating-cards container (keep for backwards compatibility) */
+.floating-cards {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* Device Frame Mockup */
@@ -4297,5 +4315,417 @@
   .download-modal {
     padding: 2rem;
     margin: 1rem;
+  }
+}
+
+/* ============================================
+   AFFILIATE PAGE STYLES
+   ============================================ */
+
+/* Affiliate Steps */
+.affiliate-how-it-works {
+  padding: 6rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.affiliate-steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.affiliate-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  flex: 1;
+  min-width: 250px;
+  max-width: 300px;
+  position: relative;
+}
+
+.affiliate-step:hover {
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.affiliate-step-number {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ai-green);
+  color: #000;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.affiliate-step-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.affiliate-step h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.affiliate-step p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.affiliate-step-arrow {
+  font-size: 2rem;
+  color: var(--ai-green);
+  padding-top: 3rem;
+}
+
+/* Earnings Table */
+.affiliate-earnings {
+  padding: 6rem 2rem;
+  background: var(--bg-surface);
+}
+
+.earnings-table {
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.earnings-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 255, 136, 0.1);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ai-green);
+}
+
+.earnings-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.earnings-plan {
+  font-weight: 600;
+}
+
+.earnings-price {
+  color: var(--text-secondary);
+}
+
+.earnings-commission {
+  color: var(--ai-green);
+  font-weight: 700;
+}
+
+.earnings-highlight {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 2rem auto 0;
+}
+
+.earnings-highlight-icon {
+  font-size: 1.5rem;
+}
+
+.earnings-highlight strong {
+  color: var(--ai-green);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.earnings-highlight p {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Calculator */
+.affiliate-calculator {
+  padding: 6rem 2rem;
+}
+
+.calculator-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--ai-green);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 0 60px rgba(0, 255, 136, 0.1);
+}
+
+.calculator-input {
+  margin-bottom: 2rem;
+}
+
+.calculator-input label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.calculator-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.calculator-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 8px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+  outline: none;
+}
+
+.calculator-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--ai-green);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.calculator-value {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--ai-green);
+  min-width: 120px;
+  text-align: center;
+}
+
+.calculator-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.calculator-result {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.calculator-result.featured {
+  border-color: var(--ai-green);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.result-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--ai-green);
+}
+
+.result-note {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.calculator-scenarios h4 {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.scenario {
+  background: var(--bg-surface);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.scenario-title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.scenario-refs {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.scenario-earnings {
+  display: block;
+  color: var(--ai-green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Benefits Grid */
+.affiliate-benefits {
+  padding: 6rem 2rem;
+  background: var(--bg-surface);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.benefit-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.benefit-card:hover {
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.75rem;
+}
+
+.benefit-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Audience Grid */
+.affiliate-audience {
+  padding: 6rem 2rem;
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.audience-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.audience-card:hover {
+  border-color: rgba(0, 255, 136, 0.3);
+  transform: translateY(-5px);
+}
+
+.audience-emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.audience-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.audience-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* FAQ with details/summary */
+.faq-item[open] .faq-toggle {
+  transform: rotate(45deg);
+}
+
+details.faq-item summary {
+  list-style: none;
+}
+
+details.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .affiliate-steps {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .affiliate-step-arrow {
+    transform: rotate(90deg);
+    padding: 0.5rem 0;
+  }
+  
+  .calculator-results {
+    grid-template-columns: 1fr;
+  }
+  
+  .scenario-grid {
+    grid-template-columns: 1fr;
   }
 }
