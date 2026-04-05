@@ -125,8 +125,9 @@ async def login(
     session: AsyncSession = Depends(get_session),
 ):
     """Login user and return JWT token."""
+    email = data.email.lower()
     result = await session.execute(
-        select(User).where(User.email == data.email)
+        select(User).where(User.email == email)
     )
     user = result.scalar_one_or_none()
 
@@ -162,9 +163,12 @@ async def signup(
     session: AsyncSession = Depends(get_session),
 ):
     """Register a new user."""
+    # Normalize email to lowercase
+    email = data.email.lower()
+
     # Check if email exists
     result = await session.execute(
-        select(User).where(User.email == data.email)
+        select(User).where(User.email == email)
     )
     existing = result.scalar_one_or_none()
 
@@ -176,7 +180,7 @@ async def signup(
 
     # Create user
     user = User(
-        email=data.email,
+        email=email,
         name=data.name,
     )
     user.set_password(data.password)
@@ -214,8 +218,9 @@ async def forgot_password(
     session: AsyncSession = Depends(get_session),
 ):
     """Request password reset email."""
+    email = data.email.lower()
     result = await session.execute(
-        select(User).where(User.email == data.email)
+        select(User).where(User.email == email)
     )
     user = result.scalar_one_or_none()
 
