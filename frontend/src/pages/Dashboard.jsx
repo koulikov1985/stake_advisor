@@ -453,25 +453,76 @@ function Dashboard() {
                   gap: '1rem',
                   marginBottom: '1.5rem'
                 }}>
-                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.5rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Total Referrals</div>
-                    <div style={{ fontSize: '2rem', fontWeight: '700' }}>{affiliateStats?.total_referrals || 0}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>All signups</div>
+                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.75rem 1.25rem' }}>
+                    <div style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      marginBottom: '0.75rem'
+                    }}>Referrals</div>
+                    <div style={{
+                      fontSize: '2.5rem',
+                      fontWeight: '800',
+                      lineHeight: '1',
+                      fontFamily: 'system-ui, -apple-system, sans-serif'
+                    }}>{affiliateStats?.total_referrals || 0}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Total signups</div>
                   </div>
-                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.5rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Converted</div>
-                    <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--accent-blue)' }}>{affiliateStats?.converted_referrals || 0}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>Paid customers</div>
+                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.75rem 1.25rem' }}>
+                    <div style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      marginBottom: '0.75rem'
+                    }}>Converted</div>
+                    <div style={{
+                      fontSize: '2.5rem',
+                      fontWeight: '800',
+                      lineHeight: '1',
+                      color: 'var(--accent-blue)',
+                      fontFamily: 'system-ui, -apple-system, sans-serif'
+                    }}>{affiliateStats?.converted_referrals || 0}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Paid customers</div>
                   </div>
-                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.5rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Total Earned</div>
-                    <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--accent-green)' }}>${(affiliateStats?.total_earned || 0).toFixed(2)}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>Lifetime earnings</div>
+                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.75rem 1.25rem' }}>
+                    <div style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      marginBottom: '0.75rem'
+                    }}>Earned</div>
+                    <div style={{
+                      fontSize: '2.5rem',
+                      fontWeight: '800',
+                      lineHeight: '1',
+                      color: '#00d97e',
+                      fontFamily: 'system-ui, -apple-system, sans-serif'
+                    }}>${(affiliateStats?.total_earned || 0).toFixed(2)}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Lifetime total</div>
                   </div>
-                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.5rem' }}>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Pending</div>
-                    <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>${(affiliateStats?.pending_earnings || 0).toFixed(2)}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>Awaiting approval</div>
+                  <div className="dash-card" style={{ textAlign: 'center', padding: '1.75rem 1.25rem' }}>
+                    <div style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      marginBottom: '0.75rem'
+                    }}>Pending</div>
+                    <div style={{
+                      fontSize: '2.5rem',
+                      fontWeight: '800',
+                      lineHeight: '1',
+                      color: 'var(--gold)',
+                      fontFamily: 'system-ui, -apple-system, sans-serif'
+                    }}>${(affiliateStats?.pending_earnings || 0).toFixed(2)}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Awaiting approval</div>
                   </div>
                 </div>
 
