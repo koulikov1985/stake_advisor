@@ -721,11 +721,11 @@ function Dashboard() {
                       </div>
                       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                         {[
-                          { name: 'PokerStars', icon: '⭐' },
-                          { name: 'GGPoker', icon: '🎯' },
-                          { name: '888poker', icon: '8️⃣' },
-                          { name: 'PartyPoker', icon: '🎉' },
-                          { name: 'WPT Global', icon: '🌎' }
+                          { name: 'Global Poker', icon: '🌐' },
+                          { name: 'ClubGG', icon: '🃏' },
+                          { name: 'BetOnline', icon: '💰' },
+                          { name: 'Ignition', icon: '🔥' },
+                          { name: 'Americas Cardroom', icon: '🇺🇸' }
                         ].map((site, index) => (
                           <div
                             key={site.name}
