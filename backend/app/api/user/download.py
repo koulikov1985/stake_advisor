@@ -12,7 +12,9 @@ from jose import jwt, JWTError
 from app.services.settings_service import SettingsService
 from app.database import get_session
 from app.models import User, License, LicenseStatus
-from app.config import settings
+from app.config import get_settings
+
+settings = get_settings()
 
 router = APIRouter(tags=["Downloads"])
 
