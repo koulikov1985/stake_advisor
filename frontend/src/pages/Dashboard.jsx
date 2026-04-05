@@ -244,6 +244,101 @@ function Dashboard() {
     );
   }
 
+  // Require email verification
+  if (user && !user.email_verified) {
+    return (
+      <div className="dash">
+        <header className="dash-header">
+          <Link to="/" className="dash-logo">
+            <span className="logo-icon">♠</span>
+            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          </Link>
+          <div className="dash-header-right">
+            <div className="dash-user">
+              <span className="user-email">{user?.email}</span>
+              <button className="logout-btn" onClick={handleLogout}>Log out</button>
+            </div>
+          </div>
+        </header>
+
+        <main className="dash-main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 80px)' }}>
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '16px',
+            padding: '3rem',
+            maxWidth: '480px',
+            textAlign: 'center'
+          }}>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              background: 'rgba(212, 175, 55, 0.15)',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.5rem',
+              fontSize: '2.5rem'
+            }}>
+              ✉️
+            </div>
+            <h2 style={{ color: 'var(--text-primary)', marginBottom: '0.75rem', fontSize: '1.75rem' }}>
+              Verify Your Email
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+              We sent a verification email to <strong style={{ color: 'var(--gold)' }}>{user.email}</strong>.
+              Please check your inbox and click the verification link to access your dashboard.
+            </p>
+
+            <button
+              onClick={resendVerification}
+              disabled={resendingVerification || verificationSent}
+              style={{
+                width: '100%',
+                background: verificationSent ? 'rgba(0, 217, 126, 0.15)' : 'var(--gold)',
+                color: verificationSent ? '#00d97e' : '#000',
+                border: verificationSent ? '1px solid #00d97e' : 'none',
+                padding: '1rem',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: verificationSent ? 'default' : 'pointer',
+                marginBottom: '1rem'
+              }}
+            >
+              {verificationSent ? '✓ Email Sent!' : resendingVerification ? 'Sending...' : 'Resend Verification Email'}
+            </button>
+
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+              Didn't receive it? Check your spam folder or click above to resend.
+            </p>
+
+            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                Wrong email address?
+              </p>
+              <button
+                onClick={handleLogout}
+                style={{
+                  background: 'transparent',
+                  color: 'var(--gold)',
+                  border: '1px solid var(--gold)',
+                  padding: '0.5rem 1.5rem',
+                  borderRadius: '6px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Sign up with different email
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const hasActiveSubscription = license?.status === 'active';
 
   return (
