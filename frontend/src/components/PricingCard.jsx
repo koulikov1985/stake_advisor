@@ -69,7 +69,7 @@ function PricingCard({ plan, name, price, label, duration, features, popular }) 
       {error && <p className="error-message">{error}</p>}
       <button
         className="purchase-btn"
-        onClick={plan === 'trial' ? () => window.open('https://discord.gg/rBCt9yp7', '_blank') : handlePurchase}
+        onClick={plan === 'trial' ? () => window.open('https://discord.gg/NHUjvZXzrR', '_blank') : handlePurchase}
         disabled={loading && plan !== 'trial'}
       >
         {loading && plan !== 'trial' ? 'Processing...' : (plan === 'trial' ? 'Join Discord' : 'Get Started')}

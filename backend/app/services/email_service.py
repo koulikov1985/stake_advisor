@@ -75,7 +75,7 @@ class EmailService:
                 </ol>
                 <a href="{self.frontend_url}/dashboard" class="btn">Go to Dashboard</a>
                 <div class="footer">
-                    <p>Questions? Join our <a href="https://discord.gg/rBCt9yp7" style="color: #d4af37;">Discord</a></p>
+                    <p>Questions? Join our <a href="https://discord.gg/NHUjvZXzrR" style="color: #d4af37;">Discord</a></p>
                     <p>PokerSharkScope - Play Smarter, Win More</p>
                 </div>
             </div>
@@ -158,7 +158,7 @@ class EmailService:
                 <a href="{self.frontend_url}/dashboard" class="btn">Go to Dashboard</a>
                 <div class="footer">
                     <p>You can activate this license on up to 2 devices.</p>
-                    <p>Questions? Join our <a href="https://discord.gg/rBCt9yp7" style="color: #d4af37;">Discord</a></p>
+                    <p>Questions? Join our <a href="https://discord.gg/NHUjvZXzrR" style="color: #d4af37;">Discord</a></p>
                 </div>
             </div>
         </body>
@@ -193,7 +193,7 @@ class EmailService:
                 <p>You can continue using all features until this date. After that, you can resubscribe at any time.</p>
                 <a href="{self.frontend_url}/pricing" class="btn">View Plans</a>
                 <div class="footer">
-                    <p>We'd love to have you back! If you have any feedback, join our <a href="https://discord.gg/rBCt9yp7" style="color: #d4af37;">Discord</a></p>
+                    <p>We'd love to have you back! If you have any feedback, join our <a href="https://discord.gg/NHUjvZXzrR" style="color: #d4af37;">Discord</a></p>
                 </div>
             </div>
         </body>
