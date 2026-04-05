@@ -174,7 +174,8 @@ function Dashboard() {
   };
 
   const handleDownload = (platform) => {
-    window.location.href = `${API_URL}/api/download/${platform}`;
+    const token = localStorage.getItem('token');
+    window.location.href = `${API_URL}/api/user/download/${platform}?token=${token}`;
   };
 
   const handleLogout = () => {

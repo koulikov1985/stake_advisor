@@ -5,7 +5,6 @@ import Pricing from './pages/Pricing';
 import FAQ from './pages/FAQ';
 import Download from './pages/Download';
 import Success from './pages/Success';
-import Admin from './pages/Admin';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
@@ -22,7 +21,6 @@ function AppContent() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/download" element={<Download />} />
         <Route path="/success" element={<Success />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
