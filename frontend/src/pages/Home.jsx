@@ -390,6 +390,63 @@ function Home() {
         </div>
       </section>
 
+      {/* Supported Sites Section */}
+      <section className="supported-sites-section">
+        <div className="supported-sites-header">
+          <span className="section-tag-pro">Compatibility</span>
+          <h2 className="section-title-pro">
+            Supported<br/>
+            <span className="gradient-text-ultra">Poker Sites</span>
+          </h2>
+        </div>
+
+        <div className="supported-sites-container">
+          {/* Live Site */}
+          <div className="supported-site-card live">
+            <div className="site-status-badge live">
+              <span className="pulse-dot"></span>
+              LIVE
+            </div>
+            <div className="site-logo-wrapper">
+              <img src="/images/stake-logo.png" alt="Stake.us" className="site-logo" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+              <div className="site-logo-fallback" style={{ display: 'none' }}>
+                <span>♠</span>
+              </div>
+            </div>
+            <h3 className="site-name">Stake.us</h3>
+            <p className="site-description">Full support for all cash games and tournaments</p>
+            <div className="site-features">
+              <span className="site-feature">Cash Games</span>
+              <span className="site-feature">Tournaments</span>
+              <span className="site-feature">6 Tables</span>
+            </div>
+          </div>
+
+          {/* Coming Soon Sites */}
+          <div className="coming-soon-wrapper">
+            <h3 className="coming-soon-title">
+              <span className="sparkle-icon">✨</span>
+              Coming Soon
+            </h3>
+            <div className="coming-soon-grid">
+              {[
+                { name: 'Global Poker', icon: '🌎' },
+                { name: 'ClubGG', icon: '🃏' },
+                { name: 'BetOnline', icon: '💰' },
+                { name: 'Ignition', icon: '🔥' },
+                { name: 'Americas Cardroom', icon: '🇺🇸' }
+              ].map((site, index) => (
+                <div key={site.name} className="coming-soon-site" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <span className="coming-soon-icon">{site.icon}</span>
+                  <span className="coming-soon-name">{site.name}</span>
+                </div>
+              ))}
+            </div>
+            <p className="coming-soon-note">Browser-based poker sites - no download required</p>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Preview */}
       <section className="pricing-preview">
         <div className="pricing-preview-header">
