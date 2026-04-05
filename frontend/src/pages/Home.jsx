@@ -5,11 +5,6 @@ import '../styles/landing.css';
 function Home() {
   const [searchParams] = useSearchParams();
   const [showCanceled, setShowCanceled] = useState(false);
-  const [, forceUpdate] = useState(0);
-
-  useEffect(() => {
-    forceUpdate(n => n + 1);
-  }, []);
 
   useEffect(() => {
     if (searchParams.get('canceled') === 'true') {
@@ -17,14 +12,12 @@ function Home() {
       window.history.replaceState({}, '', '/');
     }
 
-    // Capture referral code from URL and store it
+    // Capture referral code from URL
     const refCode = searchParams.get('ref');
     if (refCode) {
-      // Store referral code in localStorage for 30 days
       const expiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000);
       localStorage.setItem('referralCode', refCode.toUpperCase());
       localStorage.setItem('referralCodeExpires', expiresAt.toString());
-      // Clean up URL
       window.history.replaceState({}, '', '/');
     }
   }, [searchParams]);
@@ -33,12 +26,11 @@ function Home() {
   const isLoggedIn = !!token;
 
   return (
-    <div className="landing">
+    <div className="landing ai-theme">
       {/* Header */}
       <header className="landing-header">
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="nav-discord">
@@ -47,10 +39,9 @@ function Home() {
             </svg>
             <span>Discord</span>
           </a>
-                    <Link to="/pricing">Pricing</Link>
+          <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
-          <Link to="/affiliate">Affiliate</Link>
           {isLoggedIn ? (
             <Link to="/dashboard" className="nav-btn-primary">Dashboard</Link>
           ) : (
@@ -70,492 +61,520 @@ function Home() {
       )}
 
       {/* Hero Section */}
-      <section className="hero-ultra">
+      <section className="hero-ai">
         <div className="hero-bg-effects">
-          <div className="hero-glow-main"></div>
-          <div className="hero-glow-secondary"></div>
-          <div className="hero-grid-overlay"></div>
+          <div className="ai-grid-bg"></div>
+          <div className="ai-glow-orb orb-1"></div>
+          <div className="ai-glow-orb orb-2"></div>
+          <div className="ai-particles"></div>
         </div>
 
-        <div className="hero-content-ultra">
-          <div className="hero-badge-pro">
-            <span className="badge-pulse"></span>
-            <span>Used by 500+ Winning Players</span>
+        <div className="hero-content-ai">
+          <div className="hero-logo-large">
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" />
           </div>
 
-          <h1 className="hero-title-ultra">
-            Stop Guessing.<br/>
-            <span className="gradient-text-ultra">Start Crushing.</span>
+          <div className="ai-badge">
+            <span className="ai-pulse"></span>
+            <span className="ai-text">Powered by Advanced AI</span>
+          </div>
+
+          <h1 className="hero-title-ai">
+            The Future of Poker<br/>
+            <span className="gradient-text-ai">Is Here.</span>
           </h1>
 
-          <p className="hero-subtitle-ultra">
-            Real-time GTO advice on every hand. Track 6 tables at once.
-            See exactly what the pros see — and make +EV decisions every single time.
+          <p className="hero-subtitle-ai">
+            Not just another poker tool. <strong>Poker AI</strong> is a fully autonomous artificial intelligence
+            that reads your tables, analyzes every situation in real-time, and executes
+            mathematically perfect GTO decisions — automatically.
           </p>
 
           <div className="hero-cta-group">
-            <Link to="/signup" className="btn-cta-primary">
-              <span>Get 200 Hands Free</span>
+            <Link to="/signup" className="btn-cta-ai">
+              <span>Start Playing with AI</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
-            <Link to="/features" className="btn-cta-secondary">
-              See How It Works
+            <Link to="/faq" className="btn-cta-secondary-ai">
+              <span>How It Works</span>
             </Link>
           </div>
 
-          <div className="hero-trust-badges">
-            <div className="trust-item">
-              <span className="trust-icon">🎁</span>
-              <span>200 Free Hands</span>
+          <div className="hero-trust-ai">
+            <div className="trust-item-ai">
+              <span className="trust-icon-ai">🤖</span>
+              <span>Fully Automated</span>
             </div>
-            <div className="trust-item">
-              <span className="trust-icon">🔒</span>
-              <span>100% Private</span>
+            <div className="trust-item-ai">
+              <span className="trust-icon-ai">🧠</span>
+              <span>AI Decision Engine</span>
             </div>
-            <div className="trust-item">
-              <span className="trust-icon">⚡</span>
-              <span>Instant Access</span>
+            <div className="trust-item-ai">
+              <span className="trust-icon-ai">⚡</span>
+              <span>Real-Time Analysis</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof Stats */}
-      <section className="stats-showcase">
-        <div className="stats-container">
-          <div className="stat-item-pro">
-            <span className="stat-number-pro">+91</span>
-            <span className="stat-unit">BB/100</span>
-            <span className="stat-desc">Average Win Rate</span>
+      {/* What Makes This Different */}
+      <section className="ai-difference">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Why Poker AI?</span>
+          <h2 className="section-title-ai">
+            This Isn't a Poker <em>Tool</em>.<br/>
+            <span className="gradient-text-ai">It's a Poker AI.</span>
+          </h2>
+          <p className="section-subtitle-ai">
+            Other products give you suggestions. Poker AI takes action.
+            Our advanced AI reads your screen, calculates optimal plays,
+            and executes them — all in milliseconds.
+          </p>
+        </div>
+
+        <div className="comparison-grid">
+          <div className="comparison-card old">
+            <div className="comparison-header">
+              <span className="comparison-icon">📊</span>
+              <h3>Traditional Tools</h3>
+            </div>
+            <ul className="comparison-list">
+              <li><span className="x-mark">✗</span> Manual input required</li>
+              <li><span className="x-mark">✗</span> You interpret the data</li>
+              <li><span className="x-mark">✗</span> You click the buttons</li>
+              <li><span className="x-mark">✗</span> Slow decision making</li>
+              <li><span className="x-mark">✗</span> Human error</li>
+              <li><span className="x-mark">✗</span> One table at a time</li>
+            </ul>
           </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item-pro">
-            <span className="stat-number-pro">6</span>
-            <span className="stat-unit">Tables</span>
-            <span className="stat-desc">Simultaneous Play</span>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item-pro">
-            <span className="stat-number-pro">69%</span>
-            <span className="stat-unit">Win Rate</span>
-            <span className="stat-desc">All-In Situations</span>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item-pro">
-            <span className="stat-number-pro">&lt;1s</span>
-            <span className="stat-unit">Response</span>
-            <span className="stat-desc">Real-Time Advice</span>
+
+          <div className="comparison-card new">
+            <div className="comparison-header">
+              <span className="comparison-icon">🤖</span>
+              <h3>Poker AI</h3>
+              <span className="ai-chip">AI-Powered</span>
+            </div>
+            <ul className="comparison-list">
+              <li><span className="check-mark">✓</span> Reads screen automatically</li>
+              <li><span className="check-mark">✓</span> AI analyzes every situation</li>
+              <li><span className="check-mark">✓</span> Executes actions for you</li>
+              <li><span className="check-mark">✓</span> Sub-second decisions</li>
+              <li><span className="check-mark">✓</span> Mathematical precision</li>
+              <li><span className="check-mark">✓</span> 6 tables simultaneously</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* Supported Sites Section */}
-      <section className="supported-sites-section">
-        <div className="supported-sites-header">
-          <span className="section-tag-pro">Compatibility</span>
-          <h2 className="section-title-pro">
-            Supported<br/>
-            <span className="gradient-text-ultra">Poker Sites</span>
+      {/* AI Capabilities */}
+      <section className="ai-capabilities">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">AI Capabilities</span>
+          <h2 className="section-title-ai">
+            What The AI<br/>
+            <span className="gradient-text-ai">Actually Does</span>
           </h2>
         </div>
 
-        <div className="supported-sites-container">
-          {/* Live Site */}
-          <div className="supported-site-card live">
-            <div className="site-status-badge live">
-              <span className="pulse-dot"></span>
-              LIVE
+        <div className="capabilities-grid">
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
             </div>
-            <div className="site-logo-wrapper">
-              <span style={{ fontSize: '3rem' }}>🎰</span>
-            </div>
-            <h3 className="site-name">Stake.us</h3>
-            <p className="site-description">Full support for all cash game tables</p>
-            <div className="site-features">
-              <span className="site-feature">Cash Games</span>
-              <span className="site-feature">All Stakes</span>
-              <span className="site-feature">6 Tables</span>
+            <h3>Computer Vision</h3>
+            <p>
+              AI reads your poker table in real-time. Detects cards, chips,
+              pot sizes, player positions, and actions — all automatically.
+            </p>
+            <div className="capability-stats">
+              <span><strong>99.9%</strong> accuracy</span>
+              <span><strong>&lt;50ms</strong> detection</span>
             </div>
           </div>
 
-          {/* Coming Soon Sites */}
-          <div className="coming-soon-wrapper">
-            <h3 className="coming-soon-title">
-              <span className="sparkle-icon">✨</span>
-              Coming Soon
-            </h3>
-            <div className="coming-soon-grid">
-              {[
-                { name: 'Global Poker', icon: '🌎' },
-                { name: 'ClubGG', icon: '🃏' },
-                { name: 'BetOnline', icon: '💰' },
-                { name: 'Ignition', icon: '🔥' },
-                { name: 'Americas Cardroom', icon: '🇺🇸' }
-              ].map((site, index) => (
-                <div key={site.name} className="coming-soon-site" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <span className="coming-soon-icon">{site.icon}</span>
-                  <span className="coming-soon-name">{site.name}</span>
-                </div>
-              ))}
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 2a4 4 0 0 1 4 4v1a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4Z"/>
+                <path d="M16 15H8a4 4 0 0 0-4 4v2h16v-2a4 4 0 0 0-4-4Z"/>
+                <circle cx="12" cy="10" r="1"/>
+              </svg>
             </div>
-            <p className="coming-soon-note">Browser-based poker sites - no download required</p>
+            <h3>Opponent Profiling</h3>
+            <p>
+              AI tracks every opponent across sessions. Builds detailed profiles
+              with VPIP, PFR, aggression factors, and exploitable tendencies.
+            </p>
+            <div className="capability-stats">
+              <span><strong>8,000+</strong> players tracked</span>
+              <span><strong>20+</strong> stats per player</span>
+            </div>
+          </div>
+
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                <circle cx="12" cy="12" r="4"/>
+              </svg>
+            </div>
+            <h3>GTO Engine</h3>
+            <p>
+              Advanced game theory optimal calculations for every decision.
+              Preflop ranges, postflop equity, pot odds, implied odds — all computed instantly.
+            </p>
+            <div className="capability-stats">
+              <span><strong>100K+</strong> simulations/sec</span>
+              <span><strong>GTO</strong> + exploitative</span>
+            </div>
+          </div>
+
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </div>
+            <h3>Auto-Execution</h3>
+            <p>
+              AI doesn't just advise — it acts. Automatically clicks fold, call,
+              raise, or all-in with precise bet sizing. You watch, it wins.
+            </p>
+            <div className="capability-stats">
+              <span><strong>100%</strong> automated</span>
+              <span><strong>0</strong> misclicks</span>
+            </div>
+          </div>
+
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 21V9"/>
+              </svg>
+            </div>
+            <h3>Multi-Table AI</h3>
+            <p>
+              Run up to 6 tables simultaneously. AI manages all of them
+              independently with zero performance loss. Maximum volume, maximum profit.
+            </p>
+            <div className="capability-stats">
+              <span><strong>6</strong> tables</span>
+              <span><strong>1000+</strong> hands/hour</span>
+            </div>
+          </div>
+
+          <div className="capability-card">
+            <div className="capability-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 3v18h18"/>
+                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+              </svg>
+            </div>
+            <h3>Performance Analytics</h3>
+            <p>
+              Track every session with detailed analytics. Win rates, BB/100,
+              hand histories, P/L calendars, and leak detection.
+            </p>
+            <div className="capability-stats">
+              <span><strong>Real-time</strong> stats</span>
+              <span><strong>Full</strong> hand history</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Auto-Scrolling Screenshot Showcase */}
+      {/* Live Stats */}
+      <section className="stats-showcase-ai">
+        <div className="stats-container-ai">
+          <div className="stat-item-ai">
+            <span className="stat-number-ai">+91</span>
+            <span className="stat-unit-ai">BB/100</span>
+            <span className="stat-desc-ai">AI Win Rate</span>
+          </div>
+          <div className="stat-divider-ai"></div>
+          <div className="stat-item-ai">
+            <span className="stat-number-ai">6</span>
+            <span className="stat-unit-ai">Tables</span>
+            <span className="stat-desc-ai">Simultaneous</span>
+          </div>
+          <div className="stat-divider-ai"></div>
+          <div className="stat-item-ai">
+            <span className="stat-number-ai">69%</span>
+            <span className="stat-unit-ai">Win Rate</span>
+            <span className="stat-desc-ai">All-In Equity</span>
+          </div>
+          <div className="stat-divider-ai"></div>
+          <div className="stat-item-ai">
+            <span className="stat-number-ai">&lt;1s</span>
+            <span className="stat-unit-ai">Response</span>
+            <span className="stat-desc-ai">Decision Time</span>
+          </div>
+        </div>
+      </section>
+
+      {/* How AI Works */}
+      <section className="ai-process">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">The AI Process</span>
+          <h2 className="section-title-ai">
+            From Screen to Action<br/>
+            <span className="gradient-text-ai">In Milliseconds</span>
+          </h2>
+        </div>
+
+        <div className="process-flow">
+          <div className="process-step">
+            <div className="process-number">01</div>
+            <div className="process-content">
+              <h3>Capture</h3>
+              <p>AI captures your poker table screen in real-time using advanced computer vision</p>
+            </div>
+            <div className="process-visual">
+              <div className="visual-icon">👁️</div>
+            </div>
+          </div>
+
+          <div className="process-connector">
+            <svg viewBox="0 0 100 20">
+              <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+          </div>
+
+          <div className="process-step">
+            <div className="process-number">02</div>
+            <div className="process-content">
+              <h3>Analyze</h3>
+              <p>AI identifies cards, positions, pot size, stack depths, and opponent tendencies</p>
+            </div>
+            <div className="process-visual">
+              <div className="visual-icon">🧠</div>
+            </div>
+          </div>
+
+          <div className="process-connector">
+            <svg viewBox="0 0 100 20">
+              <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+          </div>
+
+          <div className="process-step">
+            <div className="process-number">03</div>
+            <div className="process-content">
+              <h3>Calculate</h3>
+              <p>GTO engine computes optimal action with precise bet sizing using game theory</p>
+            </div>
+            <div className="process-visual">
+              <div className="visual-icon">⚡</div>
+            </div>
+          </div>
+
+          <div className="process-connector">
+            <svg viewBox="0 0 100 20">
+              <path d="M0 10 H90 L80 5 M90 10 L80 15" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+          </div>
+
+          <div className="process-step">
+            <div className="process-number">04</div>
+            <div className="process-content">
+              <h3>Execute</h3>
+              <p>AI clicks the action automatically — fold, call, raise, or all-in</p>
+            </div>
+            <div className="process-visual">
+              <div className="visual-icon">🎯</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Screenshots */}
       <section className="auto-showcase">
         <div className="showcase-header">
-          <span className="section-tag-pro">See It In Action</span>
-          <h2 className="section-title-pro">
-            Professional-Grade Dashboard<br/>
-            <span className="gradient-text-ultra">Built For Winners</span>
+          <span className="section-tag-ai">See It In Action</span>
+          <h2 className="section-title-ai">
+            Professional-Grade<br/>
+            <span className="gradient-text-ai">AI Dashboard</span>
           </h2>
         </div>
 
         <div className="scroll-row large">
           <div className="scroll-track scroll-left">
-            <div className="scroll-item large">
-              <img src="/images/live-tables.png" alt="Live tables dashboard" />
-              <div className="scroll-caption">
-                <h4>6 Tables at Once</h4>
-                <p>GTO advice on every hand, every table</p>
+            {[
+              { img: 'live-tables.png', title: '6 Tables at Once', desc: 'AI plays every table simultaneously' },
+              { img: 'profit-tracker.png', title: 'Profit Tracking', desc: 'Watch your bankroll grow' },
+              { img: 'calendar.png', title: 'P/L Calendar', desc: '24 winning days. 1 losing day.' },
+              { img: 'hand-replay.png', title: 'Hand Replay', desc: 'Review AI decisions street-by-street' },
+              { img: 'opponents-board.png', title: 'Opponent Database', desc: '8,000+ players profiled' },
+              { img: 'activity-metrics.png', title: 'AI Metrics', desc: '97% execution accuracy' },
+            ].map((item, i) => (
+              <div className="scroll-item large" key={i}>
+                <img src={`/images/${item.img}`} alt={item.title} />
+                <div className="scroll-caption">
+                  <h4>{item.title}</h4>
+                  <p>{item.desc}</p>
+                </div>
               </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/profit-tracker.png" alt="Profit tracker" />
-              <div className="scroll-caption">
-                <h4>Track Your Profits</h4>
-                <p>Beautiful graphs. Real results.</p>
+            ))}
+            {/* Duplicate for seamless loop */}
+            {[
+              { img: 'live-tables.png', title: '6 Tables at Once', desc: 'AI plays every table simultaneously' },
+              { img: 'profit-tracker.png', title: 'Profit Tracking', desc: 'Watch your bankroll grow' },
+              { img: 'calendar.png', title: 'P/L Calendar', desc: '24 winning days. 1 losing day.' },
+              { img: 'hand-replay.png', title: 'Hand Replay', desc: 'Review AI decisions street-by-street' },
+              { img: 'opponents-board.png', title: 'Opponent Database', desc: '8,000+ players profiled' },
+              { img: 'activity-metrics.png', title: 'AI Metrics', desc: '97% execution accuracy' },
+            ].map((item, i) => (
+              <div className="scroll-item large" key={`dup-${i}`}>
+                <img src={`/images/${item.img}`} alt={item.title} />
+                <div className="scroll-caption">
+                  <h4>{item.title}</h4>
+                  <p>{item.desc}</p>
+                </div>
               </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/calendar.png" alt="P/L Calendar" />
-              <div className="scroll-caption">
-                <h4>Daily P/L Calendar</h4>
-                <p>24 winning days. 1 losing day.</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/hand-replay.png" alt="Hand replay" />
-              <div className="scroll-caption">
-                <h4>Hand Replay</h4>
-                <p>Review every decision street-by-street</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/opponents-board.png" alt="Opponent tracking" />
-              <div className="scroll-caption">
-                <h4>8,825 Opponents Tracked</h4>
-                <p>Know your competition inside out</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/activity-metrics.png" alt="Execution metrics" />
-              <div className="scroll-caption">
-                <h4>97% Execution Rate</h4>
-                <p>Industry-leading accuracy</p>
-              </div>
-            </div>
-            {/* Duplicates for seamless loop */}
-            <div className="scroll-item large">
-              <img src="/images/live-tables.png" alt="Live tables dashboard" />
-              <div className="scroll-caption">
-                <h4>6 Tables at Once</h4>
-                <p>GTO advice on every hand, every table</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/profit-tracker.png" alt="Profit tracker" />
-              <div className="scroll-caption">
-                <h4>Track Your Profits</h4>
-                <p>Beautiful graphs. Real results.</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/calendar.png" alt="P/L Calendar" />
-              <div className="scroll-caption">
-                <h4>Daily P/L Calendar</h4>
-                <p>24 winning days. 1 losing day.</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/hand-replay.png" alt="Hand replay" />
-              <div className="scroll-caption">
-                <h4>Hand Replay</h4>
-                <p>Review every decision street-by-street</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/opponents-board.png" alt="Opponent tracking" />
-              <div className="scroll-caption">
-                <h4>8,825 Opponents Tracked</h4>
-                <p>Know your competition inside out</p>
-              </div>
-            </div>
-            <div className="scroll-item large">
-              <img src="/images/activity-metrics.png" alt="Execution metrics" />
-              <div className="scroll-caption">
-                <h4>97% Execution Rate</h4>
-                <p>Industry-leading accuracy</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Simple Feature Pills */}
-      <section className="feature-pills-section">
-        <div className="pills-container">
-          <div className="pill">
-            <span className="pill-icon">⚡</span>
-            <span className="pill-text">Real-Time GTO</span>
-          </div>
-          <div className="pill">
-            <span className="pill-icon">🎯</span>
-            <span className="pill-text">6 Tables</span>
-          </div>
-          <div className="pill">
-            <span className="pill-icon">👥</span>
-            <span className="pill-text">8,825+ Opponents</span>
-          </div>
-          <div className="pill">
-            <span className="pill-icon">📊</span>
-            <span className="pill-text">P/L Tracking</span>
-          </div>
-          <div className="pill">
-            <span className="pill-icon">🔄</span>
-            <span className="pill-text">Hand Replay</span>
-          </div>
-          <div className="pill gold">
-            <span className="pill-icon">🔒</span>
-            <span className="pill-text">100% Private</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Results Section */}
-      <section className="results-section">
-        <div className="results-content">
-          <div className="results-text">
-            <span className="section-tag-pro">Real Results</span>
-            <h2 className="section-title-pro">
-              Players Are Winning<br/>
-              <span className="gradient-text-ultra">More Than Ever</span>
-            </h2>
-            <p className="results-description">
-              Our users report significant improvements in their win rates after just one week
-              of using PokerSharkScope. The combination of real-time GTO advice and detailed
-              analytics helps identify and fix leaks faster than ever before.
-            </p>
-            <div className="results-stats">
-              <div className="result-stat">
-                <span className="result-number">24</span>
-                <span className="result-label">Winning Days</span>
-              </div>
-              <div className="result-stat">
-                <span className="result-number">1</span>
-                <span className="result-label">Losing Day</span>
-              </div>
-              <div className="result-stat">
-                <span className="result-number">+19K</span>
-                <span className="result-label">BB Monthly</span>
-              </div>
-            </div>
-            <Link to="/signup" className="btn-cta-primary" style={{ marginTop: '2rem' }}>
-              <span>Start Your Winning Streak</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </div>
-          <div className="results-visual">
-            <div className="results-card">
-              <div className="results-card-header">March 2026 Results</div>
-              <div className="results-big-number">+19,011 BB</div>
-              <div className="results-details">
-                <div className="results-detail">
-                  <span className="detail-label">Best Day</span>
-                  <span className="detail-value green">+2,622 BB</span>
-                </div>
-                <div className="results-detail">
-                  <span className="detail-label">Total Hands</span>
-                  <span className="detail-value">32,929</span>
-                </div>
-                <div className="results-detail">
-                  <span className="detail-label">Win Rate</span>
-                  <span className="detail-value green">96%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="how-it-works-ultra">
-        <div className="hiw-header">
-          <span className="section-tag-pro">Get Started</span>
-          <h2 className="section-title-pro">
-            Playing Smarter in<br/>
-            <span className="gradient-text-ultra">Under 5 Minutes</span>
+      {/* Supported Sites */}
+      <section className="supported-sites-ai">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Compatibility</span>
+          <h2 className="section-title-ai">
+            Supported<br/>
+            <span className="gradient-text-ai">Poker Sites</span>
           </h2>
         </div>
 
-        <div className="hiw-steps">
-          <div className="hiw-step">
-            <div className="hiw-step-number">1</div>
-            <div className="hiw-step-content">
-              <h3>Create Account</h3>
-              <p>Create your account and choose a plan to get started.</p>
+        <div className="sites-grid">
+          <div className="site-card-ai live">
+            <div className="site-status live">
+              <span className="pulse-dot"></span>
+              LIVE NOW
             </div>
-            <div className="hiw-step-visual">
-              <div className="step-icon">📧</div>
-            </div>
-          </div>
-
-          <div className="hiw-connector"></div>
-
-          <div className="hiw-step">
-            <div className="hiw-step-number">2</div>
-            <div className="hiw-step-content">
-              <h3>Download App</h3>
-              <p>Get the native app for Mac or Windows. Install in under a minute.</p>
-            </div>
-            <div className="hiw-step-visual">
-              <div className="step-icon">⬇️</div>
+            <div className="site-icon">🎰</div>
+            <h3>Stake.us</h3>
+            <p>Full AI support for all cash game tables</p>
+            <div className="site-tags">
+              <span>Cash Games</span>
+              <span>All Stakes</span>
+              <span>6 Tables</span>
             </div>
           </div>
 
-          <div className="hiw-connector"></div>
-
-          <div className="hiw-step">
-            <div className="hiw-step-number">3</div>
-            <div className="hiw-step-content">
-              <h3>Start Winning</h3>
-              <p>Launch Chrome, open tables, and get real-time GTO advice on every hand.</p>
-            </div>
-            <div className="hiw-step-visual">
-              <div className="step-icon">🏆</div>
+          <div className="coming-soon-sites">
+            <h4>Coming Soon</h4>
+            <div className="coming-soon-list">
+              {['Global Poker', 'ClubGG', 'BetOnline', 'Ignition', 'ACR'].map(site => (
+                <div className="coming-soon-item" key={site}>
+                  <span className="coming-icon">🔜</span>
+                  <span>{site}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Preview */}
-      <section className="pricing-preview">
-        <div className="pricing-preview-header">
-          <span className="section-tag-pro">Simple Pricing</span>
-          <h2 className="section-title-pro">
-            One Tool. One Price.<br/>
-            <span className="gradient-text-ultra">Unlimited Potential.</span>
+      {/* Pricing */}
+      <section className="pricing-ai">
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Pricing</span>
+          <h2 className="section-title-ai">
+            Simple, Transparent<br/>
+            <span className="gradient-text-ai">AI Pricing</span>
           </h2>
         </div>
 
-        <div className="pricing-cards-preview">
-          <div className="price-card-mini">
+        <div className="pricing-cards-ai">
+          <div className="price-card-ai">
             <div className="price-name">Weekly</div>
             <div className="price-amount">$25</div>
             <div className="price-period">per week</div>
-            <Link to="/signup" className="price-btn">Get Started</Link>
+            <ul className="price-features">
+              <li>Full AI automation</li>
+              <li>6 tables simultaneous</li>
+              <li>All analytics</li>
+            </ul>
+            <Link to="/signup" className="price-btn-ai">Get Started</Link>
           </div>
 
-          <div className="price-card-mini featured">
-            <div className="price-popular-badge">MOST POPULAR</div>
+          <div className="price-card-ai featured">
+            <div className="price-badge">MOST POPULAR</div>
             <div className="price-name">Monthly</div>
             <div className="price-amount">$85</div>
             <div className="price-period">per month</div>
             <div className="price-savings">Save 15%</div>
-            <Link to="/signup" className="price-btn primary">Get Started</Link>
+            <ul className="price-features">
+              <li>Full AI automation</li>
+              <li>6 tables simultaneous</li>
+              <li>All analytics</li>
+              <li>Priority support</li>
+            </ul>
+            <Link to="/signup" className="price-btn-ai primary">Get Started</Link>
           </div>
 
-          <div className="price-card-mini">
+          <div className="price-card-ai">
             <div className="price-name">Yearly</div>
             <div className="price-amount">$799</div>
             <div className="price-period">per year</div>
-            <div className="price-savings">Best Value - Save 39%</div>
-            <Link to="/signup" className="price-btn">Get Started</Link>
+            <div className="price-savings">Best Value - Save 22%</div>
+            <ul className="price-features">
+              <li>Full AI automation</li>
+              <li>6 tables simultaneous</li>
+              <li>All analytics</li>
+              <li>Priority support</li>
+            </ul>
+            <Link to="/signup" className="price-btn-ai">Get Started</Link>
           </div>
         </div>
 
-        <p className="pricing-note">
-          All plans include full access to every feature. Cancel anytime.
+        <p className="pricing-note-ai">
+          All plans include full AI capabilities. Cancel anytime. 200 free hands to start.
         </p>
       </section>
 
-      {/* Affiliate Section */}
-      <section className="affiliate-promo">
-        <div className="affiliate-promo-content">
-          <div className="affiliate-promo-text">
-            <span className="section-tag-pro">Earn Money</span>
-            <h2 className="section-title-pro">
-              Refer Friends.<br/>
-              <span className="gradient-text-ultra">Earn 15% Forever.</span>
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7', marginTop: '1rem' }}>
-              Know other poker players? Share PokerSharkScope and earn 15% of every payment they make — for as long as they stay subscribed.
-            </p>
-            <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-              <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>15%</div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Recurring</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$12+</div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Monthly Referral</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--gold)' }}>$120</div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Per Yearly Referral</div>
-              </div>
-            </div>
-            <Link to="/affiliate" className="btn-cta-secondary" style={{ marginTop: '2rem', display: 'inline-flex' }}>
-              Learn About Affiliate Program →
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA */}
-      <section className="final-cta-ultra">
-        <div className="final-cta-bg">
-          <div className="cta-glow"></div>
+      <section className="final-cta-ai">
+        <div className="cta-bg-ai">
+          <div className="cta-glow-ai"></div>
         </div>
-        <div className="final-cta-content">
-          <h2>Ready to Stop Leaving Money on the Table?</h2>
+        <div className="cta-content-ai">
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="cta-logo" />
+          <h2>Ready to Let AI Play for You?</h2>
           <p>
-            Join hundreds of players who are already using PokerSharkScope
-            to make better decisions and win more consistently.
+            Join hundreds of players who are already using Poker AI
+            to automate their game and maximize their profits.
           </p>
-          <div className="final-cta-buttons">
-            <Link to="/signup" className="btn-cta-primary large">
-              <span>Get Started Now</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </div>
-          <p className="cta-subtext">Instant access • Cancel anytime • Secure payment</p>
+          <Link to="/signup" className="btn-cta-ai large">
+            <span>Start Playing with AI</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Link>
+          <p className="cta-subtext-ai">Instant access • Cancel anytime • 200 free hands</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="landing-footer">
-        <div className="footer-brand">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+      <footer className="landing-footer-ai">
+        <div className="footer-brand-ai">
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
-        <div className="footer-links">
-                    <Link to="/pricing">Pricing</Link>
+        <div className="footer-links-ai">
+          <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
-          <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="footer-discord">
-            Discord
-          </a>
+          <Link to="/affiliate">Affiliate</Link>
+          <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy">© 2024 PokerSharkScope. All rights reserved.</p>
+        <p className="footer-copy-ai">© 2024 Poker AI. All rights reserved.</p>
       </footer>
     </div>
   );
