@@ -22,6 +22,12 @@ router = APIRouter(tags=["Downloads"])
 # Local downloads folder
 DOWNLOADS_DIR = Path(__file__).parent.parent.parent.parent / "downloads"
 
+# Cloudflare R2 download URLs
+DOWNLOAD_URLS = {
+    "windows": "https://pub-2b2ed661543848dc98a305e77904f486.r2.dev/PokerSharkScope_v1-3.zip",
+    "mac": "https://pub-2b2ed661543848dc98a305e77904f486.r2.dev/PokerSharkScope_v1.0.0_Mac.zip",
+}
+
 
 async def get_user_from_token(token: str, session: AsyncSession) -> User:
     """Get user from JWT token."""
@@ -102,6 +108,10 @@ async def download_app(
             filename=filename,
             media_type="application/zip"
         )
+
+    # Check for hardcoded Cloudflare R2 URLs first
+    if platform in DOWNLOAD_URLS:
+        return RedirectResponse(url=DOWNLOAD_URLS[platform])
 
     # Otherwise, check for external URL in settings
     settings_service = SettingsService(session)
