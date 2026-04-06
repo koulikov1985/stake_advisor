@@ -577,14 +577,14 @@ function Home() {
         <div className="pricing-cards-ai">
           <div className="price-card-ai">
             <div className="price-name">Free Trial</div>
-            <div className="price-amount">$0</div>
-            <div className="price-period">1 day</div>
+            <div className="price-amount">Free</div>
+            <div className="price-period">via Discord</div>
             <ul className="price-features">
               <li>Full AI automation</li>
               <li>6 tables simultaneous</li>
               <li>All analytics</li>
             </ul>
-            <Link to="/signup" className="price-btn-ai">Try Free</Link>
+            <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="price-btn-ai">Join Discord</a>
           </div>
 
           <div className="price-card-ai">

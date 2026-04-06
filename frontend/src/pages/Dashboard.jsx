@@ -5,7 +5,7 @@ import '../styles/dashboard.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const plans = [
-  { plan: 'daily', name: 'Free Trial', price: 0 },
+  { plan: 'trial', name: 'Free Trial', price: 0, discord: true },
   { plan: 'weekly', name: '1 Week', price: 15 },
   { plan: 'monthly', name: '1 Month', price: 45, popular: true }
 ];
@@ -187,6 +187,12 @@ function Dashboard() {
   };
 
   const handlePurchase = async (planId) => {
+    // Free trial redirects to Discord
+    if (planId === 'trial') {
+      window.open('https://discord.gg/NHUjvZXzrR', '_blank');
+      return;
+    }
+
     setPurchasing(planId);
     try {
       const res = await fetch(`${API_URL}/api/user/payment/create-checkout-session`, {
@@ -1326,8 +1332,14 @@ function Dashboard() {
                   {p.savings && <div className="savings-badge">Save {p.savings}</div>}
                   <h3>{p.name}</h3>
                   <div className="price">
-                    <span className="currency">$</span>
-                    <span className="amount">{p.price}</span>
+                    {p.discord ? (
+                      <span className="amount">Free</span>
+                    ) : (
+                      <>
+                        <span className="currency">$</span>
+                        <span className="amount">{p.price}</span>
+                      </>
+                    )}
                   </div>
                   <ul>
                     <li>Real-time GTO advice</li>
@@ -1340,7 +1352,7 @@ function Dashboard() {
                     onClick={() => handlePurchase(p.plan)}
                     disabled={purchasing === p.plan}
                   >
-                    {purchasing === p.plan ? 'Processing...' : 'Get Started'}
+                    {p.discord ? 'Join Discord' : (purchasing === p.plan ? 'Processing...' : 'Get Started')}
                   </button>
                 </div>
               ))}

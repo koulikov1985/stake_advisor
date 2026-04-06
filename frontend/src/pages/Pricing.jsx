@@ -5,7 +5,7 @@ import '../styles/landing.css';
 
 const plans = [
   {
-    plan: 'daily',
+    plan: 'trial',
     name: 'Free Trial',
     price: '0',
     duration: 'day',

@@ -32,7 +32,7 @@ PLANS = {
     "daily": {
         "price_id": settings.stripe_price_daily,
         "duration": 1,
-        "name": "1-Day Pass",
+        "name": "Free Trial",
         "tier": LicenseTier.DAY,
     },
     "weekly": {
@@ -46,12 +46,6 @@ PLANS = {
         "duration": 30,
         "name": "Monthly",
         "tier": LicenseTier.MONTH,
-    },
-    "yearly": {
-        "price_id": settings.stripe_price_yearly,
-        "duration": 365,
-        "name": "Yearly",
-        "tier": LicenseTier.YEAR,
     },
 }
 
@@ -391,10 +385,9 @@ class StripeService:
 
         # Get payment amount from plan (in cents)
         plan_prices = {
-            "daily": 500,      # $5
-            "weekly": 2500,    # $25
-            "monthly": 6000,   # $60
-            "yearly": 54900,   # $549
+            "daily": 0,        # Free trial
+            "weekly": 1500,    # $15
+            "monthly": 4500,   # $45
         }
         tier_value = plan_config["tier"].value if hasattr(plan_config["tier"], 'value') else plan_config["tier"]
         base_amount = plan_prices.get(tier_value, 6000)  # Default to monthly
