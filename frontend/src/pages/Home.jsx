@@ -75,8 +75,6 @@ function Home() {
   const [searchParams] = useSearchParams();
   const [showCanceled, setShowCanceled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const [showExitPopup, setShowExitPopup] = useState(false);
-  const [exitPopupShown, setExitPopupShown] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -103,16 +101,7 @@ function Home() {
       window.history.replaceState({}, '', '/');
     }
 
-    // Exit intent detection
-    const handleMouseLeave = (e) => {
-      if (e.clientY <= 0 && !exitPopupShown) {
-        setShowExitPopup(true);
-        setExitPopupShown(true);
-      }
-    };
-    document.addEventListener('mouseleave', handleMouseLeave);
-    return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, [searchParams, exitPopupShown]);
+  }, [searchParams]);
 
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token;
@@ -146,27 +135,6 @@ function Home() {
         <div className="floating-card card-9">🂫</div>
         <div className="floating-card card-10">🃋</div>
       </div>
-
-      {/* Exit Intent Popup */}
-      {showExitPopup && (
-        <div className="exit-popup-overlay" onClick={() => setShowExitPopup(false)}>
-          <div className="exit-popup" onClick={(e) => e.stopPropagation()}>
-            <button className="exit-popup-close" onClick={() => setShowExitPopup(false)}>×</button>
-            <div className="exit-popup-content">
-              <span className="exit-popup-emoji">🎁</span>
-              <h3>Wait! Don't Leave Empty Handed</h3>
-              <p>Get <strong>20% OFF</strong> your first month with code:</p>
-              <div className="exit-popup-code">FIRST20</div>
-              <Link to="/signup" className="btn-cta-ai" onClick={() => setShowExitPopup(false)}>
-                Claim My Discount
-              </Link>
-              <button className="exit-popup-dismiss" onClick={() => setShowExitPopup(false)}>
-                No thanks, I'll pay full price
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Dark/Light Mode Toggle */}
       <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>

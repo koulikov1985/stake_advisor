@@ -63,6 +63,20 @@ function Download() {
 
   return (
     <div className="landing ai-theme">
+      {/* Floating Poker Cards - Page Wide */}
+      <div className="floating-cards-global">
+        <div className="floating-card card-1">🂡</div>
+        <div className="floating-card card-2">🂮</div>
+        <div className="floating-card card-3">🃁</div>
+        <div className="floating-card card-4">🃎</div>
+        <div className="floating-card card-5">🂱</div>
+        <div className="floating-card card-6">🃑</div>
+        <div className="floating-card card-7">🂢</div>
+        <div className="floating-card card-8">🃞</div>
+        <div className="floating-card card-9">🂫</div>
+        <div className="floating-card card-10">🃋</div>
+      </div>
+
       {/* Auth Required Modal */}
       {showAuthModal && (
         <div className="download-modal-overlay" onClick={() => setShowAuthModal(false)}>

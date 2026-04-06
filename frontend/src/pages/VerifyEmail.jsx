@@ -56,7 +56,16 @@ function VerifyEmail() {
 
   if (loading) {
     return (
-      <div className="landing" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Floating Poker Cards */}
+      <div className="floating-cards-global">
+        <div className="floating-card card-1">🂡</div>
+        <div className="floating-card card-2">🂮</div>
+        <div className="floating-card card-3">🃁</div>
+        <div className="floating-card card-4">🃎</div>
+        <div className="floating-card card-5">🂱</div>
+        <div className="floating-card card-6">🃑</div>
+      </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
             <span className="logo-icon">♠</span>
@@ -93,7 +102,16 @@ function VerifyEmail() {
 
   if (!token) {
     return (
-      <div className="landing" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Floating Poker Cards */}
+      <div className="floating-cards-global">
+        <div className="floating-card card-1">🂡</div>
+        <div className="floating-card card-2">🂮</div>
+        <div className="floating-card card-3">🃁</div>
+        <div className="floating-card card-4">🃎</div>
+        <div className="floating-card card-5">🂱</div>
+        <div className="floating-card card-6">🃑</div>
+      </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
             <span className="logo-icon">♠</span>
@@ -156,7 +174,16 @@ function VerifyEmail() {
 
   if (success) {
     return (
-      <div className="landing" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Floating Poker Cards */}
+      <div className="floating-cards-global">
+        <div className="floating-card card-1">🂡</div>
+        <div className="floating-card card-2">🂮</div>
+        <div className="floating-card card-3">🃁</div>
+        <div className="floating-card card-4">🃎</div>
+        <div className="floating-card card-5">🂱</div>
+        <div className="floating-card card-6">🃑</div>
+      </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
             <span className="logo-icon">♠</span>
@@ -253,7 +280,16 @@ function VerifyEmail() {
 
   // Error state
   return (
-    <div className="landing" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Floating Poker Cards */}
+      <div className="floating-cards-global">
+        <div className="floating-card card-1">🂡</div>
+        <div className="floating-card card-2">🂮</div>
+        <div className="floating-card card-3">🃁</div>
+        <div className="floating-card card-4">🃎</div>
+        <div className="floating-card card-5">🂱</div>
+        <div className="floating-card card-6">🃑</div>
+      </div>
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
           <span className="logo-icon">♠</span>
