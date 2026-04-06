@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy import text
 
 # revision identifiers, used by Alembic.
-revision = '005_backfill_referral_commissions'
+revision = '005_backfill_commissions'
 down_revision = '004_add_stripe_support'
 branch_labels = None
 depends_on = None
