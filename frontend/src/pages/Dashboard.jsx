@@ -486,7 +486,7 @@ function Dashboard() {
               onClick={() => setActiveSection('referral')}
               style={activeSection === 'referral' ? {} : { color: '#00d97e' }}
             >
-              Referral Program
+              Affiliate
             </button>
             <button
               className={`dash-tab ${activeSection === 'devices' ? 'active' : ''}`}
