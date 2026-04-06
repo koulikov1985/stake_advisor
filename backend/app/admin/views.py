@@ -210,10 +210,26 @@ class ReferralAdmin(ModelView, model=Referral):
         "referred_user",
         "referral_code_used",
         "converted",
+        "converted_at",
+        "ip_address",
+        "admin_notes",
         "created_at",
     ]
-    column_sortable_list = ["created_at", "converted"]
+    column_searchable_list = ["referral_code_used", "ip_address", "admin_notes"]
+    column_sortable_list = ["created_at", "converted", "converted_at"]
     column_default_sort = [("created_at", True)]
+    column_filters = ["converted", "referral_code_used", "created_at"]
+    column_labels = {
+        "affiliate": "Affiliate (Referrer)",
+        "referred_user": "Referred User",
+        "referral_code_used": "Code Used",
+        "converted": "Paid?",
+        "converted_at": "Converted At",
+    }
+    column_formatters = {
+        "converted": lambda m, a: "Yes" if m.converted else "No",
+    }
+    form_columns = ["affiliate", "referred_user", "referral_code_used", "converted", "converted_at", "ip_address", "admin_notes"]
     can_create = True
     can_edit = True
     can_delete = True
@@ -226,14 +242,34 @@ class CommissionAdmin(ModelView, model=Commission):
     column_list = [
         "id",
         "affiliate",
+        "referral",
         "amount",
+        "base_amount",
+        "commission_rate",
         "currency",
         "status",
-        "commission_rate",
+        "reviewed_by",
+        "reviewed_at",
+        "rejection_reason",
         "created_at",
     ]
-    column_sortable_list = ["created_at", "amount", "status"]
+    column_searchable_list = ["reviewed_by", "rejection_reason"]
+    column_sortable_list = ["created_at", "amount", "status", "commission_rate"]
     column_default_sort = [("created_at", True)]
+    column_filters = ["status", "commission_rate", "created_at"]
+    column_labels = {
+        "amount": "Commission ($)",
+        "base_amount": "Sale Amount ($)",
+        "commission_rate": "Rate (%)",
+        "reviewed_by": "Reviewed By",
+        "reviewed_at": "Reviewed At",
+    }
+    column_formatters = {
+        "amount": lambda m, a: f"${m.amount / 100:.2f}" if m.amount else "$0.00",
+        "base_amount": lambda m, a: f"${m.base_amount / 100:.2f}" if m.base_amount else "$0.00",
+        "commission_rate": lambda m, a: f"{m.commission_rate}%",
+    }
+    form_columns = ["affiliate", "referral", "amount", "base_amount", "commission_rate", "currency", "status", "reviewed_by", "rejection_reason"]
     can_create = True
     can_edit = True
     can_delete = True
@@ -249,11 +285,27 @@ class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
         "amount",
         "currency",
         "status",
+        "payment_method",
+        "payment_reference",
+        "processed_by",
         "requested_at",
         "processed_at",
+        "notes",
     ]
-    column_sortable_list = ["created_at", "amount", "status"]
+    column_searchable_list = ["payment_reference", "processed_by", "notes"]
+    column_sortable_list = ["created_at", "amount", "status", "requested_at", "processed_at"]
     column_default_sort = [("created_at", True)]
+    column_filters = ["status", "payment_method", "created_at"]
+    column_labels = {
+        "amount": "Payout Amount ($)",
+        "payment_method": "Method",
+        "payment_reference": "Reference #",
+        "processed_by": "Processed By",
+    }
+    column_formatters = {
+        "amount": lambda m, a: f"${m.amount / 100:.2f}" if m.amount else "$0.00",
+    }
+    form_columns = ["affiliate", "amount", "currency", "status", "payment_method", "payment_reference", "processed_by", "notes"]
     can_create = True
     can_edit = True
     can_delete = True
