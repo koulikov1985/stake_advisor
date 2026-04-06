@@ -45,13 +45,13 @@ function Affiliate() {
   const stat3 = useCountUp(1800, 2000);
 
   const earnings = [
-    { plan: 'Daily', price: 5, commission: 1.25 },
-    { plan: 'Weekly', price: 25, commission: 6.25 },
-    { plan: 'Monthly', price: 60, commission: 15.00 }
+    { plan: 'Free Trial', price: 0, commission: 0 },
+    { plan: 'Weekly', price: 15, commission: 3.75 },
+    { plan: 'Monthly', price: 45, commission: 11.25 }
   ];
 
   // Calculate potential earnings
-  const monthlyPerReferral = 15.00; // 25% of $60 monthly
+  const monthlyPerReferral = 11.25; // 25% of $45 monthly
   const monthlyTotal = referrals * monthlyPerReferral;
   const yearlyTotal = monthlyTotal * 12;
 
@@ -253,7 +253,7 @@ function Affiliate() {
           <div className="earnings-highlight-icon">🎯</div>
           <div>
             <strong>Best for You: Monthly Referrals</strong>
-            <p>Most users choose monthly subscriptions ($15/referral). Focus on getting long-term subscribers for maximum passive income!</p>
+            <p>Most users choose monthly subscriptions ($11.25/referral). Focus on getting long-term subscribers for maximum passive income!</p>
           </div>
         </div>
       </section>

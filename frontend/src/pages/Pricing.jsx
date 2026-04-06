@@ -6,8 +6,8 @@ import '../styles/landing.css';
 const plans = [
   {
     plan: 'daily',
-    name: '1-Day Pass',
-    price: '5',
+    name: 'Free Trial',
+    price: '0',
     duration: 'day',
     features: [
       'Full real-time GTO advisor',
@@ -20,7 +20,7 @@ const plans = [
   {
     plan: 'weekly',
     name: 'Weekly',
-    price: '25',
+    price: '15',
     duration: 'week',
     features: [
       'Full real-time GTO advisor',
@@ -33,7 +33,7 @@ const plans = [
   {
     plan: 'monthly',
     name: 'Monthly',
-    price: '60',
+    price: '45',
     duration: 'month',
     features: [
       'Full real-time GTO advisor',

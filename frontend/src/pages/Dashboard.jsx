@@ -5,9 +5,9 @@ import '../styles/dashboard.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const plans = [
-  { plan: 'daily', name: '1 Day', price: 5 },
-  { plan: 'weekly', name: '1 Week', price: 25, savings: '50%' },
-  { plan: 'monthly', name: '1 Month', price: 60, popular: true, savings: '60%' }
+  { plan: 'daily', name: 'Free Trial', price: 0 },
+  { plan: 'weekly', name: '1 Week', price: 15 },
+  { plan: 'monthly', name: '1 Month', price: 45, popular: true }
 ];
 
 function Dashboard() {

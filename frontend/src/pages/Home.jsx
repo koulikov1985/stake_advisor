@@ -576,22 +576,21 @@ function Home() {
 
         <div className="pricing-cards-ai">
           <div className="price-card-ai">
-            <div className="price-name">Daily</div>
-            <div className="price-amount">$5</div>
-            <div className="price-period">per day</div>
+            <div className="price-name">Free Trial</div>
+            <div className="price-amount">$0</div>
+            <div className="price-period">1 day</div>
             <ul className="price-features">
               <li>Full AI automation</li>
               <li>6 tables simultaneous</li>
               <li>All analytics</li>
             </ul>
-            <Link to="/signup" className="price-btn-ai">Get Started</Link>
+            <Link to="/signup" className="price-btn-ai">Try Free</Link>
           </div>
 
           <div className="price-card-ai">
             <div className="price-name">Weekly</div>
-            <div className="price-amount">$25</div>
+            <div className="price-amount">$15</div>
             <div className="price-period">per week</div>
-            <div className="price-savings">Save 50%</div>
             <ul className="price-features">
               <li>Full AI automation</li>
               <li>6 tables simultaneous</li>
@@ -603,9 +602,8 @@ function Home() {
           <div className="price-card-ai featured">
             <div className="price-badge">MOST POPULAR</div>
             <div className="price-name">Monthly</div>
-            <div className="price-amount">$60</div>
+            <div className="price-amount">$45</div>
             <div className="price-period">per month</div>
-            <div className="price-savings">Save 60%</div>
             <ul className="price-features">
               <li>Full AI automation</li>
               <li>6 tables simultaneous</li>
