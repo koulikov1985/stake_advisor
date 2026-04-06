@@ -154,6 +154,7 @@ function Home() {
             <span>Discord</span>
           </a>
           <Link to="/pricing">Pricing</Link>
+          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           {isLoggedIn ? (
@@ -730,6 +731,7 @@ function Home() {
         </div>
         <div className="footer-links-ai">
           <Link to="/pricing">Pricing</Link>
+          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/affiliate">Affiliate</Link>

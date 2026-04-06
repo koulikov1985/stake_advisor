@@ -85,6 +85,7 @@ function Affiliate() {
             <span>Discord</span>
           </a>
           <Link to="/pricing">Pricing</Link>
+          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           {isLoggedIn ? (
@@ -482,6 +483,7 @@ function Affiliate() {
         </div>
         <div className="footer-links-ai">
           <Link to="/pricing">Pricing</Link>
+          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/affiliate">Earn With Us</Link>
