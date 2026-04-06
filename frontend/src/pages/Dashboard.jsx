@@ -484,9 +484,19 @@ function Dashboard() {
             <button
               className={`dash-tab ${activeSection === 'referral' ? 'active' : ''}`}
               onClick={() => setActiveSection('referral')}
-              style={activeSection === 'referral' ? {} : { color: '#00d97e' }}
+              style={{
+                color: '#00d97e',
+                border: '1px solid #00d97e',
+                boxShadow: activeSection === 'referral'
+                  ? '0 0 15px rgba(0, 217, 126, 0.5), 0 0 30px rgba(0, 217, 126, 0.3), inset 0 0 10px rgba(0, 217, 126, 0.1)'
+                  : '0 0 10px rgba(0, 217, 126, 0.4), 0 0 20px rgba(0, 217, 126, 0.2)',
+                background: activeSection === 'referral'
+                  ? 'rgba(0, 217, 126, 0.15)'
+                  : 'rgba(0, 217, 126, 0.05)',
+                animation: activeSection !== 'referral' ? 'glowPulse 2s ease-in-out infinite' : 'none'
+              }}
             >
-              Affiliate
+              💰 Affiliate
             </button>
             <button
               className={`dash-tab ${activeSection === 'devices' ? 'active' : ''}`}
