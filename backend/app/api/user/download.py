@@ -24,7 +24,7 @@ DOWNLOADS_DIR = Path(__file__).parent.parent.parent.parent / "downloads"
 
 # Cloudflare R2 download URLs
 DOWNLOAD_URLS = {
-    "windows": "https://pub-2b2ed661543848dc98a305e77904f486.r2.dev/PokerSharkScope_v1-3.zip",
+    "windows": "https://pub-2b2ed661543848dc98a305e77904f486.r2.dev/PokerSharkScope_v1.0.8_Windows.zip",
     "mac": "https://pub-2b2ed661543848dc98a305e77904f486.r2.dev/PokerSharkScope_v1.0.0_Mac.zip",
 }
 
