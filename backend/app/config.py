@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     email_from: str = "PokerSharkScope <noreply@pokersharkscope.com>"
 
     # Frontend URL (for email links)
-    frontend_url: str = "https://sharkscopepro.onrender.com"
+    frontend_url: str = "https://sharkpokerclub.com"
 
     # App
     debug: bool = False

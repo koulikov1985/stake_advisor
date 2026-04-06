@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.models import User
+from app.models.affiliate import Referral
 from app.config import get_settings
 from app.services.email_service import get_email_service
 
@@ -35,6 +36,7 @@ class UserSignup(BaseModel):
     email: EmailStr
     password: str
     name: Optional[str] = None
+    referral_code: Optional[str] = None
 
 
 class TokenResponse(BaseModel):
@@ -188,6 +190,29 @@ async def signup(
     session.add(user)
     await session.commit()
     await session.refresh(user)
+
+    # Handle referral tracking
+    if data.referral_code:
+        # Find the affiliate by their code
+        affiliate_result = await session.execute(
+            select(User).where(User.affiliate_code == data.referral_code)
+        )
+        affiliate = affiliate_result.scalar_one_or_none()
+
+        if affiliate and affiliate.is_affiliate:
+            # Create referral record
+            referral = Referral(
+                affiliate_id=affiliate.id,
+                referred_user_id=user.id,
+                referral_code_used=data.referral_code,
+                converted=False,
+            )
+            session.add(referral)
+
+            # Store referral info on user
+            user.referred_by_id = affiliate.id
+            await session.commit()
+            logger.info(f"Referral tracked: {user.email} referred by {affiliate.email}")
 
     token = create_access_token(str(user.id), user.email)
 

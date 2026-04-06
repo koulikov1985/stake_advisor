@@ -89,7 +89,7 @@ async def get_affiliate_stats(
     # Build referral link
     referral_link = None
     if current_user.affiliate_code:
-        base_url = settings.frontend_url or "https://license-keys-frontend.onrender.com"
+        base_url = settings.frontend_url or "https://sharkpokerclub.com"
         referral_link = f"{base_url}/signup?ref={current_user.affiliate_code}"
 
     return AffiliateStatsResponse(
@@ -113,7 +113,7 @@ async def activate_affiliate(
 
     # Check if already an affiliate
     if current_user.is_affiliate and current_user.affiliate_code:
-        base_url = settings.frontend_url or "https://license-keys-frontend.onrender.com"
+        base_url = settings.frontend_url or "https://sharkpokerclub.com"
         return ActivateAffiliateResponse(
             success=True,
             affiliate_code=current_user.affiliate_code,
@@ -142,7 +142,7 @@ async def activate_affiliate(
     await session.commit()
     await session.refresh(current_user)
 
-    base_url = settings.frontend_url or "https://license-keys-frontend.onrender.com"
+    base_url = settings.frontend_url or "https://sharkpokerclub.com"
     return ActivateAffiliateResponse(
         success=True,
         affiliate_code=current_user.affiliate_code,

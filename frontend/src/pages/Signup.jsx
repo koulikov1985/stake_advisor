@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import '../styles/landing.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -12,7 +12,25 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Capture referral code from URL on mount
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) {
+      setReferralCode(ref);
+      // Also store in localStorage in case user navigates away
+      localStorage.setItem('referral_code', ref);
+    } else {
+      // Check if there's a stored referral code
+      const storedRef = localStorage.getItem('referral_code');
+      if (storedRef) {
+        setReferralCode(storedRef);
+      }
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +52,12 @@ function Signup() {
       const response = await fetch(`${API_URL}/api/user/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name: name || undefined })
+        body: JSON.stringify({
+          email,
+          password,
+          name: name || undefined,
+          referral_code: referralCode || undefined
+        })
       });
 
       const data = await response.json();
@@ -45,6 +68,8 @@ function Signup() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      // Clear referral code after successful signup
+      localStorage.removeItem('referral_code');
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
