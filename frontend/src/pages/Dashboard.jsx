@@ -1118,8 +1118,9 @@ function Dashboard() {
                             <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Email</th>
                             <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Name</th>
                             <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Signed Up</th>
-                            <th style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Subscription</th>
+                            <th style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Status</th>
                             <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Plan</th>
+                            <th style={{ textAlign: 'right', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Commission</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1153,6 +1154,31 @@ function Dashboard() {
                               </td>
                               <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>
                                 {referral.subscription_tier ? referral.subscription_tier.toUpperCase() : '-'}
+                              </td>
+                              <td style={{ padding: '0.75rem', textAlign: 'right' }}>
+                                {referral.commission_earned > 0 ? (
+                                  <span style={{ color: '#00d97e', fontWeight: '600' }}>
+                                    ${referral.commission_earned.toFixed(2)}
+                                    {referral.commission_status && (
+                                      <span style={{
+                                        marginLeft: '0.5rem',
+                                        fontSize: '0.7rem',
+                                        padding: '0.15rem 0.4rem',
+                                        borderRadius: '4px',
+                                        background: referral.commission_status === 'paid' ? 'rgba(0, 217, 126, 0.15)' :
+                                                   referral.commission_status === 'approved' ? 'rgba(59, 130, 246, 0.15)' :
+                                                   'rgba(212, 175, 55, 0.15)',
+                                        color: referral.commission_status === 'paid' ? '#00d97e' :
+                                               referral.commission_status === 'approved' ? '#3b82f6' :
+                                               'var(--gold)'
+                                      }}>
+                                        {referral.commission_status}
+                                      </span>
+                                    )}
+                                  </span>
+                                ) : (
+                                  <span style={{ color: 'var(--text-muted)' }}>-</span>
+                                )}
                               </td>
                             </tr>
                           ))}

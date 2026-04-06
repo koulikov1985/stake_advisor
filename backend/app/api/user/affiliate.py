@@ -163,6 +163,8 @@ class ReferralDetail(BaseModel):
     subscription_expires: Optional[str]
     converted: bool
     converted_at: Optional[str]
+    commission_earned: float
+    commission_status: Optional[str]
 
 
 class ReferralsListResponse(BaseModel):
@@ -208,6 +210,22 @@ async def get_affiliate_referrals(
         )
         active_license = license_result.scalar_one_or_none()
 
+        # Get total commission earned from this referral
+        commission_result = await session.execute(
+            select(func.coalesce(func.sum(Commission.amount), 0))
+            .where(Commission.referral_id == referral.id)
+        )
+        total_commission = (commission_result.scalar() or 0) / 100  # Convert cents to dollars
+
+        # Get latest commission status
+        latest_commission_result = await session.execute(
+            select(Commission)
+            .where(Commission.referral_id == referral.id)
+            .order_by(Commission.created_at.desc())
+        )
+        latest_commission = latest_commission_result.scalar_one_or_none()
+        commission_status = latest_commission.status.value if latest_commission else None
+
         referral_details.append(ReferralDetail(
             id=str(referral.id),
             email=referred_user.email,
@@ -218,6 +236,8 @@ async def get_affiliate_referrals(
             subscription_expires=active_license.expires_at.isoformat() if active_license and active_license.expires_at else None,
             converted=referral.converted,
             converted_at=referral.converted_at.isoformat() if referral.converted_at else None,
+            commission_earned=total_commission,
+            commission_status=commission_status,
         ))
 
     return ReferralsListResponse(
