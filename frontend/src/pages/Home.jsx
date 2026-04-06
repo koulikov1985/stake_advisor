@@ -160,7 +160,7 @@ function Home() {
             <span>Discord</span>
           </a>
           <Link to="/pricing">Pricing</Link>
-          <Link to="/affiliate">Affiliate</Link>
+          <Link to="/affiliate" className="nav-affiliate-glow">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           {isLoggedIn ? (

@@ -96,7 +96,7 @@ function Features() {
           </a>
           <Link to="/features">Features</Link>
           <Link to="/pricing">Pricing</Link>
-          <Link to="/affiliate">Affiliate</Link>
+          <Link to="/affiliate" className="nav-affiliate-glow">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/login" className="nav-btn-ghost">Login</Link>
