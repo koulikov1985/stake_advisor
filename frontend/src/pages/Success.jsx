@@ -90,8 +90,7 @@ function Success() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -146,8 +145,7 @@ function Success() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -221,8 +219,7 @@ function Success() {
       </div>
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
       </header>
 

@@ -40,19 +40,19 @@ function Affiliate() {
   const isLoggedIn = !!token;
 
   // Animated stats
-  const stat1 = useCountUp(15, 1500);
-  const stat2 = useCountUp(120, 2000);
-  const stat3 = useCountUp(1440, 2000);
+  const stat1 = useCountUp(25, 1500);
+  const stat2 = useCountUp(180, 2000);
+  const stat3 = useCountUp(1800, 2000);
 
   const earnings = [
-    { plan: 'Daily', price: 5, commission: 0.75 },
-    { plan: 'Weekly', price: 25, commission: 3.75 },
-    { plan: 'Monthly', price: 60, commission: 9.00 },
-    { plan: 'Yearly', price: 549, commission: 82.35 }
+    { plan: 'Daily', price: 5, commission: 1.25 },
+    { plan: 'Weekly', price: 25, commission: 6.25 },
+    { plan: 'Monthly', price: 60, commission: 15.00 },
+    { plan: 'Yearly', price: 549, commission: 137.25 }
   ];
 
   // Calculate potential earnings
-  const monthlyPerReferral = 9.00; // 15% of $60 monthly
+  const monthlyPerReferral = 15.00; // 25% of $60 monthly
   const monthlyTotal = referrals * monthlyPerReferral;
   const yearlyTotal = monthlyTotal * 12;
 
@@ -131,7 +131,7 @@ function Affiliate() {
           </h1>
 
           <p className="hero-subtitle-ai">
-            Know poker players? Share Poker AI and earn <strong>15% recurring commission</strong> on every subscription —
+            Know poker players? Share Poker AI and earn <strong>25% recurring commission</strong> on every subscription —
             for as long as they stay subscribed. No limits. No caps. Pure profit.
           </p>
 
@@ -150,7 +150,7 @@ function Affiliate() {
           <div className="hero-trust-ai">
             <div className="trust-item-ai">
               <span className="trust-icon-ai">💰</span>
-              <span>15% Recurring</span>
+              <span>25% Recurring</span>
             </div>
             <div className="trust-item-ai">
               <span className="trust-icon-ai">♾️</span>
@@ -219,8 +219,8 @@ function Affiliate() {
           <div className="affiliate-step">
             <div className="affiliate-step-number">3</div>
             <div className="affiliate-step-icon">💸</div>
-            <h3>Earn 15% Forever</h3>
-            <p>Every time someone subscribes through your link, you earn 15% of their payment. Not just once — every single month they stay subscribed.</p>
+            <h3>Earn 25% Forever</h3>
+            <p>Every time someone subscribes through your link, you earn 25% of their payment. Not just once — every single month they stay subscribed.</p>
           </div>
         </div>
       </section>
@@ -239,7 +239,7 @@ function Affiliate() {
           <div className="earnings-header">
             <span>Plan</span>
             <span>Price</span>
-            <span>Your Commission (15%)</span>
+            <span>Your Commission (25%)</span>
           </div>
           {earnings.map((item, i) => (
             <div className="earnings-row" key={i}>
@@ -335,7 +335,7 @@ function Affiliate() {
           <div className="benefit-card">
             <div className="benefit-icon">🔄</div>
             <h3>Recurring Revenue</h3>
-            <p>Unlike one-time commissions, you earn 15% every time your referral renews. Monthly subscribers = monthly income for you.</p>
+            <p>Unlike one-time commissions, you earn 25% every time your referral renews. Monthly subscribers = monthly income for you.</p>
           </div>
 
           <div className="benefit-card">
@@ -489,13 +489,14 @@ function Affiliate() {
         </div>
         <div className="footer-links-ai">
           <Link to="/pricing">Pricing</Link>
-          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
-          <Link to="/affiliate">Earn With Us</Link>
+          <Link to="/affiliate">Affiliate</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy-ai">© 2025 Poker AI. All rights reserved.</p>
+        <p className="footer-copy-ai">&copy; 2025 Poker AI. All rights reserved.</p>
       </footer>
     </div>
   );

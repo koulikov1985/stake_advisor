@@ -319,13 +319,14 @@ function Download() {
         </div>
         <div className="footer-links-ai">
           <Link to="/pricing">Pricing</Link>
-          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/affiliate">Affiliate</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy-ai">© 2025 Poker AI. All rights reserved.</p>
+        <p className="footer-copy-ai">&copy; 2025 Poker AI. All rights reserved.</p>
       </footer>
     </div>
   );

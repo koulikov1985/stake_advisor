@@ -61,7 +61,7 @@ function LicenseDisplay({ licenseKey, plan, expiresAt }) {
           </div>
           <div className="step">
             <span className="step-num">2</span>
-            <span>Open SharkScope Pro app</span>
+            <span>Open Poker AI app</span>
           </div>
           <div className="step">
             <span className="step-num">3</span>

@@ -4748,17 +4748,124 @@ details.faq-item summary::-webkit-details-marker {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .affiliate-step-arrow {
     transform: rotate(90deg);
     padding: 0.5rem 0;
   }
-  
+
   .calculator-results {
     grid-template-columns: 1fr;
   }
-  
+
   .scenario-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ==================== */
+/* Legal Pages (Terms & Privacy) */
+/* ==================== */
+
+.legal-content {
+  padding: 8rem 2rem 4rem;
+  min-height: calc(100vh - 200px);
+  position: relative;
+  z-index: 1;
+}
+
+.legal-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 3rem;
+}
+
+.legal-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #fff 0%, #00ff88 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.legal-updated {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.legal-section {
+  margin-bottom: 2.5rem;
+}
+
+.legal-section h2 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.legal-section h3 {
+  font-size: 1.1rem;
+  color: #00ff88;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.legal-section p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.legal-section ul {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.legal-section li {
+  margin-bottom: 0.5rem;
+}
+
+.legal-section li strong {
+  color: var(--text-primary);
+}
+
+.legal-section a {
+  color: #00ff88;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.legal-section a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Legal page responsive */
+@media (max-width: 768px) {
+  .legal-content {
+    padding: 6rem 1rem 3rem;
+  }
+
+  .legal-container {
+    padding: 1.5rem;
+  }
+
+  .legal-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .legal-section h2 {
+    font-size: 1.2rem;
   }
 }

@@ -1,47 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/landing.css';
-
-// Animated Counter Hook
-function useCountUp(end, duration = 2000, startOnView = true) {
-  const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (!startOnView) {
-      animateCount();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
-          setHasStarted(true);
-          animateCount();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [hasStarted]);
-
-  const animateCount = () => {
-    const startTime = Date.now();
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * end));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    animate();
-  };
-
-  return { count, ref };
-}
 
 // FAQ Data
 const faqData = [
@@ -79,9 +38,6 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Animated stats
-  const stat1 = useCountUp(91, 2000);
-  const stat2 = useCountUp(6, 1500);
-  const stat3 = useCountUp(69, 2000);
 
   useEffect(() => {
     // Simulate loading
@@ -409,35 +365,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Live Stats - Animated */}
-      <section className="stats-showcase-ai">
-        <div className="stats-container-ai">
-          <div className="stat-item-ai" ref={stat1.ref}>
-            <span className="stat-number-ai">+{stat1.count}</span>
-            <span className="stat-unit-ai">BB/100</span>
-            <span className="stat-desc-ai">AI Win Rate</span>
-          </div>
-          <div className="stat-divider-ai"></div>
-          <div className="stat-item-ai" ref={stat2.ref}>
-            <span className="stat-number-ai">{stat2.count}</span>
-            <span className="stat-unit-ai">Tables</span>
-            <span className="stat-desc-ai">Simultaneous</span>
-          </div>
-          <div className="stat-divider-ai"></div>
-          <div className="stat-item-ai" ref={stat3.ref}>
-            <span className="stat-number-ai">{stat3.count}%</span>
-            <span className="stat-unit-ai">Win Rate</span>
-            <span className="stat-desc-ai">All-In Equity</span>
-          </div>
-          <div className="stat-divider-ai"></div>
-          <div className="stat-item-ai">
-            <span className="stat-number-ai">&lt;1s</span>
-            <span className="stat-unit-ai">Response</span>
-            <span className="stat-desc-ai">Decision Time</span>
-          </div>
-        </div>
-      </section>
-
       {/* How AI Works */}
       <section className="ai-process">
         <div className="section-header-ai">
@@ -737,13 +664,14 @@ function Home() {
         </div>
         <div className="footer-links-ai">
           <Link to="/pricing">Pricing</Link>
-          <Link to="/affiliate">Affiliate</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/affiliate">Affiliate</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer">Discord</a>
         </div>
-        <p className="footer-copy-ai">© 2025 Poker AI. All rights reserved.</p>
+        <p className="footer-copy-ai">&copy; 2025 Poker AI. All rights reserved.</p>
       </footer>
 
       {/* Sticky Mobile CTA */}

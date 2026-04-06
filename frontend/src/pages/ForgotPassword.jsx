@@ -56,8 +56,7 @@ function ForgotPassword() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -136,8 +135,7 @@ function ForgotPassword() {
       </div>
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
           <Link to="/login" className="nav-btn-ghost">Login</Link>

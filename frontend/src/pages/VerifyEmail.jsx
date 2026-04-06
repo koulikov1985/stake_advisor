@@ -74,8 +74,7 @@ function VerifyEmail() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -126,8 +125,7 @@ function VerifyEmail() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -204,8 +202,7 @@ function VerifyEmail() {
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
         </header>
 
@@ -241,7 +238,7 @@ function VerifyEmail() {
             }}>✓</div>
             <h2 style={{ color: '#00d97e', marginBottom: '0.75rem', fontSize: '1.75rem' }}>Email Verified!</h2>
             <p style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1.1rem' }}>
-              Welcome to PokerSharkScope
+              Welcome to Poker AI
             </p>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
               You're all set to start crushing the tables.
@@ -316,8 +313,7 @@ function VerifyEmail() {
       </div>
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
       </header>
 

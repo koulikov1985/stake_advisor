@@ -12,6 +12,8 @@ import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import Dashboard from './pages/Dashboard';
 import Affiliate from './pages/Affiliate';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 
 function AppContent() {
   return (
@@ -29,6 +31,8 @@ function AppContent() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/affiliate" element={<Affiliate />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
       </Routes>
     </div>
   );

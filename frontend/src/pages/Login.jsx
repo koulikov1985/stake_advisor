@@ -65,8 +65,7 @@ function Login() {
       {/* Header */}
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
           <Link to="/signup" className="nav-btn-primary">Sign Up</Link>

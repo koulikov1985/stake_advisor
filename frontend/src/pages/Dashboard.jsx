@@ -275,8 +275,7 @@ function Dashboard() {
       <div className="dash">
         <header className="dash-header">
           <Link to="/" className="dash-logo">
-            <span className="logo-icon">♠</span>
-            <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+            <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
           </Link>
           <div className="dash-header-right">
             <div className="dash-user">
@@ -371,8 +370,7 @@ function Dashboard() {
       {/* Header */}
       <header className="dash-header">
         <Link to="/" className="dash-logo">
-          <span className="logo-icon">♠</span>
-          <span className="logo-text">Poker<span className="gold">SharkScope</span></span>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <div className="dash-header-right">
           <a href="https://discord.gg/NHUjvZXzrR" target="_blank" rel="noopener noreferrer" className="dash-discord">
@@ -628,7 +626,7 @@ function Dashboard() {
                   </div>
                   <div className="card-content">
                     <h3>Download App</h3>
-                    <p>Get PokerSharkScope for your platform</p>
+                    <p>Get Poker AI for your platform</p>
                     <div className="download-buttons">
                       <button className="download-btn mac" onClick={() => handleDownload('mac')}>
                         <span className="platform-icon">🍎</span>
@@ -804,7 +802,7 @@ function Dashboard() {
                   {/* Quick Share Buttons */}
                   <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                     <button
-                      onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Level up your poker game with PokerSharkScope - real-time GTO advice! Use my link:')}&url=${encodeURIComponent(affiliateStats.referral_link)}`, '_blank')}
+                      onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Level up your poker game with Poker AI - real-time GTO advice! Use my link:')}&url=${encodeURIComponent(affiliateStats.referral_link)}`, '_blank')}
                       style={{
                         background: '#1DA1F2',
                         color: '#fff',
@@ -846,7 +844,7 @@ function Dashboard() {
                       Facebook
                     </button>
                     <button
-                      onClick={() => window.open(`https://reddit.com/submit?url=${encodeURIComponent(affiliateStats.referral_link)}&title=${encodeURIComponent('PokerSharkScope - Real-time GTO advice for online poker')}`, '_blank')}
+                      onClick={() => window.open(`https://reddit.com/submit?url=${encodeURIComponent(affiliateStats.referral_link)}&title=${encodeURIComponent('Poker AI - Real-time GTO advice for online poker')}`, '_blank')}
                       style={{
                         background: '#FF4500',
                         color: '#fff',
@@ -867,7 +865,7 @@ function Dashboard() {
                       Reddit
                     </button>
                     <button
-                      onClick={() => window.open(`mailto:?subject=${encodeURIComponent('Check out PokerSharkScope')}&body=${encodeURIComponent(`Hey! I've been using PokerSharkScope for real-time GTO advice in online poker and it's been a game changer. Check it out: ${affiliateStats.referral_link}`)}`, '_blank')}
+                      onClick={() => window.open(`mailto:?subject=${encodeURIComponent('Check out Poker AI')}&body=${encodeURIComponent(`Hey! I've been using Poker AI for real-time GTO advice in online poker and it's been a game changer. Check it out: ${affiliateStats.referral_link}`)}`, '_blank')}
                       style={{
                         background: 'var(--bg-elevated)',
                         color: 'var(--text-primary)',
