@@ -25,8 +25,8 @@ const faqData = [
     a: "Traditional tools give you advice - you still have to make decisions and click buttons. Poker AI is fully autonomous. It reads, decides, and executes automatically. You just watch it win."
   },
   {
-    q: "Is there a free trial?",
-    a: "Yes! Every new account gets 200 free hands to test the AI. No credit card required to start."
+    q: "How do I get started?",
+    a: "Simply create an account and purchase a plan. We offer daily, weekly, and monthly options starting at just $5."
   }
 ];
 
@@ -615,23 +615,10 @@ function Home() {
             <Link to="/signup" className="price-btn-ai primary">Get Started</Link>
           </div>
 
-          <div className="price-card-ai">
-            <div className="price-name">Yearly</div>
-            <div className="price-amount">$549</div>
-            <div className="price-period">per year</div>
-            <div className="price-savings">Best Value - Save 70%</div>
-            <ul className="price-features">
-              <li>Full AI automation</li>
-              <li>6 tables simultaneous</li>
-              <li>All analytics</li>
-              <li>Priority support</li>
-            </ul>
-            <Link to="/signup" className="price-btn-ai">Get Started</Link>
-          </div>
         </div>
 
         <p className="pricing-note-ai">
-          All plans include full AI capabilities. Cancel anytime. 200 free hands to start.
+          All plans include full AI capabilities. Cancel anytime.
         </p>
       </section>
 
@@ -653,7 +640,7 @@ function Home() {
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </Link>
-          <p className="cta-subtext-ai">Instant access • Cancel anytime • 200 free hands</p>
+          <p className="cta-subtext-ai">Instant access • Cancel anytime</p>
         </div>
       </section>
 
@@ -677,8 +664,7 @@ function Home() {
       {/* Sticky Mobile CTA */}
       <div className="sticky-cta-mobile">
         <Link to="/signup" className="sticky-cta-btn">
-          <span>Start Free Trial</span>
-          <span className="sticky-cta-badge">200 Free Hands</span>
+          <span>Get Started</span>
         </Link>
       </div>
 

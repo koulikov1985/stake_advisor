@@ -159,10 +159,10 @@ function Features() {
       <section className="landing-cta">
         <div className="cta-card">
           <h2>Ready to Level Up Your Game?</h2>
-          <p>Sign up and get 200 hands free to see the difference for yourself.</p>
+          <p>Sign up today and start winning with AI-powered poker decisions.</p>
           <div className="cta-buttons">
             <Link to="/signup" className="btn-hero-primary">
-              Get 200 Hands Free
+              Get Started
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
