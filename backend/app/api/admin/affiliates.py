@@ -1,10 +1,13 @@
 from typing import Optional
 from uuid import UUID
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
-from app.models import AdminUser
+from app.models import AdminUser, User, License, LicenseStatus
+from app.models.affiliate import Referral, Commission, CommissionStatus
 from app.schemas.affiliate import (
     AffiliateResponse,
     AffiliateListResponse,
@@ -291,3 +294,87 @@ async def process_payout(
         created_at=payout.created_at,
         commissions_count=len(payout.commissions) if payout.commissions else 0,
     )
+
+
+# Plan prices in cents
+PLAN_PRICES = {
+    'trial': 0,
+    'day': 500,
+    'week': 2500,
+    'month': 6000,
+    '6month': 31500,
+    'year': 54900,
+}
+
+
+@router.post("/backfill-commissions")
+async def backfill_commissions(
+    admin: AdminUser = Depends(require_write_permission),
+    session: AsyncSession = Depends(get_session),
+):
+    """Backfill commissions for existing referrals where referred user has active subscription."""
+
+    # Find all referrals
+    result = await session.execute(select(Referral))
+    referrals = result.scalars().all()
+
+    processed = 0
+    created = 0
+
+    for referral in referrals:
+        # Check if referred user has active license
+        license_result = await session.execute(
+            select(License)
+            .where(License.user_id == referral.referred_user_id)
+            .where(License.status == LicenseStatus.ACTIVE)
+            .order_by(License.created_at.desc())
+        )
+        active_license = license_result.scalar_one_or_none()
+
+        if not active_license:
+            continue
+
+        processed += 1
+
+        # Mark as converted if not already
+        if not referral.converted:
+            referral.converted = True
+            referral.converted_at = datetime.utcnow()
+
+        # Check if commission already exists
+        existing_commission = await session.execute(
+            select(Commission).where(Commission.referral_id == referral.id)
+        )
+        if existing_commission.scalar_one_or_none():
+            continue
+
+        # Get affiliate's commission rate
+        affiliate_result = await session.execute(
+            select(User).where(User.id == referral.affiliate_id)
+        )
+        affiliate = affiliate_result.scalar_one_or_none()
+        commission_rate = affiliate.custom_commission_rate or 15 if affiliate else 15
+
+        # Calculate commission based on license tier
+        tier = active_license.tier.value if hasattr(active_license.tier, 'value') else str(active_license.tier)
+        base_amount = PLAN_PRICES.get(tier, 6000)
+        commission_amount = int(base_amount * commission_rate / 100)
+
+        # Create commission
+        commission = Commission(
+            affiliate_id=referral.affiliate_id,
+            referral_id=referral.id,
+            amount=commission_amount,
+            currency="USD",
+            commission_rate=commission_rate,
+            base_amount=base_amount,
+            status=CommissionStatus.PENDING,
+        )
+        session.add(commission)
+        created += 1
+
+    await session.commit()
+
+    return {
+        "message": f"Backfill complete. Processed {processed} referrals, created {created} commissions."
+    }
