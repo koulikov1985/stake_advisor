@@ -19,6 +19,7 @@ from app.models import (
     SubscriptionStatus,
 )
 from app.models.license import generate_license_key
+from app.models.affiliate import Referral, Commission, CommissionStatus
 
 settings = get_settings()
 logger = logging.getLogger(__name__)
@@ -349,6 +350,69 @@ class StripeService:
                 self.session.add(subscription)
 
         logger.info(f"Checkout completed for {email}, plan: {plan}")
+
+        # Handle referral conversion and commission
+        await self._process_referral_conversion(user, plan_config, session)
+
+    async def _process_referral_conversion(self, user: User, plan_config: dict, checkout_session: dict) -> None:
+        """Process referral conversion when a referred user makes a payment."""
+        # Check if user was referred
+        if not user.referred_by_id:
+            return
+
+        # Find the referral record
+        result = await self.session.execute(
+            select(Referral).where(Referral.referred_user_id == user.id)
+        )
+        referral = result.scalar_one_or_none()
+
+        if not referral:
+            logger.warning(f"Referral record not found for user {user.email}")
+            return
+
+        # Get the affiliate
+        affiliate_result = await self.session.execute(
+            select(User).where(User.id == user.referred_by_id)
+        )
+        affiliate = affiliate_result.scalar_one_or_none()
+
+        if not affiliate or not affiliate.is_affiliate:
+            logger.warning(f"Affiliate not found or not active for user {user.email}")
+            return
+
+        # Mark referral as converted (if not already)
+        if not referral.converted:
+            referral.converted = True
+            referral.converted_at = datetime.utcnow()
+            logger.info(f"Referral marked as converted: {user.email} -> {affiliate.email}")
+
+        # Calculate commission (15% default, or custom rate)
+        commission_rate = affiliate.custom_commission_rate or 15
+
+        # Get payment amount from plan (in cents)
+        plan_prices = {
+            "daily": 500,      # $5
+            "weekly": 2500,    # $25
+            "monthly": 6000,   # $60
+            "yearly": 54900,   # $549
+        }
+        tier_value = plan_config["tier"].value if hasattr(plan_config["tier"], 'value') else plan_config["tier"]
+        base_amount = plan_prices.get(tier_value, 6000)  # Default to monthly
+        commission_amount = int(base_amount * commission_rate / 100)
+
+        # Create commission record
+        commission = Commission(
+            affiliate_id=affiliate.id,
+            referral_id=referral.id,
+            amount=commission_amount,
+            currency="USD",
+            commission_rate=commission_rate,
+            base_amount=base_amount,
+            status=CommissionStatus.PENDING,
+        )
+        self.session.add(commission)
+
+        logger.info(f"Commission created: ${commission_amount/100:.2f} for {affiliate.email} (referral: {user.email})")
 
     async def _handle_subscription_created(self, data: dict) -> None:
         """Handle customer.subscription.created event."""
