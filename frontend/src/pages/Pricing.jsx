@@ -161,7 +161,7 @@ function Pricing() {
       <section className="landing-cta">
         <div className="cta-card">
           <h2>Ready to Start?</h2>
-          <p>Try the 1-Day Pass for just $5 and see the difference.</p>
+          <p>Try the free 1-Day Pass and see the difference.</p>
           <div className="cta-buttons">
             <Link to="/signup" className="btn-hero-primary">
               Create Account

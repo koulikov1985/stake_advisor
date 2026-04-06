@@ -58,7 +58,7 @@ const faqs = [
       },
       {
         question: 'Can I try it before buying?',
-        answer: 'Yes! Sign up and get 200 hands free to try out the software. You can also get the 1-Day Pass for just $5 to test all features.'
+        answer: 'Yes! Join our Discord to get a free 1-Day Pass and try out the full software before subscribing.'
       }
     ]
   },

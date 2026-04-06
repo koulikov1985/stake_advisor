@@ -390,7 +390,7 @@ class StripeService:
             "monthly": 4500,   # $45
         }
         tier_value = plan_config["tier"].value if hasattr(plan_config["tier"], 'value') else plan_config["tier"]
-        base_amount = plan_prices.get(tier_value, 6000)  # Default to monthly
+        base_amount = plan_prices.get(tier_value, 4500)  # Default to monthly ($45)
         commission_amount = int(base_amount * commission_rate / 100)
 
         # Create commission record

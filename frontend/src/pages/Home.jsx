@@ -26,7 +26,7 @@ const faqData = [
   },
   {
     q: "How do I get started?",
-    a: "Simply create an account and purchase a plan. We offer daily, weekly, and monthly options starting at just $5."
+    a: "Simply create an account and purchase a plan. We offer a free 1-day pass, plus weekly ($15) and monthly ($45) options."
   }
 ];
 

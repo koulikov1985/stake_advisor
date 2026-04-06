@@ -123,7 +123,7 @@ function Download() {
               </button>
             </div>
             <p className="download-modal-note">
-              Plans start at just <strong>$5/day</strong>
+              Try our <strong>free 1-Day Pass</strong> or subscribe from <strong>$15/week</strong>
             </p>
           </div>
         </div>

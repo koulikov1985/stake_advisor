@@ -985,7 +985,7 @@ function Dashboard() {
                       ))}
                     </div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.75rem', textAlign: 'center' }}>
-                      Based on average $60/mo subscription
+                      Based on average $45/mo subscription
                     </p>
                   </div>
                 </div>
