@@ -576,9 +576,9 @@ function Home() {
 
         <div className="pricing-cards-ai">
           <div className="price-card-ai">
-            <div className="price-name">Free Trial</div>
+            <div className="price-name">1-Day Pass</div>
             <div className="price-amount">Free</div>
-            <div className="price-period">via Discord</div>
+            <div className="price-period">1 day</div>
             <ul className="price-features">
               <li>Full AI automation</li>
               <li>6 tables simultaneous</li>

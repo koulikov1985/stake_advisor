@@ -5,7 +5,7 @@ import '../styles/dashboard.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const plans = [
-  { plan: 'trial', name: 'Free Trial', price: 0, discord: true },
+  { plan: 'trial', name: '1-Day Pass', price: 0, discord: true },
   { plan: 'weekly', name: '1 Week', price: 15 },
   { plan: 'monthly', name: '1 Month', price: 45, popular: true }
 ];

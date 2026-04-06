@@ -6,7 +6,7 @@ import '../styles/landing.css';
 const plans = [
   {
     plan: 'trial',
-    name: 'Free Trial',
+    name: '1-Day Pass',
     price: '0',
     duration: 'day',
     features: [
