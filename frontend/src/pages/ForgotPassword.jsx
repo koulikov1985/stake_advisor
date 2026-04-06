@@ -41,12 +41,18 @@ function ForgotPassword() {
       <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Floating Poker Cards */}
       <div className="floating-cards-global">
-        <div className="floating-card card-1">🂡</div>
-        <div className="floating-card card-2">🂮</div>
-        <div className="floating-card card-3">🃁</div>
-        <div className="floating-card card-4">🃎</div>
-        <div className="floating-card card-5">🂱</div>
-        <div className="floating-card card-6">🃑</div>
+        <div className="floating-card card-1">A♠</div>
+        <div className="floating-card card-2">K♥</div>
+        <div className="floating-card card-3">Q♦</div>
+        <div className="floating-card card-4">J♣</div>
+        <div className="floating-card card-5">10♠</div>
+        <div className="floating-card card-6">9♥</div>
+        <div className="floating-card card-7">A♦</div>
+        <div className="floating-card card-8">K♣</div>
+        <div className="floating-card card-9">Q♠</div>
+        <div className="floating-card card-10">J♥</div>
+        <div className="floating-card card-11">A♣</div>
+        <div className="floating-card card-12">K♦</div>
       </div>
         <header className="landing-header" style={{ position: 'relative' }}>
           <Link to="/" className="landing-logo">
@@ -115,12 +121,18 @@ function ForgotPassword() {
     <div className="landing ai-theme" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Floating Poker Cards */}
       <div className="floating-cards-global">
-        <div className="floating-card card-1">🂡</div>
-        <div className="floating-card card-2">🂮</div>
-        <div className="floating-card card-3">🃁</div>
-        <div className="floating-card card-4">🃎</div>
-        <div className="floating-card card-5">🂱</div>
-        <div className="floating-card card-6">🃑</div>
+        <div className="floating-card card-1">A♠</div>
+        <div className="floating-card card-2">K♥</div>
+        <div className="floating-card card-3">Q♦</div>
+        <div className="floating-card card-4">J♣</div>
+        <div className="floating-card card-5">10♠</div>
+        <div className="floating-card card-6">9♥</div>
+        <div className="floating-card card-7">A♦</div>
+        <div className="floating-card card-8">K♣</div>
+        <div className="floating-card card-9">Q♠</div>
+        <div className="floating-card card-10">J♥</div>
+        <div className="floating-card card-11">A♣</div>
+        <div className="floating-card card-12">K♦</div>
       </div>
       <header className="landing-header" style={{ position: 'relative' }}>
         <Link to="/" className="landing-logo">
