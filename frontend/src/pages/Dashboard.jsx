@@ -7,8 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const plans = [
   { plan: 'daily', name: '1 Day', price: 5 },
   { plan: 'weekly', name: '1 Week', price: 25, savings: '50%' },
-  { plan: 'monthly', name: '1 Month', price: 60, popular: true, savings: '60%' },
-  { plan: 'yearly', name: '1 Year', price: 549, savings: '70%' }
+  { plan: 'monthly', name: '1 Month', price: 60, popular: true, savings: '60%' }
 ];
 
 function Dashboard() {

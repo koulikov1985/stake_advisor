@@ -5,20 +5,6 @@ import '../styles/landing.css';
 
 const plans = [
   {
-    plan: 'trial',
-    name: 'Free Trial',
-    price: '0',
-    label: '200 Hands Free',
-    duration: 'trial',
-    features: [
-      'Full real-time GTO advisor',
-      'Up to 2 tables',
-      '200 hands included',
-      'No credit card required'
-    ],
-    popular: false
-  },
-  {
     plan: 'daily',
     name: '1-Day Pass',
     price: '5',
@@ -57,21 +43,6 @@ const plans = [
       'Priority support'
     ],
     popular: true
-  },
-  {
-    plan: 'yearly',
-    name: 'Yearly',
-    price: '549',
-    duration: 'year',
-    features: [
-      'Full real-time GTO advisor',
-      'Up to 6 tables',
-      'Opponent tracking',
-      'P/L tracking',
-      'Priority support',
-      'Best value - Save 39%'
-    ],
-    popular: false
   }
 ];
 
