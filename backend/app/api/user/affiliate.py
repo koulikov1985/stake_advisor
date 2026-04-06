@@ -5,8 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from pydantic import BaseModel
 
+from typing import Optional
+from datetime import datetime
+
 from app.database import get_session
-from app.models import User
+from app.models import User, License
 from app.models.affiliate import Referral, Commission, CommissionStatus
 from app.models.user import generate_affiliate_code
 from app.api.user.profile import get_current_user
@@ -147,4 +150,77 @@ async def activate_affiliate(
         success=True,
         affiliate_code=current_user.affiliate_code,
         referral_link=f"{base_url}/signup?ref={current_user.affiliate_code}",
+    )
+
+
+class ReferralDetail(BaseModel):
+    id: str
+    email: str
+    name: Optional[str]
+    signed_up_at: str
+    has_active_subscription: bool
+    subscription_tier: Optional[str]
+    subscription_expires: Optional[str]
+    converted: bool
+    converted_at: Optional[str]
+
+
+class ReferralsListResponse(BaseModel):
+    referrals: list[ReferralDetail]
+    total: int
+
+
+@router.get("/affiliate/referrals", response_model=ReferralsListResponse)
+async def get_affiliate_referrals(
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """Get list of users referred by the current affiliate."""
+
+    if not current_user.is_affiliate:
+        return ReferralsListResponse(referrals=[], total=0)
+
+    # Get all referrals for this affiliate
+    result = await session.execute(
+        select(Referral)
+        .where(Referral.affiliate_id == current_user.id)
+        .order_by(Referral.created_at.desc())
+    )
+    referrals = result.scalars().all()
+
+    referral_details = []
+    for referral in referrals:
+        # Get the referred user
+        user_result = await session.execute(
+            select(User).where(User.id == referral.referred_user_id)
+        )
+        referred_user = user_result.scalar_one_or_none()
+
+        if not referred_user:
+            continue
+
+        # Check for active license/subscription
+        license_result = await session.execute(
+            select(License)
+            .where(License.user_id == referred_user.id)
+            .where(License.status == "active")
+            .order_by(License.created_at.desc())
+        )
+        active_license = license_result.scalar_one_or_none()
+
+        referral_details.append(ReferralDetail(
+            id=str(referral.id),
+            email=referred_user.email,
+            name=referred_user.name,
+            signed_up_at=referral.created_at.isoformat(),
+            has_active_subscription=active_license is not None,
+            subscription_tier=active_license.tier.value if active_license and hasattr(active_license.tier, 'value') else (active_license.tier if active_license else None),
+            subscription_expires=active_license.expires_at.isoformat() if active_license and active_license.expires_at else None,
+            converted=referral.converted,
+            converted_at=referral.converted_at.isoformat() if referral.converted_at else None,
+        ))
+
+    return ReferralsListResponse(
+        referrals=referral_details,
+        total=len(referral_details)
     )

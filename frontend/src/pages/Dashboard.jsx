@@ -18,6 +18,7 @@ function Dashboard() {
   const [devices, setDevices] = useState([]);
   const [payments, setPayments] = useState([]);
   const [affiliateStats, setAffiliateStats] = useState(null);
+  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [copiedRef, setCopiedRef] = useState(false);
@@ -126,9 +127,25 @@ function Dashboard() {
       });
       if (res.ok) {
         setAffiliateStats(await res.json());
+        // Also fetch referrals list
+        fetchReferrals(token);
       }
     } catch (err) {
       console.error('Failed to fetch affiliate stats:', err);
+    }
+  };
+
+  const fetchReferrals = async (token) => {
+    try {
+      const res = await fetch(`${API_URL}/api/user/affiliate/referrals`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setReferrals(data.referrals || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch referrals:', err);
     }
   };
 
@@ -1084,6 +1101,69 @@ function Dashboard() {
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Your Referrals List */}
+                <div className="dash-card" style={{ marginTop: '1.5rem' }}>
+                  <h3 style={{ marginBottom: '1rem' }}>Your Referrals</h3>
+                  {referrals.length > 0 ? (
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{
+                        width: '100%',
+                        borderCollapse: 'collapse',
+                        fontSize: '0.9rem'
+                      }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                            <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Email</th>
+                            <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Name</th>
+                            <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Signed Up</th>
+                            <th style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Subscription</th>
+                            <th style={{ textAlign: 'left', padding: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Plan</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {referrals.map((referral) => (
+                            <tr key={referral.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                              <td style={{ padding: '0.75rem', color: 'var(--text-primary)' }}>{referral.email}</td>
+                              <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>{referral.name || '-'}</td>
+                              <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>
+                                {new Date(referral.signed_up_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </td>
+                              <td style={{ padding: '0.75rem', textAlign: 'center' }}>
+                                {referral.has_active_subscription ? (
+                                  <span style={{
+                                    background: 'rgba(0, 217, 126, 0.15)',
+                                    color: '#00d97e',
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '20px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: '600'
+                                  }}>Active</span>
+                                ) : (
+                                  <span style={{
+                                    background: 'rgba(239, 68, 68, 0.15)',
+                                    color: '#ef4444',
+                                    padding: '0.25rem 0.75rem',
+                                    borderRadius: '20px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: '600'
+                                  }}>Inactive</span>
+                                )}
+                              </td>
+                              <td style={{ padding: '0.75rem', color: 'var(--text-secondary)' }}>
+                                {referral.subscription_tier ? referral.subscription_tier.toUpperCase() : '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+                      No referrals yet. Share your link to start earning!
+                    </p>
+                  )}
                 </div>
               </>
             ) : (
