@@ -51,6 +51,34 @@ function BlogWhatIsGTO() {
         })}
       </script>
 
+      {/* Breadcrumb Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://sharkpokerclub.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog",
+              "item": "https://sharkpokerclub.com/blog"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "What is GTO Poker",
+              "item": "https://sharkpokerclub.com/blog/what-is-gto-poker"
+            }
+          ]
+        })}
+      </script>
+
       <div className="landing ai-theme">
         {/* Floating Poker Cards */}
         <div className="floating-cards-global">
@@ -74,14 +102,24 @@ function BlogWhatIsGTO() {
           </nav>
         </header>
 
+        {/* Breadcrumbs */}
+        <div style={{
+          maxWidth: '800px',
+          margin: '2rem auto 0',
+          padding: '0 1rem',
+          fontSize: '0.85rem',
+          color: 'var(--text-muted)'
+        }}>
+          <Link to="/" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Home</Link>
+          <span style={{ margin: '0 0.5rem' }}>/</span>
+          <Link to="/blog" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Blog</Link>
+          <span style={{ margin: '0 0.5rem' }}>/</span>
+          <span style={{ color: 'var(--text-primary)' }}>What is GTO Poker</span>
+        </div>
+
         {/* Article Header */}
-        <section className="landing-hero" style={{ paddingBottom: '2rem' }}>
+        <section className="landing-hero" style={{ paddingBottom: '2rem', paddingTop: '1rem' }}>
           <div className="hero-content" style={{ maxWidth: '800px' }}>
-            <div style={{ marginBottom: '1rem' }}>
-              <Link to="/blog" style={{ color: 'var(--accent-cyan)', textDecoration: 'none', fontSize: '0.9rem' }}>
-                ← Back to Blog
-              </Link>
-            </div>
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <span style={{
                 background: 'var(--accent-cyan)',

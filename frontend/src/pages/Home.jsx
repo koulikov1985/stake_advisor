@@ -730,6 +730,7 @@ function Home() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
         <div className="footer-links-ai">
+          <Link to="/blog">Blog</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
