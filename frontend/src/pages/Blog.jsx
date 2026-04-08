@@ -58,6 +58,34 @@ function Blog() {
         <meta property="og:description" content="Expert poker strategy articles and software tutorials." />
         <meta property="og:url" content="https://sharkpokerclub.com/blog" />
       </Helmet>
+
+      {/* CollectionPage Schema */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Poker AI Blog - Strategy Guides & Software Tutorials",
+          "description": "Expert poker strategy articles, GTO guides, and software tutorials to improve your poker game.",
+          "url": "https://sharkpokerclub.com/blog",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Poker AI",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://sharkpokerclub.com/images/poker-ai-logo.png"
+            }
+          },
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": blogPosts.map((post, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "url": `https://sharkpokerclub.com/blog/${post.slug}`,
+              "name": post.title
+            }))
+          }
+        })}
+      </script>
       <div className="landing ai-theme">
       {/* Floating Poker Cards */}
       <div className="floating-cards-global">

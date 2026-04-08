@@ -623,6 +623,85 @@ function Home() {
         </p>
       </section>
 
+      {/* Blog Section */}
+      <section className="landing-features" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Learn Poker Strategy</span>
+          <h2 className="section-title-ai">
+            Latest from the Blog<br/>
+            <span className="gradient-text-ai">Expert Poker Guides</span>
+          </h2>
+        </div>
+
+        <div className="features-grid" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Link to="/blog/what-is-gto-poker" className="feature-card" style={{ textDecoration: 'none' }}>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                background: 'var(--accent-cyan)',
+                color: 'var(--bg-darker)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: 'bold'
+              }}>Strategy</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>8 min read</span>
+            </div>
+            <h3>What is GTO Poker? Complete Beginner's Guide</h3>
+            <p>Learn what Game Theory Optimal poker strategy is, why it matters, and how to implement it in your game to become unexploitable.</p>
+            <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--accent-cyan)', fontWeight: '600' }}>
+              Read Article →
+            </div>
+          </Link>
+
+          <Link to="/blog/best-poker-software-2026" className="feature-card" style={{ textDecoration: 'none' }}>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                background: 'var(--accent-purple)',
+                color: 'var(--bg-darker)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: 'bold'
+              }}>Software</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>12 min read</span>
+            </div>
+            <h3>10 Best Poker Software Tools in 2026</h3>
+            <p>Comprehensive comparison of the best poker software including GTO solvers, HUDs, trackers, and AI assistants for serious players.</p>
+            <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--accent-cyan)', fontWeight: '600' }}>
+              Read Article →
+            </div>
+          </Link>
+
+          <Link to="/blog/poker-hud-statistics-guide" className="feature-card" style={{ textDecoration: 'none' }}>
+            <div style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                background: 'var(--accent-cyan)',
+                color: 'var(--bg-darker)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: 'bold'
+              }}>Strategy</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>10 min read</span>
+            </div>
+            <h3>Poker HUD Statistics Explained: VPIP, PFR & More</h3>
+            <p>Complete guide to poker HUD stats. Learn what VPIP, PFR, aggression factor mean and how to exploit different player types.</p>
+            <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--accent-cyan)', fontWeight: '600' }}>
+              Read Article →
+            </div>
+          </Link>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <Link to="/blog" className="btn-cta-ai">
+            <span>View All Articles</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </Link>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="final-cta-ai">
         <div className="cta-bg-ai">
