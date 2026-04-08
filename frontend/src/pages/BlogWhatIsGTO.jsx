@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import JsonLd from '../components/JsonLd';
 import '../styles/landing.css';
 
 function BlogWhatIsGTO() {
@@ -23,9 +24,8 @@ function BlogWhatIsGTO() {
         <meta property="article:tag" content="Strategy" />
       </Helmet>
 
-      {/* Article Schema */}
-      <script type="application/ld+json">
-        {JSON.stringify({
+      <JsonLd
+        data={{
           "@context": "https://schema.org",
           "@type": "Article",
           "headline": "What is GTO Poker? Complete Beginner's Guide to Game Theory Optimal Strategy",
@@ -48,12 +48,11 @@ function BlogWhatIsGTO() {
             "@type": "WebPage",
             "@id": "https://sharkpokerclub.com/blog/what-is-gto-poker"
           }
-        })}
-      </script>
+        }}
+      />
 
-      {/* Breadcrumb Schema */}
-      <script type="application/ld+json">
-        {JSON.stringify({
+      <JsonLd
+        data={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           "itemListElement": [
@@ -76,8 +75,8 @@ function BlogWhatIsGTO() {
               "item": "https://sharkpokerclub.com/blog/what-is-gto-poker"
             }
           ]
-        })}
-      </script>
+        }}
+      />
 
       <div className="landing ai-theme">
         {/* Floating Poker Cards */}

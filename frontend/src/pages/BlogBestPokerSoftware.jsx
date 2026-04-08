@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import JsonLd from '../components/JsonLd';
 import '../styles/landing.css';
 
 function BlogBestPokerSoftware() {
@@ -19,8 +20,8 @@ function BlogBestPokerSoftware() {
         <meta property="article:published_time" content="2026-04-08T00:00:00Z" />
       </Helmet>
 
-      <script type="application/ld+json">
-        {JSON.stringify({
+      <JsonLd
+        data={{
           "@context": "https://schema.org",
           "@type": "Article",
           "headline": "10 Best Poker Software Tools in 2026 - Complete Comparison & Review",
@@ -33,8 +34,8 @@ function BlogBestPokerSoftware() {
           },
           "datePublished": "2026-04-08",
           "dateModified": "2026-04-08"
-        })}
-      </script>
+        }}
+      />
 
       <div className="landing ai-theme">
         <div className="floating-cards-global">

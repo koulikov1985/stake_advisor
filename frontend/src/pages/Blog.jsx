@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import JsonLd from '../components/JsonLd';
 import '../styles/landing.css';
 
 const blogPosts = [
@@ -59,9 +60,8 @@ function Blog() {
         <meta property="og:url" content="https://sharkpokerclub.com/blog" />
       </Helmet>
 
-      {/* CollectionPage Schema */}
-      <script type="application/ld+json">
-        {JSON.stringify({
+      <JsonLd
+        data={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           "name": "Poker AI Blog - Strategy Guides & Software Tutorials",
@@ -84,8 +84,8 @@ function Blog() {
               "name": post.title
             }))
           }
-        })}
-      </script>
+        }}
+      />
       <div className="landing ai-theme">
       {/* Floating Poker Cards */}
       <div className="floating-cards-global">

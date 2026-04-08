@@ -1,26 +1,12 @@
-# Robots.txt for PokerAI
-
 User-agent: *
 Allow: /
-
-# Disallow private/auth pages
-Disallow: /dashboard
+Disallow: /api/
+Disallow: /success
 Disallow: /login
 Disallow: /signup
-Disallow: /verify-email
-Disallow: /reset-password
 Disallow: /forgot-password
-Disallow: /api/
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /dashboard
 
-# Allow important pages
-Allow: /pricing
-Allow: /features
-Allow: /download
-Allow: /faq
-Allow: /blog
-
-# Sitemap location
 Sitemap: https://sharkpokerclub.com/sitemap.xml
-
-# Crawl delay (be nice to servers)
-Crawl-delay: 1
