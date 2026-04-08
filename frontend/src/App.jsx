@@ -14,6 +14,10 @@ import Dashboard from './pages/Dashboard';
 import Affiliate from './pages/Affiliate';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import Features from './pages/Features';
+import GTOSolver from './pages/GTOSolver';
+import HandAnalyzer from './pages/HandAnalyzer';
+import HowItWorks from './pages/HowItWorks';
 
 function AppContent() {
   return (
@@ -21,6 +25,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/features" element={<Features />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/download" element={<Download />} />
         <Route path="/success" element={<Success />} />
@@ -33,6 +38,11 @@ function AppContent() {
         <Route path="/affiliate" element={<Affiliate />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+
+        {/* SEO Landing Pages */}
+        <Route path="/gto-solver" element={<GTOSolver />} />
+        <Route path="/hand-analyzer" element={<HandAnalyzer />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
       </Routes>
     </div>
   );

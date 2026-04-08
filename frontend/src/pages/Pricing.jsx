@@ -6,41 +6,50 @@ import '../styles/landing.css';
 const plans = [
   {
     plan: 'trial',
-    name: '1-Day Pass',
+    name: '1-Day Free Trial',
     price: '0',
     duration: 'day',
     features: [
-      'Full real-time GTO advisor',
-      'Up to 6 tables',
-      'Opponent tracking',
-      'P/L tracking'
+      'Real-time GTO solver analysis',
+      'AI decision support',
+      'Multi-table support (6 tables)',
+      'Opponent HUD statistics',
+      'Hand analyzer & equity calculator',
+      'Performance analytics'
     ],
     popular: false
   },
   {
     plan: 'weekly',
-    name: 'Weekly',
+    name: 'Weekly Plan',
     price: '15',
     duration: 'week',
     features: [
-      'Full real-time GTO advisor',
-      'Up to 6 tables',
-      'Opponent tracking',
-      'P/L tracking'
+      'Real-time GTO solver analysis',
+      'AI decision support',
+      'Multi-table support (6 tables)',
+      'Opponent HUD statistics',
+      'Hand analyzer & equity calculator',
+      'Performance analytics',
+      'Full hand history database'
     ],
     popular: false
   },
   {
     plan: 'monthly',
-    name: 'Monthly',
+    name: 'Monthly Plan',
     price: '45',
     duration: 'month',
     features: [
-      'Full real-time GTO advisor',
-      'Up to 6 tables',
-      'Opponent tracking',
-      'P/L tracking',
-      'Priority support'
+      'Real-time GTO solver analysis',
+      'AI decision support',
+      'Multi-table support (6 tables)',
+      'Opponent HUD statistics',
+      'Hand analyzer & equity calculator',
+      'Performance analytics',
+      'Full hand history database',
+      'Priority email support',
+      'Early access to new features'
     ],
     popular: true
   }

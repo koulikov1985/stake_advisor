@@ -2,31 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import '../styles/landing.css';
 
-// FAQ Data
+// FAQ Data - SEO Optimized
 const faqData = [
   {
-    q: "Is this legal to use?",
-    a: "Poker AI is designed for sweepstakes and social poker sites where real-time assistance tools are permitted. Always check the terms of service of your specific poker site."
+    q: "What is Poker AI software?",
+    a: "Poker AI is professional poker software that provides real-time GTO solver analysis, hand analysis tools, AI decision support, and HUD statistics. It's designed for serious poker players who want advanced analytical tools."
   },
   {
-    q: "How does the AI read my poker table?",
-    a: "Our AI uses advanced computer vision to capture and analyze your screen in real-time. It detects cards, chips, pot sizes, and player actions with 99.9% accuracy in under 50 milliseconds."
+    q: "How does the GTO solver work?",
+    a: "Our GTO solver uses advanced algorithms to analyze poker situations in real-time. It calculates optimal plays based on game theory, provides equity analysis, and evaluates hand ranges with mathematical precision."
   },
   {
-    q: "Will I get detected or banned?",
-    a: "Poker AI operates externally and doesn't modify any game files or inject code. It simply reads your screen like a human would. We've had zero reported bans from our users."
+    q: "What poker sites does it support?",
+    a: "Poker AI currently supports Stake.us with additional poker sites coming soon including Global Poker, ClubGG, BetOnline, and Ignition. Check our compatibility page for the latest updates."
   },
   {
-    q: "Can I run multiple tables?",
-    a: "Yes! Poker AI can manage up to 6 tables simultaneously, each running independently with its own AI decision engine. Perfect for maximizing volume and profits."
+    q: "Can I run multiple tables simultaneously?",
+    a: "Yes, Poker AI supports up to 6 tables simultaneously. Each table is analyzed independently with dedicated real-time GTO calculations and decision support."
   },
   {
-    q: "What's the difference between this and other poker tools?",
-    a: "Traditional tools give you advice - you still have to make decisions and click buttons. Poker AI is fully autonomous. It reads, decides, and executes automatically. You just watch it win."
+    q: "What makes Poker AI different from other poker software?",
+    a: "Poker AI combines a powerful GTO solver, real-time analysis, AI decision support, opponent tracking, and performance analytics in one platform. Our software uses advanced computer vision and machine learning for superior accuracy."
   },
   {
-    q: "How do I get started?",
-    a: "Simply create an account and purchase a plan. We offer a free 1-day pass, plus weekly ($15) and monthly ($45) options."
+    q: "How do I get started with Poker AI?",
+    a: "Create an account and choose a plan. We offer a free 1-day pass to try the software, plus weekly ($15) and monthly ($45) subscription options. Download for Windows or Mac."
   }
 ];
 
@@ -156,36 +156,36 @@ function Home() {
           </div>
 
           <h1 className="hero-title-ai">
-            The Future of Poker<br/>
-            <span className="gradient-text-ai">Is Here.</span>
+            Advanced Poker AI Software<br/>
+            <span className="gradient-text-ai">For Serious Players</span>
           </h1>
 
           <p className="hero-subtitle-ai">
-            Not just another poker tool. <strong>Poker AI</strong> is a fully autonomous artificial intelligence
-            that reads your tables, analyzes every situation in real-time, and executes
-            mathematically perfect GTO decisions — automatically.
+            Professional poker software with real-time <strong>GTO solver</strong>, hand analyzer,
+            AI decision support, and advanced HUD statistics. Get optimal play recommendations
+            with mathematical precision across 6 tables simultaneously.
           </p>
 
           <div className="hero-cta-group">
             <Link to="/signup" className="btn-cta-ai">
-              <span>Start Playing with AI</span>
+              <span>Get Started Free</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </Link>
-            <Link to="/faq" className="btn-cta-secondary-ai">
+            <Link to="/how-it-works" className="btn-cta-secondary-ai">
               <span>How It Works</span>
             </Link>
           </div>
 
           <div className="hero-trust-ai">
             <div className="trust-item-ai">
-              <span className="trust-icon-ai">🤖</span>
-              <span>Fully Automated</span>
+              <span className="trust-icon-ai">🎯</span>
+              <span>GTO Solver</span>
             </div>
             <div className="trust-item-ai">
               <span className="trust-icon-ai">🧠</span>
-              <span>AI Decision Engine</span>
+              <span>AI Decision Support</span>
             </div>
             <div className="trust-item-ai">
               <span className="trust-icon-ai">⚡</span>
@@ -198,15 +198,15 @@ function Home() {
       {/* What Makes This Different */}
       <section className="ai-difference">
         <div className="section-header-ai">
-          <span className="section-tag-ai">Why Poker AI?</span>
+          <span className="section-tag-ai">Why Choose Poker AI Software?</span>
           <h2 className="section-title-ai">
-            This Isn't a Poker <em>Tool</em>.<br/>
-            <span className="gradient-text-ai">It's a Poker AI.</span>
+            Advanced Poker Software<br/>
+            <span className="gradient-text-ai">Built Different</span>
           </h2>
           <p className="section-subtitle-ai">
-            Other products give you suggestions. Poker AI takes action.
-            Our advanced AI reads your screen, calculates optimal plays,
-            and executes them — all in milliseconds.
+            Poker AI combines GTO solver technology, real-time analysis, and AI decision support
+            in one powerful platform. Get instant recommendations based on game theory optimal strategy
+            with mathematical precision.
           </p>
         </div>
 
@@ -214,15 +214,15 @@ function Home() {
           <div className="comparison-card old">
             <div className="comparison-header">
               <span className="comparison-icon">📊</span>
-              <h3>Traditional Tools</h3>
+              <h3>Basic Poker Tools</h3>
             </div>
             <ul className="comparison-list">
               <li><span className="x-mark">✗</span> Manual input required</li>
-              <li><span className="x-mark">✗</span> You interpret the data</li>
-              <li><span className="x-mark">✗</span> You click the buttons</li>
-              <li><span className="x-mark">✗</span> Slow decision making</li>
-              <li><span className="x-mark">✗</span> Human error</li>
-              <li><span className="x-mark">✗</span> One table at a time</li>
+              <li><span className="x-mark">✗</span> Limited analysis depth</li>
+              <li><span className="x-mark">✗</span> Slow calculations</li>
+              <li><span className="x-mark">✗</span> Basic HUD stats only</li>
+              <li><span className="x-mark">✗</span> No GTO solver</li>
+              <li><span className="x-mark">✗</span> Single table focus</li>
             </ul>
           </div>
 
@@ -233,11 +233,11 @@ function Home() {
               <span className="ai-chip">AI-Powered</span>
             </div>
             <ul className="comparison-list">
-              <li><span className="check-mark">✓</span> Reads screen automatically</li>
-              <li><span className="check-mark">✓</span> AI analyzes every situation</li>
-              <li><span className="check-mark">✓</span> Executes actions for you</li>
-              <li><span className="check-mark">✓</span> Sub-second decisions</li>
-              <li><span className="check-mark">✓</span> Mathematical precision</li>
+              <li><span className="check-mark">✓</span> Automatic table recognition</li>
+              <li><span className="check-mark">✓</span> Advanced GTO solver</li>
+              <li><span className="check-mark">✓</span> Real-time decision support</li>
+              <li><span className="check-mark">✓</span> Comprehensive HUD statistics</li>
+              <li><span className="check-mark">✓</span> Equity calculator built-in</li>
               <li><span className="check-mark">✓</span> 6 tables simultaneously</li>
             </ul>
           </div>
@@ -247,10 +247,10 @@ function Home() {
       {/* AI Capabilities */}
       <section className="ai-capabilities">
         <div className="section-header-ai">
-          <span className="section-tag-ai">AI Capabilities</span>
+          <span className="section-tag-ai">Poker Software Features</span>
           <h2 className="section-title-ai">
-            What The AI<br/>
-            <span className="gradient-text-ai">Actually Does</span>
+            Professional-Grade<br/>
+            <span className="gradient-text-ai">Poker Tools</span>
           </h2>
         </div>
 
@@ -262,10 +262,11 @@ function Home() {
                 <circle cx="12" cy="12" r="3"/>
               </svg>
             </div>
-            <h3>Computer Vision</h3>
+            <h3>Real-Time Table Recognition</h3>
             <p>
-              AI reads your poker table in real-time. Detects cards, chips,
-              pot sizes, player positions, and actions — all automatically.
+              Advanced computer vision technology analyzes poker tables in real-time.
+              Automatically detects cards, chips, pot sizes, player positions, and actions
+              with industry-leading accuracy.
             </p>
             <div className="capability-stats">
               <span><strong>99.9%</strong> accuracy</span>
@@ -299,10 +300,10 @@ function Home() {
                 <circle cx="12" cy="12" r="4"/>
               </svg>
             </div>
-            <h3>GTO Engine</h3>
+            <h3>GTO Solver Engine</h3>
             <p>
-              Advanced game theory optimal calculations for every decision.
-              Preflop ranges, postflop equity, pot odds, implied odds — all computed instantly.
+              Professional-grade GTO solver with game theory optimal calculations for every decision.
+              Analyzes preflop ranges, postflop equity, pot odds, and implied odds with mathematical precision.
             </p>
             <div className="capability-stats">
               <span><strong>100K+</strong> simulations/sec</span>
@@ -316,14 +317,15 @@ function Home() {
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
               </svg>
             </div>
-            <h3>Auto-Execution</h3>
+            <h3>AI Decision Support</h3>
             <p>
-              AI doesn't just advise — it acts. Automatically clicks fold, call,
-              raise, or all-in with precise bet sizing. You watch, it wins.
+              Get instant AI-powered recommendations for every poker decision.
+              Optimal fold, call, raise, and all-in suggestions with precise bet sizing
+              based on GTO strategy and opponent tendencies.
             </p>
             <div className="capability-stats">
-              <span><strong>100%</strong> automated</span>
-              <span><strong>0</strong> misclicks</span>
+              <span><strong>Real-time</strong> recommendations</span>
+              <span><strong>GTO</strong> precision</span>
             </div>
           </div>
 
@@ -334,10 +336,11 @@ function Home() {
                 <path d="M3 9h18M9 21V9"/>
               </svg>
             </div>
-            <h3>Multi-Table AI</h3>
+            <h3>Multi-Table Support</h3>
             <p>
-              Run up to 6 tables simultaneously. AI manages all of them
-              independently with zero performance loss. Maximum volume, maximum profit.
+              Analyze up to 6 poker tables simultaneously with independent GTO calculations
+              for each table. Perfect for high-volume players who want consistent decision quality
+              across multiple games.
             </p>
             <div className="capability-stats">
               <span><strong>6</strong> tables</span>
@@ -368,9 +371,9 @@ function Home() {
       {/* How AI Works */}
       <section className="ai-process">
         <div className="section-header-ai">
-          <span className="section-tag-ai">The AI Process</span>
+          <span className="section-tag-ai">How Poker AI Works</span>
           <h2 className="section-title-ai">
-            From Screen to Action<br/>
+            From Analysis to Decision<br/>
             <span className="gradient-text-ai">In Milliseconds</span>
           </h2>
         </div>
@@ -379,8 +382,8 @@ function Home() {
           <div className="process-step">
             <div className="process-number">01</div>
             <div className="process-content">
-              <h3>Capture</h3>
-              <p>AI captures your poker table screen in real-time using advanced computer vision</p>
+              <h3>Table Recognition</h3>
+              <p>Advanced computer vision captures poker table data in real-time with 99.9% accuracy</p>
             </div>
             <div className="process-visual">
               <div className="visual-icon">👁️</div>
@@ -396,8 +399,8 @@ function Home() {
           <div className="process-step">
             <div className="process-number">02</div>
             <div className="process-content">
-              <h3>Analyze</h3>
-              <p>AI identifies cards, positions, pot size, stack depths, and opponent tendencies</p>
+              <h3>Data Analysis</h3>
+              <p>Software identifies cards, positions, pot size, stack depths, and opponent statistics</p>
             </div>
             <div className="process-visual">
               <div className="visual-icon">🧠</div>
@@ -413,8 +416,8 @@ function Home() {
           <div className="process-step">
             <div className="process-number">03</div>
             <div className="process-content">
-              <h3>Calculate</h3>
-              <p>GTO engine computes optimal action with precise bet sizing using game theory</p>
+              <h3>GTO Calculation</h3>
+              <p>GTO solver computes optimal strategy with precise equity calculations and bet sizing</p>
             </div>
             <div className="process-visual">
               <div className="visual-icon">⚡</div>
@@ -430,8 +433,8 @@ function Home() {
           <div className="process-step">
             <div className="process-number">04</div>
             <div className="process-content">
-              <h3>Execute</h3>
-              <p>AI clicks the action automatically — fold, call, raise, or all-in</p>
+              <h3>Decision Support</h3>
+              <p>AI provides optimal play recommendations — fold, call, raise, or all-in with exact sizing</p>
             </div>
             <div className="process-visual">
               <div className="visual-icon">🎯</div>
@@ -626,19 +629,19 @@ function Home() {
           <div className="cta-glow-ai"></div>
         </div>
         <div className="cta-content-ai">
-          <img src="/images/poker-ai-logo.png" alt="Poker AI" className="cta-logo" />
-          <h2>Ready to Let AI Play for You?</h2>
+          <img src="/images/poker-ai-logo.png" alt="Poker AI Software Logo" className="cta-logo" />
+          <h2>Ready to Elevate Your Poker Game?</h2>
           <p>
-            Join hundreds of players who are already using Poker AI
-            to automate their game and maximize their profits.
+            Join hundreds of serious poker players using Poker AI software
+            for GTO analysis, decision support, and advanced hand analysis.
           </p>
           <Link to="/signup" className="btn-cta-ai large">
-            <span>Start Playing with AI</span>
+            <span>Get Started Free</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </Link>
-          <p className="cta-subtext-ai">Instant access • Cancel anytime</p>
+          <p className="cta-subtext-ai">1-day free trial • Cancel anytime • Windows & Mac</p>
         </div>
       </section>
 
