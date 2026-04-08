@@ -10,10 +10,10 @@ function HowItWorks() {
         <title>How Poker AI Works - Computer Vision & GTO Algorithms</title>
         <meta name="description" content="Learn how Poker AI uses computer vision, GTO algorithms, and AI to provide real-time poker analysis with 99.9% accuracy in under 50ms." />
         <meta name="keywords" content="poker AI, how it works, computer vision, GTO algorithms, poker technology" />
-        <link rel="canonical" href="https://sharkpokerclub.com/how-it-works" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/how-it-works" />
         <meta property="og:title" content="How Poker AI Works - Technology Explained" />
         <meta property="og:description" content="Deep dive into Poker AI technology: computer vision, GTO solvers, and real-time analysis." />
-        <meta property="og:url" content="https://sharkpokerclub.com/how-it-works" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/how-it-works" />
       </Helmet>
       <div className="landing ai-theme">
       {/* Floating Poker Cards */}

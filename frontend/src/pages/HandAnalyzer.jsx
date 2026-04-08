@@ -10,10 +10,10 @@ function HandAnalyzer() {
         <title>Poker Hand Analyzer - Equity Calculator & Range Analysis</title>
         <meta name="description" content="Advanced poker hand analyzer with equity calculator, range analysis, and hand history review. Find leaks and improve your game." />
         <meta name="keywords" content="hand analyzer, poker hand analysis, equity calculator, range analysis, hand history" />
-        <link rel="canonical" href="https://sharkpokerclub.com/hand-analyzer" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/hand-analyzer" />
         <meta property="og:title" content="Poker Hand Analyzer - Equity Calculator Tool" />
         <meta property="og:description" content="Analyze poker hands with equity calculator and range analysis tools." />
-        <meta property="og:url" content="https://sharkpokerclub.com/hand-analyzer" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/hand-analyzer" />
       </Helmet>
       <div className="landing ai-theme">
       {/* Floating Poker Cards */}

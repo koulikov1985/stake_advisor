@@ -10,7 +10,7 @@ function PokerBotAlternative() {
         <title>Poker Bot Alternative - Legal AI Training Software 2026</title>
         <meta name="description" content="Legal alternative to poker bots. AI-powered training software for learning and improving your game without automation or terms of service violations." />
         <meta name="keywords" content="poker bot alternative, legal poker software, poker training tool, poker AI assistant" />
-        <link rel="canonical" href="https://sharkpokerclub.com/poker-bot-alternative" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/poker-bot-alternative" />
       </Helmet>
 
       <div className="landing ai-theme">

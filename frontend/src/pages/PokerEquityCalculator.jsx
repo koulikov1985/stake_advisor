@@ -10,7 +10,7 @@ function PokerEquityCalculator() {
         <title>Poker Equity Calculator - Free Online Equity Analysis Tool</title>
         <meta name="description" content="Free poker equity calculator with range vs range analysis. Calculate hand equity, pot odds, and win percentages instantly." />
         <meta name="keywords" content="poker equity calculator, equity calculator online, poker odds calculator, hand equity" />
-        <link rel="canonical" href="https://sharkpokerclub.com/poker-equity-calculator" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/poker-equity-calculator" />
       </Helmet>
 
       <div className="landing ai-theme">

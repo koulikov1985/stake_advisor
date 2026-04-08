@@ -9,4 +9,4 @@ Disallow: /reset-password
 Disallow: /verify-email
 Disallow: /dashboard
 
-Sitemap: https://sharkpokerclub.com/sitemap.xml
+Sitemap: https://www.sharkpokerclub.com/sitemap.xml

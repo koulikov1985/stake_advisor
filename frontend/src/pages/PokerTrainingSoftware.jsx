@@ -10,7 +10,7 @@ function PokerTrainingSoftware() {
         <title>Poker Training Software - AI-Powered Learning Tools 2026</title>
         <meta name="description" content="Professional poker training software with GTO solver, hand analyzer, and AI coaching. Improve your game faster with advanced training tools." />
         <meta name="keywords" content="poker training software, poker training tools, poker learning software, GTO training" />
-        <link rel="canonical" href="https://sharkpokerclub.com/poker-training-software" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/poker-training-software" />
       </Helmet>
 
       <div className="landing ai-theme">

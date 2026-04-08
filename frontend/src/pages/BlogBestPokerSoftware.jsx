@@ -11,11 +11,11 @@ function BlogBestPokerSoftware() {
         <title>10 Best Poker Software Tools in 2026 - Complete Comparison</title>
         <meta name="description" content="Compare the best poker software in 2026 including GTO solvers, HUDs, trackers, and AI assistants. Find the perfect tool for your poker game." />
         <meta name="keywords" content="best poker software, poker software 2026, GTO solver, poker HUD, poker tracker, poker AI" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog/best-poker-software-2026" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog/best-poker-software-2026" />
 
         <meta property="og:title" content="10 Best Poker Software Tools in 2026" />
         <meta property="og:description" content="Comprehensive comparison of top poker software tools for serious players." />
-        <meta property="og:url" content="https://sharkpokerclub.com/blog/best-poker-software-2026" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/blog/best-poker-software-2026" />
         <meta property="og:type" content="article" />
         <meta property="article:published_time" content="2026-04-08T00:00:00Z" />
       </Helmet>
@@ -30,7 +30,7 @@ function BlogBestPokerSoftware() {
           "publisher": {
             "@type": "Organization",
             "name": "Poker AI",
-            "logo": { "@type": "ImageObject", "url": "https://sharkpokerclub.com/images/poker-ai-logo.png" }
+            "logo": { "@type": "ImageObject", "url": "https://www.sharkpokerclub.com/images/poker-ai-logo.png" }
           },
           "datePublished": "2026-04-08",
           "dateModified": "2026-04-08"
