@@ -11,14 +11,14 @@ function GTOSolver() {
         <title>GTO Solver for Poker - Game Theory Optimal Analysis</title>
         <meta name="description" content="Professional GTO solver for poker with real-time calculations, preflop ranges, and postflop equity analysis. 100K+ simulations per second." />
         <meta name="keywords" content="GTO solver, poker GTO, game theory optimal, poker solver, equity calculator" />
-        <link rel="canonical" href="https://sharkpokerclub.com/gto-solver" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/gto-solver" />
         <meta property="og:title" content="GTO Solver for Poker - Professional GTO Analysis" />
         <meta property="og:description" content="Professional GTO solver with real-time calculations and optimal strategy recommendations." />
-        <meta property="og:url" content="https://sharkpokerclub.com/gto-solver" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/gto-solver" />
       </Helmet>
       <BreadcrumbSchema items={[
-        { name: "Home", url: "https://sharkpokerclub.com/" },
-        { name: "GTO Solver", url: "https://sharkpokerclub.com/gto-solver" }
+        { name: "Home", url: "https://www.sharkpokerclub.com/" },
+        { name: "GTO Solver", url: "https://www.sharkpokerclub.com/gto-solver" }
       ]} />
       <div className="landing ai-theme">
       {/* Floating Poker Cards */}

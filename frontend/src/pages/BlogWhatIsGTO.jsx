@@ -11,11 +11,11 @@ function BlogWhatIsGTO() {
         <title>What is GTO Poker? Complete Beginner's Guide to Game Theory Optimal</title>
         <meta name="description" content="Learn what GTO (Game Theory Optimal) poker is, why it matters, and how to use it to improve your game. Complete beginner's guide with examples and strategies." />
         <meta name="keywords" content="GTO poker, game theory optimal, poker strategy, GTO guide, what is GTO, poker GTO explained" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog/what-is-gto-poker" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog/what-is-gto-poker" />
 
         <meta property="og:title" content="What is GTO Poker? Complete Beginner's Guide" />
         <meta property="og:description" content="Complete guide to Game Theory Optimal poker strategy for beginners." />
-        <meta property="og:url" content="https://sharkpokerclub.com/blog/what-is-gto-poker" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/blog/what-is-gto-poker" />
         <meta property="og:type" content="article" />
         <meta property="article:published_time" content="2026-04-08T00:00:00Z" />
         <meta property="article:author" content="Poker AI" />
@@ -39,14 +39,14 @@ function BlogWhatIsGTO() {
             "name": "Poker AI",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://sharkpokerclub.com/images/poker-ai-logo.png"
+              "url": "https://www.sharkpokerclub.com/images/poker-ai-logo.png"
             }
           },
           "datePublished": "2026-04-08",
           "dateModified": "2026-04-08",
           "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": "https://sharkpokerclub.com/blog/what-is-gto-poker"
+            "@id": "https://www.sharkpokerclub.com/blog/what-is-gto-poker"
           }
         }}
       />
@@ -60,19 +60,19 @@ function BlogWhatIsGTO() {
               "@type": "ListItem",
               "position": 1,
               "name": "Home",
-              "item": "https://sharkpokerclub.com/"
+              "item": "https://www.sharkpokerclub.com/"
             },
             {
               "@type": "ListItem",
               "position": 2,
               "name": "Blog",
-              "item": "https://sharkpokerclub.com/blog"
+              "item": "https://www.sharkpokerclub.com/blog"
             },
             {
               "@type": "ListItem",
               "position": 3,
               "name": "What is GTO Poker",
-              "item": "https://sharkpokerclub.com/blog/what-is-gto-poker"
+              "item": "https://www.sharkpokerclub.com/blog/what-is-gto-poker"
             }
           ]
         }}

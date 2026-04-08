@@ -54,10 +54,10 @@ function Blog() {
         <title>Poker AI Blog - Strategy Guides & Software Tutorials</title>
         <meta name="description" content="Learn poker strategy, GTO concepts, and software guides. Expert articles on improving your poker game with AI and analytics." />
         <meta name="keywords" content="poker blog, poker strategy, GTO strategy, poker guides, poker tutorials" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog" />
         <meta property="og:title" content="Poker AI Blog - Strategy & Software Guides" />
         <meta property="og:description" content="Expert poker strategy articles and software tutorials." />
-        <meta property="og:url" content="https://sharkpokerclub.com/blog" />
+        <meta property="og:url" content="https://www.sharkpokerclub.com/blog" />
       </Helmet>
 
       <JsonLd
@@ -66,13 +66,13 @@ function Blog() {
           "@type": "CollectionPage",
           "name": "Poker AI Blog - Strategy Guides & Software Tutorials",
           "description": "Expert poker strategy articles, GTO guides, and software tutorials to improve your poker game.",
-          "url": "https://sharkpokerclub.com/blog",
+          "url": "https://www.sharkpokerclub.com/blog",
           "publisher": {
             "@type": "Organization",
             "name": "Poker AI",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://sharkpokerclub.com/images/poker-ai-logo.png"
+              "url": "https://www.sharkpokerclub.com/images/poker-ai-logo.png"
             }
           },
           "mainEntity": {
@@ -80,7 +80,7 @@ function Blog() {
             "itemListElement": blogPosts.map((post, index) => ({
               "@type": "ListItem",
               "position": index + 1,
-              "url": `https://sharkpokerclub.com/blog/${post.slug}`,
+              "url": `https://www.sharkpokerclub.com/blog/${post.slug}`,
               "name": post.title
             }))
           }

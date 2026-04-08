@@ -10,7 +10,7 @@ function BestPokerHUD() {
         <title>Best Poker HUD 2026 - Real-Time Statistics & Opponent Tracking</title>
         <meta name="description" content="The best poker HUD software in 2026 with real-time stats, opponent tracking, and comprehensive analytics. Track VPIP, PFR, 3-bet and more." />
         <meta name="keywords" content="best poker HUD, poker HUD software, poker statistics, VPIP PFR, opponent tracking" />
-        <link rel="canonical" href="https://sharkpokerclub.com/best-poker-hud" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/best-poker-hud" />
       </Helmet>
 
       <div className="landing ai-theme">

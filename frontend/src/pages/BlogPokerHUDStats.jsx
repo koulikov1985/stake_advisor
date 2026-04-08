@@ -10,7 +10,7 @@ function BlogPokerHUDStats() {
         <title>Poker HUD Statistics Explained: VPIP, PFR, 3-Bet & More</title>
         <meta name="description" content="Complete guide to poker HUD stats. Learn what VPIP, PFR, aggression factor, and other stats mean and how to use them to exploit opponents." />
         <meta name="keywords" content="poker HUD stats, VPIP, PFR, poker statistics, 3-bet percentage, aggression factor" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog/poker-hud-statistics-guide" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog/poker-hud-statistics-guide" />
         <meta property="og:type" content="article" />
         <meta property="article:published_time" content="2026-04-08T00:00:00Z" />
       </Helmet>

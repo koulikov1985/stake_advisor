@@ -45,7 +45,88 @@ services:
         value: https://stake-advisor.onrender.com
     routes:
       - type: rewrite
-        source: /*
+        source: /pricing
+        destination: /pricing/index.html
+      - type: rewrite
+        source: /features
+        destination: /features/index.html
+      - type: rewrite
+        source: /faq
+        destination: /faq/index.html
+      - type: rewrite
+        source: /download
+        destination: /download/index.html
+      - type: rewrite
+        source: /affiliate
+        destination: /affiliate/index.html
+      - type: rewrite
+        source: /terms
+        destination: /terms/index.html
+      - type: rewrite
+        source: /privacy
+        destination: /privacy/index.html
+      - type: rewrite
+        source: /gto-solver
+        destination: /gto-solver/index.html
+      - type: rewrite
+        source: /hand-analyzer
+        destination: /hand-analyzer/index.html
+      - type: rewrite
+        source: /how-it-works
+        destination: /how-it-works/index.html
+      - type: rewrite
+        source: /poker-training-software
+        destination: /poker-training-software/index.html
+      - type: rewrite
+        source: /best-poker-hud
+        destination: /best-poker-hud/index.html
+      - type: rewrite
+        source: /poker-bot-alternative
+        destination: /poker-bot-alternative/index.html
+      - type: rewrite
+        source: /poker-equity-calculator
+        destination: /poker-equity-calculator/index.html
+      - type: rewrite
+        source: /poker-range-analyzer
+        destination: /poker-range-analyzer/index.html
+      - type: rewrite
+        source: /blog
+        destination: /blog/index.html
+      - type: rewrite
+        source: /blog/what-is-gto-poker
+        destination: /blog/what-is-gto-poker/index.html
+      - type: rewrite
+        source: /blog/best-poker-software-2026
+        destination: /blog/best-poker-software-2026/index.html
+      - type: rewrite
+        source: /blog/poker-hud-statistics-guide
+        destination: /blog/poker-hud-statistics-guide/index.html
+      - type: rewrite
+        source: /blog/poker-hand-analysis-guide
+        destination: /blog/poker-hand-analysis-guide/index.html
+      - type: rewrite
+        source: /blog/how-poker-ai-works
+        destination: /blog/how-poker-ai-works/index.html
+      - type: rewrite
+        source: /login
+        destination: /index.html
+      - type: rewrite
+        source: /signup
+        destination: /index.html
+      - type: rewrite
+        source: /forgot-password
+        destination: /index.html
+      - type: rewrite
+        source: /reset-password
+        destination: /index.html
+      - type: rewrite
+        source: /verify-email
+        destination: /index.html
+      - type: rewrite
+        source: /success
+        destination: /index.html
+      - type: rewrite
+        source: /dashboard
         destination: /index.html
 
 databases:

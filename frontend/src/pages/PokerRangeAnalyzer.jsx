@@ -10,7 +10,7 @@ function PokerRangeAnalyzer() {
         <title>Poker Range Analyzer - GTO Range Analysis Tool 2026</title>
         <meta name="description" content="Professional poker range analyzer with GTO range charts, equity analysis, and range construction tools. Master preflop and postflop ranges." />
         <meta name="keywords" content="poker range analyzer, range analysis, GTO ranges, preflop ranges, poker ranges" />
-        <link rel="canonical" href="https://sharkpokerclub.com/poker-range-analyzer" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/poker-range-analyzer" />
       </Helmet>
 
       <div className="landing ai-theme">

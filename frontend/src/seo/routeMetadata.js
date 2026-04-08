@@ -1,5 +1,5 @@
 export const SITE_NAME = 'Poker AI';
-export const SITE_URL = 'https://sharkpokerclub.com';
+export const SITE_URL = 'https://www.sharkpokerclub.com';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/images/poker-ai-logo.png`;
 export const DEFAULT_OG_IMAGE_ALT = 'Poker AI logo';
 export const DEFAULT_LASTMOD = '2026-04-08';

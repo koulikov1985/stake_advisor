@@ -10,7 +10,7 @@ function BlogHandAnalysis() {
         <title>How to Analyze Poker Hands: Complete Hand Review Guide</title>
         <meta name="description" content="Learn how to properly analyze poker hands to find leaks and improve your game. Step-by-step hand analysis process used by professionals." />
         <meta name="keywords" content="poker hand analysis, hand review, poker study, hand history review, poker leaks" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog/poker-hand-analysis-guide" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog/poker-hand-analysis-guide" />
         <meta property="og:type" content="article" />
       </Helmet>
 

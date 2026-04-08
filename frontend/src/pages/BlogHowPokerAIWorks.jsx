@@ -10,7 +10,7 @@ function BlogHowPokerAIWorks() {
         <title>How Poker AI Software Works: Technology Behind AI Decision Support</title>
         <meta name="description" content="Deep dive into how poker AI software works, including computer vision, GTO algorithms, and machine learning for real-time poker analysis." />
         <meta name="keywords" content="poker AI, how poker AI works, poker technology, computer vision poker, GTO algorithms" />
-        <link rel="canonical" href="https://sharkpokerclub.com/blog/how-poker-ai-works" />
+        <link rel="canonical" href="https://www.sharkpokerclub.com/blog/how-poker-ai-works" />
         <meta property="og:type" content="article" />
       </Helmet>
 
