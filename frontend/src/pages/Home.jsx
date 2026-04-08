@@ -35,14 +35,11 @@ function Home() {
   const [showCanceled, setShowCanceled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [openFaq, setOpenFaq] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading] = useState(false);
 
   // Animated stats
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => setIsLoading(false), 800);
-
     if (searchParams.get('canceled') === 'true') {
       setShowCanceled(true);
       window.history.replaceState({}, '', '/');
@@ -59,7 +56,7 @@ function Home() {
 
   }, [searchParams]);
 
-  const token = localStorage.getItem('token');
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const isLoggedIn = !!token;
 
   // Loading screen

@@ -9,6 +9,11 @@ function useCountUp(end, duration = 2000) {
   const ref = useRef(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
+      setCount(end);
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !hasStarted) {
@@ -36,7 +41,7 @@ function useCountUp(end, duration = 2000) {
 
 function Affiliate() {
   const [referrals, setReferrals] = useState(5);
-  const token = localStorage.getItem('token');
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const isLoggedIn = !!token;
 
   // Animated stats
