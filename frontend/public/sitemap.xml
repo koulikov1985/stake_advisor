@@ -68,6 +68,42 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- New Landing Pages -->
+  <url>
+    <loc>https://sharkpokerclub.com/poker-training-software</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sharkpokerclub.com/best-poker-hud</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sharkpokerclub.com/poker-bot-alternative</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sharkpokerclub.com/poker-equity-calculator</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://sharkpokerclub.com/poker-range-analyzer</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Secondary Pages -->
   <url>
     <loc>https://sharkpokerclub.com/affiliate</loc>

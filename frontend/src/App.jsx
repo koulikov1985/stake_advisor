@@ -18,6 +18,17 @@ import Features from './pages/Features';
 import GTOSolver from './pages/GTOSolver';
 import HandAnalyzer from './pages/HandAnalyzer';
 import HowItWorks from './pages/HowItWorks';
+import Blog from './pages/Blog';
+import BlogWhatIsGTO from './pages/BlogWhatIsGTO';
+import BlogBestPokerSoftware from './pages/BlogBestPokerSoftware';
+import BlogPokerHUDStats from './pages/BlogPokerHUDStats';
+import BlogHandAnalysis from './pages/BlogHandAnalysis';
+import BlogHowPokerAIWorks from './pages/BlogHowPokerAIWorks';
+import PokerTrainingSoftware from './pages/PokerTrainingSoftware';
+import BestPokerHUD from './pages/BestPokerHUD';
+import PokerBotAlternative from './pages/PokerBotAlternative';
+import PokerEquityCalculator from './pages/PokerEquityCalculator';
+import PokerRangeAnalyzer from './pages/PokerRangeAnalyzer';
 
 function AppContent() {
   return (
@@ -43,6 +54,19 @@ function AppContent() {
         <Route path="/gto-solver" element={<GTOSolver />} />
         <Route path="/hand-analyzer" element={<HandAnalyzer />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
+        <Route path="/poker-training-software" element={<PokerTrainingSoftware />} />
+        <Route path="/best-poker-hud" element={<BestPokerHUD />} />
+        <Route path="/poker-bot-alternative" element={<PokerBotAlternative />} />
+        <Route path="/poker-equity-calculator" element={<PokerEquityCalculator />} />
+        <Route path="/poker-range-analyzer" element={<PokerRangeAnalyzer />} />
+
+        {/* Blog */}
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/what-is-gto-poker" element={<BlogWhatIsGTO />} />
+        <Route path="/blog/best-poker-software-2026" element={<BlogBestPokerSoftware />} />
+        <Route path="/blog/poker-hud-statistics-guide" element={<BlogPokerHUDStats />} />
+        <Route path="/blog/poker-hand-analysis-guide" element={<BlogHandAnalysis />} />
+        <Route path="/blog/how-poker-ai-works" element={<BlogHowPokerAIWorks />} />
       </Routes>
     </div>
   );
