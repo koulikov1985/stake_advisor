@@ -214,19 +214,9 @@ class LicenseAdmin(ModelView, model=License):
     column_searchable_list = ["license_key"]
     column_sortable_list = ["created_at", "expires_at", "status"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
-    form_columns = [
-        "user_id",
-        "license_key",
-        "tier",
-        "status",
-        "max_devices",
-        "activated_devices",
-        "expires_at",
-        "features",
-    ]
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "License"
     name_plural = "Licenses"
     icon = "fa-solid fa-key"
@@ -268,18 +258,9 @@ class SubscriptionAdmin(ModelView, model=Subscription):
     column_searchable_list = ["paddle_subscription_id"]
     column_sortable_list = ["created_at", "status"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
-    form_columns = [
-        "user_id",
-        "license_id",
-        "paddle_subscription_id",
-        "stripe_subscription_id",
-        "status",
-        "current_period_start",
-        "current_period_end",
-    ]
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Subscription"
     name_plural = "Subscriptions"
     icon = "fa-solid fa-credit-card"
@@ -304,17 +285,9 @@ class DeviceActivationAdmin(ModelView, model=DeviceActivation):
     column_searchable_list = ["device_fingerprint"]
     column_sortable_list = ["activated_at", "is_active"]
     column_default_sort = [("activated_at", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
-    form_columns = [
-        "license_id",
-        "device_fingerprint",
-        "device_info",
-        "activated_at",
-        "last_validated_at",
-        "is_active",
-    ]
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Device"
     name_plural = "Devices"
     icon = "fa-solid fa-laptop"
@@ -463,10 +436,9 @@ class ReferralAdmin(ModelView, model=Referral):
     column_formatters = {
         "converted": lambda m, a: "Yes" if m.converted else "No",
     }
-    form_columns = ["affiliate_id", "referred_user_id", "referral_code_used", "converted", "converted_at", "ip_address", "admin_notes"]
-    can_create = True
-    can_edit = True
-    can_delete = True
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Referral"
     name_plural = "Referrals"
     icon = "fa-solid fa-users"
@@ -512,10 +484,9 @@ class CommissionAdmin(ModelView, model=Commission):
         "base_amount": lambda m, a: f"${m.base_amount / 100:.2f}" if m.base_amount else "$0.00",
         "commission_rate": lambda m, a: f"{m.commission_rate}%",
     }
-    form_columns = ["affiliate_id", "referral_id", "transaction_id", "payout_id", "amount", "base_amount", "commission_rate", "currency", "status", "reviewed_by", "rejection_reason"]
-    can_create = True
-    can_edit = True
-    can_delete = True
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Commission"
     name_plural = "Commissions"
     icon = "fa-solid fa-coins"
@@ -555,10 +526,9 @@ class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
     column_formatters = {
         "amount": lambda m, a: f"${m.amount / 100:.2f}" if m.amount else "$0.00",
     }
-    form_columns = ["affiliate_id", "amount", "currency", "status", "payment_method", "payment_reference", "processed_by", "notes"]
-    can_create = True
-    can_edit = True
-    can_delete = True
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Payout"
     name_plural = "Payouts"
     icon = "fa-solid fa-money-bill-transfer"
@@ -575,10 +545,9 @@ class UserNoteAdmin(ModelView, model=UserNote):
     column_list = ["id", "user_id", "admin_id", "content", "created_at"]
     column_sortable_list = ["created_at"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
-    form_columns = ["user_id", "admin_id", "content"]
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "User Note"
     name_plural = "User Notes"
     icon = "fa-solid fa-sticky-note"
