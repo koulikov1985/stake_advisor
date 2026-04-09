@@ -203,8 +203,8 @@ class UserAdmin(ModelView, model=User):
 class LicenseAdmin(ModelView, model=License):
     column_list = [
         "id",
+        "user_id",
         "license_key",
-        "user",
         "tier",
         "status",
         "activated_devices",
@@ -224,14 +224,10 @@ class LicenseAdmin(ModelView, model=License):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(License).options(selectinload(License.user))
+        return select(License)
 
     def details_query(self, request):
-        return select(License).options(
-            selectinload(License.user),
-            selectinload(License.device_activations),
-            selectinload(License.subscription),
-        )
+        return select(License)
 
     async def on_model_change(self, data, model, is_created, request):
         """Auto-calculate expiration date based on tier if not set."""
@@ -253,8 +249,10 @@ class LicenseAdmin(ModelView, model=License):
 class SubscriptionAdmin(ModelView, model=Subscription):
     column_list = [
         "id",
+        "user_id",
+        "license_id",
         "paddle_subscription_id",
-        "user",
+        "stripe_subscription_id",
         "status",
         "current_period_end",
     ]
@@ -264,29 +262,23 @@ class SubscriptionAdmin(ModelView, model=Subscription):
     can_create = True
     can_edit = True
     can_delete = True
+    form_excluded_columns = ["revenue_transactions"]
     name = "Subscription"
     name_plural = "Subscriptions"
     icon = "fa-solid fa-credit-card"
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(Subscription).options(
-            selectinload(Subscription.user),
-            selectinload(Subscription.license),
-        )
+        return select(Subscription)
 
     def details_query(self, request):
-        return select(Subscription).options(
-            selectinload(Subscription.user),
-            selectinload(Subscription.license),
-            selectinload(Subscription.revenue_transactions),
-        )
+        return select(Subscription)
 
 
 class DeviceActivationAdmin(ModelView, model=DeviceActivation):
     column_list = [
         "id",
-        "license",
+        "license_id",
         "device_fingerprint",
         "is_active",
         "activated_at",
@@ -304,10 +296,10 @@ class DeviceActivationAdmin(ModelView, model=DeviceActivation):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(DeviceActivation).options(selectinload(DeviceActivation.license))
+        return select(DeviceActivation)
 
     def details_query(self, request):
-        return select(DeviceActivation).options(selectinload(DeviceActivation.license))
+        return select(DeviceActivation)
 
 
 class PaddleWebhookAdmin(ModelView, model=PaddleWebhook):
@@ -364,7 +356,7 @@ class AuditLogAdmin(ModelView, model=AuditLog):
 
 
 class AdminSessionAdmin(ModelView, model=AdminSession):
-    column_list = ["id", "admin_user", "ip_address", "expires_at", "created_at"]
+    column_list = ["id", "admin_user_id", "ip_address", "expires_at", "created_at"]
     column_sortable_list = ["created_at", "expires_at"]
     column_default_sort = [("created_at", True)]
     can_create = True
@@ -376,16 +368,17 @@ class AdminSessionAdmin(ModelView, model=AdminSession):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(AdminSession).options(selectinload(AdminSession.admin_user))
+        return select(AdminSession)
 
     def details_query(self, request):
-        return select(AdminSession).options(selectinload(AdminSession.admin_user))
+        return select(AdminSession)
 
 
 class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
     column_list = [
         "id",
-        "user",
+        "user_id",
+        "subscription_id",
         "transaction_type",
         "status",
         "amount",
@@ -405,23 +398,17 @@ class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(RevenueTransaction).options(
-            selectinload(RevenueTransaction.user),
-            selectinload(RevenueTransaction.subscription),
-        )
+        return select(RevenueTransaction)
 
     def details_query(self, request):
-        return select(RevenueTransaction).options(
-            selectinload(RevenueTransaction.user),
-            selectinload(RevenueTransaction.subscription),
-        )
+        return select(RevenueTransaction)
 
 
 class ReferralAdmin(ModelView, model=Referral):
     column_list = [
         "id",
-        "affiliate",
-        "referred_user",
+        "affiliate_id",
+        "referred_user_id",
         "referral_code_used",
         "converted",
         "converted_at",
@@ -434,8 +421,8 @@ class ReferralAdmin(ModelView, model=Referral):
     column_default_sort = [("created_at", True)]
     column_filters = ["converted", "referral_code_used", "created_at"]
     column_labels = {
-        "affiliate": "Affiliate (Referrer)",
-        "referred_user": "Referred User",
+        "affiliate_id": "Affiliate (Referrer)",
+        "referred_user_id": "Referred User",
         "referral_code_used": "Code Used",
         "converted": "Paid?",
         "converted_at": "Converted At",
@@ -443,7 +430,7 @@ class ReferralAdmin(ModelView, model=Referral):
     column_formatters = {
         "converted": lambda m, a: "Yes" if m.converted else "No",
     }
-    form_columns = ["affiliate", "referred_user", "referral_code_used", "converted", "converted_at", "ip_address", "admin_notes"]
+    form_columns = ["affiliate_id", "referred_user_id", "referral_code_used", "converted", "converted_at", "ip_address", "admin_notes"]
     can_create = True
     can_edit = True
     can_delete = True
@@ -453,24 +440,19 @@ class ReferralAdmin(ModelView, model=Referral):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(Referral).options(
-            selectinload(Referral.affiliate),
-            selectinload(Referral.referred_user),
-        )
+        return select(Referral)
 
     def details_query(self, request):
-        return select(Referral).options(
-            selectinload(Referral.affiliate),
-            selectinload(Referral.referred_user),
-            selectinload(Referral.commissions),
-        )
+        return select(Referral)
 
 
 class CommissionAdmin(ModelView, model=Commission):
     column_list = [
         "id",
-        "affiliate",
-        "referral",
+        "affiliate_id",
+        "referral_id",
+        "transaction_id",
+        "payout_id",
         "amount",
         "base_amount",
         "commission_rate",
@@ -497,7 +479,7 @@ class CommissionAdmin(ModelView, model=Commission):
         "base_amount": lambda m, a: f"${m.base_amount / 100:.2f}" if m.base_amount else "$0.00",
         "commission_rate": lambda m, a: f"{m.commission_rate}%",
     }
-    form_columns = ["affiliate", "referral", "amount", "base_amount", "commission_rate", "currency", "status", "reviewed_by", "rejection_reason"]
+    form_columns = ["affiliate_id", "referral_id", "transaction_id", "payout_id", "amount", "base_amount", "commission_rate", "currency", "status", "reviewed_by", "rejection_reason"]
     can_create = True
     can_edit = True
     can_delete = True
@@ -507,24 +489,16 @@ class CommissionAdmin(ModelView, model=Commission):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(Commission).options(
-            selectinload(Commission.affiliate),
-            selectinload(Commission.referral),
-            selectinload(Commission.payout),
-        )
+        return select(Commission)
 
     def details_query(self, request):
-        return select(Commission).options(
-            selectinload(Commission.affiliate),
-            selectinload(Commission.referral),
-            selectinload(Commission.payout),
-        )
+        return select(Commission)
 
 
 class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
     column_list = [
         "id",
-        "affiliate",
+        "affiliate_id",
         "amount",
         "currency",
         "status",
@@ -548,7 +522,7 @@ class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
     column_formatters = {
         "amount": lambda m, a: f"${m.amount / 100:.2f}" if m.amount else "$0.00",
     }
-    form_columns = ["affiliate", "amount", "currency", "status", "payment_method", "payment_reference", "processed_by", "notes"]
+    form_columns = ["affiliate_id", "amount", "currency", "status", "payment_method", "payment_reference", "processed_by", "notes"]
     can_create = True
     can_edit = True
     can_delete = True
@@ -558,20 +532,14 @@ class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(AffiliatePayout).options(
-            selectinload(AffiliatePayout.affiliate),
-            selectinload(AffiliatePayout.commissions),
-        )
+        return select(AffiliatePayout)
 
     def details_query(self, request):
-        return select(AffiliatePayout).options(
-            selectinload(AffiliatePayout.affiliate),
-            selectinload(AffiliatePayout.commissions),
-        )
+        return select(AffiliatePayout)
 
 
 class UserNoteAdmin(ModelView, model=UserNote):
-    column_list = ["id", "user", "admin", "content", "created_at"]
+    column_list = ["id", "user_id", "admin_id", "content", "created_at"]
     column_sortable_list = ["created_at"]
     column_default_sort = [("created_at", True)]
     can_create = True
@@ -583,16 +551,10 @@ class UserNoteAdmin(ModelView, model=UserNote):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(UserNote).options(
-            selectinload(UserNote.user),
-            selectinload(UserNote.admin),
-        )
+        return select(UserNote)
 
     def details_query(self, request):
-        return select(UserNote).options(
-            selectinload(UserNote.user),
-            selectinload(UserNote.admin),
-        )
+        return select(UserNote)
 
 
 class UserTagAdmin(ModelView, model=UserTag):
@@ -609,7 +571,7 @@ class UserTagAdmin(ModelView, model=UserTag):
 
 
 class UserActivityLogAdmin(ModelView, model=UserActivityLog):
-    column_list = ["id", "user", "activity_type", "ip_address", "created_at"]
+    column_list = ["id", "user_id", "activity_type", "ip_address", "created_at"]
     column_searchable_list = ["activity_type"]
     column_sortable_list = ["created_at"]
     column_default_sort = [("created_at", True)]
@@ -622,10 +584,10 @@ class UserActivityLogAdmin(ModelView, model=UserActivityLog):
     column_details_list = column_list
 
     def list_query(self, request):
-        return select(UserActivityLog).options(selectinload(UserActivityLog.user))
+        return select(UserActivityLog)
 
     def details_query(self, request):
-        return select(UserActivityLog).options(selectinload(UserActivityLog.user))
+        return select(UserActivityLog)
 
 
 class SystemSettingAdmin(ModelView, model=SystemSetting):
