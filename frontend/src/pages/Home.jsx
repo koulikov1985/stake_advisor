@@ -112,6 +112,7 @@ function Home() {
             </svg>
             <span>Discord</span>
           </a>
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/affiliate" className="nav-affiliate-glow">Affiliate</Link>
           <Link to="/download">Download</Link>

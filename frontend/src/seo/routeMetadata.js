@@ -1,3 +1,5 @@
+import { seoIntentPages } from '../content/seoIntentPages.js';
+
 export const SITE_NAME = 'Poker AI';
 export const SITE_URL = 'https://www.sharkpokerclub.com';
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/images/poker-ai-logo.png`;
@@ -179,6 +181,62 @@ const pokerBotAlternativeFaqSchema = {
   ],
 };
 
+function buildBreadcrumbSchema(path, label) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${SITE_URL}/`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: label,
+        item: `${SITE_URL}${path}`,
+      },
+    ],
+  };
+}
+
+function buildFaqSchema(faqItems = []) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+const seoIntentRouteMetadata = Object.fromEntries(
+  seoIntentPages.map((page) => [
+    page.path,
+    {
+      title: page.metaTitle,
+      description: page.metaDescription,
+      ogTitle: page.ogTitle || page.metaTitle,
+      ogDescription: page.ogDescription || page.metaDescription,
+      changefreq: 'monthly',
+      priority: page.priority || '0.7',
+      prerender: true,
+      scripts: [
+        softwareApplicationSchema,
+        buildBreadcrumbSchema(page.path, page.label),
+        buildFaqSchema(page.faqItems),
+      ],
+    },
+  ]),
+);
+
 export const routeMetadata = {
   '/': {
     title: 'Poker AI Software | GTO Solver, Hand Analyzer & Poker HUD',
@@ -314,6 +372,7 @@ export const routeMetadata = {
     priority: '0.8',
     prerender: true,
   },
+  ...seoIntentRouteMetadata,
   '/blog': {
     title: 'Poker AI Blog | Poker Strategy, GTO Guides and Software Tutorials',
     description:

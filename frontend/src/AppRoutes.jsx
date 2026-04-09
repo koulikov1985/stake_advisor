@@ -30,6 +30,8 @@ import BestPokerHUD from './pages/BestPokerHUD';
 import PokerBotAlternative from './pages/PokerBotAlternative';
 import PokerEquityCalculator from './pages/PokerEquityCalculator';
 import PokerRangeAnalyzer from './pages/PokerRangeAnalyzer';
+import SeoIntentPage from './pages/SeoIntentPage';
+import { seoIntentPages } from './content/seoIntentPages.js';
 
 function AppRoutes() {
   return (
@@ -59,6 +61,13 @@ function AppRoutes() {
         <Route path="/poker-bot-alternative" element={<PokerBotAlternative />} />
         <Route path="/poker-equity-calculator" element={<PokerEquityCalculator />} />
         <Route path="/poker-range-analyzer" element={<PokerRangeAnalyzer />} />
+        {seoIntentPages.map((page) => (
+          <Route
+            key={page.path}
+            path={page.path}
+            element={<SeoIntentPage pageKey={page.key} />}
+          />
+        ))}
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/what-is-gto-poker" element={<BlogWhatIsGTO />} />
         <Route path="/blog/best-poker-software-2026" element={<BlogBestPokerSoftware />} />
