@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import delete, or_, select, update
 from sqlalchemy.ext.asyncio import async_object_session
+from sqlalchemy.orm import selectinload
 from sqladmin import Admin, ModelView
 
 from app.models import (
@@ -51,6 +52,7 @@ class UserAdmin(ModelView, model=User):
     name = "User"
     name_plural = "Users"
     icon = "fa-solid fa-user"
+    column_details_exclude_list = form_excluded_columns + ["password_hash"]
 
     async def on_model_delete(self, model, request):
         # Delete the user graph explicitly so admin deletes do not depend on
@@ -207,6 +209,21 @@ class UserAdmin(ModelView, model=User):
         )
         await session.flush()
 
+    def details_query(self, request):
+        return select(User).options(
+            selectinload(User.referred_by),
+            selectinload(User.licenses),
+            selectinload(User.subscriptions),
+            selectinload(User.referrals),
+            selectinload(User.referral_record),
+            selectinload(User.commissions),
+            selectinload(User.payouts),
+            selectinload(User.notes),
+            selectinload(User.tag_assignments).selectinload(UserTagAssignment.tag),
+            selectinload(User.activity_logs),
+            selectinload(User.revenue_transactions),
+        )
+
 
 class LicenseAdmin(ModelView, model=License):
     column_list = [
@@ -229,6 +246,17 @@ class LicenseAdmin(ModelView, model=License):
     name = "License"
     name_plural = "Licenses"
     icon = "fa-solid fa-key"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(License).options(selectinload(License.user))
+
+    def details_query(self, request):
+        return select(License).options(
+            selectinload(License.user),
+            selectinload(License.device_activations),
+            selectinload(License.subscription),
+        )
 
     async def on_model_change(self, data, model, is_created, request):
         """Auto-calculate expiration date based on tier if not set."""
@@ -264,6 +292,20 @@ class SubscriptionAdmin(ModelView, model=Subscription):
     name = "Subscription"
     name_plural = "Subscriptions"
     icon = "fa-solid fa-credit-card"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(Subscription).options(
+            selectinload(Subscription.user),
+            selectinload(Subscription.license),
+        )
+
+    def details_query(self, request):
+        return select(Subscription).options(
+            selectinload(Subscription.user),
+            selectinload(Subscription.license),
+            selectinload(Subscription.revenue_transactions),
+        )
 
 
 class DeviceActivationAdmin(ModelView, model=DeviceActivation):
@@ -284,6 +326,13 @@ class DeviceActivationAdmin(ModelView, model=DeviceActivation):
     name = "Device"
     name_plural = "Devices"
     icon = "fa-solid fa-laptop"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(DeviceActivation).options(selectinload(DeviceActivation.license))
+
+    def details_query(self, request):
+        return select(DeviceActivation).options(selectinload(DeviceActivation.license))
 
 
 class PaddleWebhookAdmin(ModelView, model=PaddleWebhook):
@@ -349,6 +398,13 @@ class AdminSessionAdmin(ModelView, model=AdminSession):
     name = "Admin Session"
     name_plural = "Admin Sessions"
     icon = "fa-solid fa-clock"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(AdminSession).options(selectinload(AdminSession.admin_user))
+
+    def details_query(self, request):
+        return select(AdminSession).options(selectinload(AdminSession.admin_user))
 
 
 class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
@@ -371,6 +427,19 @@ class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
     name = "Transaction"
     name_plural = "Transactions"
     icon = "fa-solid fa-dollar-sign"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(RevenueTransaction).options(
+            selectinload(RevenueTransaction.user),
+            selectinload(RevenueTransaction.subscription),
+        )
+
+    def details_query(self, request):
+        return select(RevenueTransaction).options(
+            selectinload(RevenueTransaction.user),
+            selectinload(RevenueTransaction.subscription),
+        )
 
 
 class ReferralAdmin(ModelView, model=Referral):
@@ -406,6 +475,20 @@ class ReferralAdmin(ModelView, model=Referral):
     name = "Referral"
     name_plural = "Referrals"
     icon = "fa-solid fa-users"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(Referral).options(
+            selectinload(Referral.affiliate),
+            selectinload(Referral.referred_user),
+        )
+
+    def details_query(self, request):
+        return select(Referral).options(
+            selectinload(Referral.affiliate),
+            selectinload(Referral.referred_user),
+            selectinload(Referral.commissions),
+        )
 
 
 class CommissionAdmin(ModelView, model=Commission):
@@ -446,6 +529,21 @@ class CommissionAdmin(ModelView, model=Commission):
     name = "Commission"
     name_plural = "Commissions"
     icon = "fa-solid fa-coins"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(Commission).options(
+            selectinload(Commission.affiliate),
+            selectinload(Commission.referral),
+            selectinload(Commission.payout),
+        )
+
+    def details_query(self, request):
+        return select(Commission).options(
+            selectinload(Commission.affiliate),
+            selectinload(Commission.referral),
+            selectinload(Commission.payout),
+        )
 
 
 class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
@@ -482,6 +580,19 @@ class AffiliatePayoutAdmin(ModelView, model=AffiliatePayout):
     name = "Payout"
     name_plural = "Payouts"
     icon = "fa-solid fa-money-bill-transfer"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(AffiliatePayout).options(
+            selectinload(AffiliatePayout.affiliate),
+            selectinload(AffiliatePayout.commissions),
+        )
+
+    def details_query(self, request):
+        return select(AffiliatePayout).options(
+            selectinload(AffiliatePayout.affiliate),
+            selectinload(AffiliatePayout.commissions),
+        )
 
 
 class UserNoteAdmin(ModelView, model=UserNote):
@@ -494,6 +605,19 @@ class UserNoteAdmin(ModelView, model=UserNote):
     name = "User Note"
     name_plural = "User Notes"
     icon = "fa-solid fa-sticky-note"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(UserNote).options(
+            selectinload(UserNote.user),
+            selectinload(UserNote.admin),
+        )
+
+    def details_query(self, request):
+        return select(UserNote).options(
+            selectinload(UserNote.user),
+            selectinload(UserNote.admin),
+        )
 
 
 class UserTagAdmin(ModelView, model=UserTag):
@@ -520,6 +644,13 @@ class UserActivityLogAdmin(ModelView, model=UserActivityLog):
     name = "User Activity"
     name_plural = "User Activities"
     icon = "fa-solid fa-chart-line"
+    column_details_list = column_list
+
+    def list_query(self, request):
+        return select(UserActivityLog).options(selectinload(UserActivityLog.user))
+
+    def details_query(self, request):
+        return select(UserActivityLog).options(selectinload(UserActivityLog.user))
 
 
 class SystemSettingAdmin(ModelView, model=SystemSetting):
