@@ -580,15 +580,7 @@ class UserActivityLogAdmin(ModelView, model=UserActivityLog):
     column_default_sort = [("created_at", True)]
     can_create = False
     can_edit = False
-    can_delete = True
-    form_columns = [
-        "user_id",
-        "activity_type",
-        "description",
-        "ip_address",
-        "user_agent",
-        "extra_data",
-    ]
+    can_delete = False
     name = "User Activity"
     name_plural = "User Activities"
     icon = "fa-solid fa-chart-line"
