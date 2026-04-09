@@ -47,6 +47,9 @@ class Subscription(Base):
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="subscriptions")
     license: Mapped["License"] = relationship("License", back_populates="subscription")
+    revenue_transactions: Mapped[list["RevenueTransaction"]] = relationship(
+        "RevenueTransaction", back_populates="subscription", lazy="selectin"
+    )
 
     def __repr__(self) -> str:
         return f"<Subscription {self.paddle_subscription_id}>"

@@ -32,10 +32,35 @@ class UserAdmin(ModelView, model=User):
     can_create = True
     can_edit = True
     can_delete = True
-    form_excluded_columns = ["licenses", "subscriptions"]
+    form_excluded_columns = [
+        "licenses",
+        "subscriptions",
+        "referred_by",
+        "referred_users",
+        "referrals",
+        "referral_record",
+        "commissions",
+        "payouts",
+        "notes",
+        "tag_assignments",
+        "activity_logs",
+        "revenue_transactions",
+    ]
     name = "User"
     name_plural = "Users"
     icon = "fa-solid fa-user"
+
+    async def on_model_delete(self, model, request):
+        # Keep nullable history rows while removing the user graph.
+        for referred_user in list(model.referred_users):
+            referred_user.referred_by = None
+
+        for transaction in list(model.revenue_transactions):
+            transaction.user = None
+
+        for subscription in list(model.subscriptions):
+            for transaction in list(subscription.revenue_transactions):
+                transaction.subscription = None
 
 
 class LicenseAdmin(ModelView, model=License):

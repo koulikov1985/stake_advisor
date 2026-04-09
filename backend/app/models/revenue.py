@@ -67,8 +67,8 @@ class RevenueTransaction(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relationships
-    user: Mapped["User"] = relationship("User", lazy="selectin")
-    subscription: Mapped["Subscription"] = relationship("Subscription", lazy="selectin")
+    user: Mapped["User"] = relationship("User", back_populates="revenue_transactions", lazy="selectin")
+    subscription: Mapped["Subscription"] = relationship("Subscription", back_populates="revenue_transactions", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"<RevenueTransaction {self.id} {self.amount/100:.2f} {self.currency}>"
