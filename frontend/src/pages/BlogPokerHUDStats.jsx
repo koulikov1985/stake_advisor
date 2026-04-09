@@ -29,6 +29,7 @@ function BlogPokerHUDStats() {
           </Link>
           <nav className="landing-nav">
             <Link to="/blog">Blog</Link>
+            <Link to="/poker-software">Software</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>
             <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -64,6 +65,17 @@ function BlogPokerHUDStats() {
               <p>
                 This guide explains the most important poker HUD statistics, what they tell you about opponents, and how to exploit
                 different player types based on their stats.
+              </p>
+              <p>
+                For the matching product and workflow pages, continue with{' '}
+                <Link to="/poker-hud-software" style={{ color: 'var(--accent-cyan)' }}>poker HUD software</Link>,{' '}
+                <Link to="/best-poker-hud-stats-for-6-max" style={{ color: 'var(--accent-cyan)' }}>
+                  best poker HUD stats for 6-max
+                </Link>
+                , and{' '}
+                <Link to="/how-to-use-a-poker-hud" style={{ color: 'var(--accent-cyan)' }}>
+                  how to use a poker HUD
+                </Link>.
               </p>
 
               <h2>Essential Poker HUD Statistics</h2>
@@ -233,6 +245,21 @@ function BlogPokerHUDStats() {
                 </svg>
               </Link>
             </div>
+
+            <div style={{ marginTop: '3rem', padding: '2rem', background: 'var(--bg-surface)', borderRadius: '16px' }}>
+              <h3>Related HUD Pages</h3>
+              <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                <Link to="/poker-hud-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker HUD Software
+                </Link>
+                <Link to="/best-poker-hud-stats-for-6-max" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Best Poker HUD Stats for 6-Max
+                </Link>
+                <Link to="/how-to-use-a-poker-hud" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → How to Use a Poker HUD
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -240,10 +267,11 @@ function BlogPokerHUDStats() {
           <div className="footer-brand-ai">
             <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
           </div>
-          <div className="footer-links-ai">
-            <Link to="/blog">Blog</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/faq">FAQ</Link>
+        <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
+          <Link to="/blog">Blog</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/faq">FAQ</Link>
             <Link to="/terms">Terms</Link>
             <Link to="/privacy">Privacy</Link>
           </div>

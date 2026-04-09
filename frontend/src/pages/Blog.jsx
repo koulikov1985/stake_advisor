@@ -47,6 +47,29 @@ const blogPosts = [
   }
 ];
 
+const blogEntryPages = [
+  {
+    href: '/poker-software',
+    title: 'Poker software',
+    description: 'The main commercial hub for players comparing complete poker software options.',
+  },
+  {
+    href: '/poker-hud-software',
+    title: 'Poker HUD software',
+    description: 'The best next step for readers focused on stats, reads, and opponent tracking.',
+  },
+  {
+    href: '/poker-strategy-software',
+    title: 'Poker strategy software',
+    description: 'The study-oriented page for players who want solver-backed improvement workflows.',
+  },
+  {
+    href: '/poker-hand-history-analyzer',
+    title: 'Poker hand history analyzer',
+    description: 'A strong internal destination for readers looking to review sessions and find leaks.',
+  },
+];
+
 function Blog() {
   return (
     <>
@@ -101,6 +124,7 @@ function Blog() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
@@ -164,12 +188,30 @@ function Blog() {
         </div>
       </section>
 
+      <section className="landing-features" style={{ paddingTop: '0' }}>
+        <div className="features-header">
+          <span className="section-tag">Popular Entry Pages</span>
+          <h2>Commercial pages worth visiting after the blog</h2>
+          <p>These are the highest-value product pages connected to the current blog cluster.</p>
+        </div>
+        <div className="seo-resource-grid">
+          {blogEntryPages.map((page) => (
+            <Link key={page.href} to={page.href} className="seo-resource-card">
+              <h3>{page.title}</h3>
+              <p>{page.description}</p>
+              <span className="seo-resource-link">Open page</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="landing-footer-ai">
         <div className="footer-brand-ai">
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
         <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>

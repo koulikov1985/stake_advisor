@@ -51,6 +51,7 @@ function BlogBestPokerSoftware() {
           </Link>
           <nav className="landing-nav">
             <Link to="/blog">Blog</Link>
+            <Link to="/poker-software">Software</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>
             <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -95,6 +96,15 @@ function BlogBestPokerSoftware() {
               <p>
                 In this comprehensive guide, we'll review the <strong>10 best poker software tools in 2026</strong>, comparing
                 features, pricing, and use cases to help you make an informed decision.
+              </p>
+              <p>
+                If you want narrower pages for specific search intent, start with our{' '}
+                <Link to="/poker-software" style={{ color: 'var(--accent-cyan)' }}>poker software</Link>,{' '}
+                <Link to="/poker-hud-software" style={{ color: 'var(--accent-cyan)' }}>poker HUD software</Link>, and{' '}
+                <Link to="/poker-decision-support-software" style={{ color: 'var(--accent-cyan)' }}>
+                  poker decision support software
+                </Link>{' '}
+                guides before comparing individual products.
               </p>
 
               <h2>Quick Comparison Table</h2>
@@ -360,6 +370,21 @@ function BlogBestPokerSoftware() {
             <div style={{ marginTop: '4rem', padding: '2rem', background: 'var(--bg-surface)', borderRadius: '16px' }}>
               <h3>Related Articles</h3>
               <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                <Link to="/poker-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Software: broad commercial hub
+                </Link>
+                <Link to="/poker-hud-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker HUD Software
+                </Link>
+                <Link to="/poker-decision-support-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Decision Support Software
+                </Link>
+                <Link to="/vs/gto-wizard" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker AI vs GTO Wizard
+                </Link>
+                <Link to="/vs/pio-solver" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker AI vs PioSolver
+                </Link>
                 <Link to="/blog/what-is-gto-poker" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
                   → What is GTO Poker? Complete Beginner's Guide
                 </Link>
@@ -399,10 +424,11 @@ function BlogBestPokerSoftware() {
           <div className="footer-brand-ai">
             <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
           </div>
-          <div className="footer-links-ai">
-            <Link to="/blog">Blog</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/download">Download</Link>
+        <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
+          <Link to="/blog">Blog</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/download">Download</Link>
             <Link to="/faq">FAQ</Link>
             <Link to="/terms">Terms</Link>
             <Link to="/privacy">Privacy</Link>

@@ -30,6 +30,39 @@ const faqData = [
   }
 ];
 
+const softwareEntryPages = [
+  {
+    href: '/poker-software',
+    title: 'Poker software',
+    description: 'The broad product hub for players comparing complete poker software options.',
+  },
+  {
+    href: '/poker-hud-software',
+    title: 'Poker HUD software',
+    description: 'A focused page for opponent stats, reads, and HUD-specific workflows.',
+  },
+  {
+    href: '/poker-strategy-software',
+    title: 'Poker strategy software',
+    description: 'The study-oriented page for range work, GTO concepts, and review discipline.',
+  },
+  {
+    href: '/poker-hand-history-analyzer',
+    title: 'Poker hand history analyzer',
+    description: 'A dedicated route for post-session review, leak finding, and hand analysis.',
+  },
+  {
+    href: '/poker-decision-support-software',
+    title: 'Poker decision support software',
+    description: 'The positioning page for analysis and player-controlled decision support.',
+  },
+  {
+    href: '/multi-table-poker-software',
+    title: 'Multi-table poker software',
+    description: 'A workflow page for serious volume players managing several tables at once.',
+  },
+];
+
 function Home() {
   const [searchParams] = useSearchParams();
   const [showCanceled, setShowCanceled] = useState(false);
@@ -190,6 +223,30 @@ function Home() {
               <span>Real-Time Analysis</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="landing-features" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
+        <div className="section-header-ai">
+          <span className="section-tag-ai">Explore by Use Case</span>
+          <h2 className="section-title-ai">
+            Start with the page that matches
+            <br />
+            <span className="gradient-text-ai">your exact search intent</span>
+          </h2>
+          <p className="section-subtitle-ai">
+            One product can support different player needs. These pages make the site easier to crawl and easier to navigate.
+          </p>
+        </div>
+
+        <div className="seo-resource-grid" style={{ maxWidth: '1200px' }}>
+          {softwareEntryPages.map((page) => (
+            <Link key={page.href} to={page.href} className="seo-resource-card">
+              <h3>{page.title}</h3>
+              <p>{page.description}</p>
+              <span className="seo-resource-link">Open page</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -728,6 +785,7 @@ function Home() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
         <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
           <Link to="/blog">Blog</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>

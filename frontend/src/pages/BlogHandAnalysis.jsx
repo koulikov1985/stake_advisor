@@ -28,6 +28,7 @@ function BlogHandAnalysis() {
           </Link>
           <nav className="landing-nav">
             <Link to="/blog">Blog</Link>
+            <Link to="/poker-software">Software</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>
             <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -62,6 +63,20 @@ function BlogHandAnalysis() {
               </p>
               <p>
                 This guide shows you exactly how professional players review hands to continuously improve their game.
+              </p>
+              <p>
+                For the matching search-intent pages, continue with{' '}
+                <Link to="/how-to-review-poker-hands" style={{ color: 'var(--accent-cyan)' }}>
+                  how to review poker hands
+                </Link>
+                ,{' '}
+                <Link to="/poker-hand-reading-guide" style={{ color: 'var(--accent-cyan)' }}>
+                  poker hand reading guide
+                </Link>
+                , and{' '}
+                <Link to="/poker-hand-history-analyzer" style={{ color: 'var(--accent-cyan)' }}>
+                  poker hand history analyzer
+                </Link>.
               </p>
 
               <h2>The 7-Step Hand Analysis Process</h2>
@@ -255,6 +270,21 @@ function BlogHandAnalysis() {
                 </svg>
               </Link>
             </div>
+
+            <div style={{ marginTop: '3rem', padding: '2rem', background: 'var(--bg-surface)', borderRadius: '16px' }}>
+              <h3>Related Hand Review Pages</h3>
+              <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                <Link to="/how-to-review-poker-hands" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → How to Review Poker Hands
+                </Link>
+                <Link to="/poker-hand-reading-guide" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Hand Reading Guide
+                </Link>
+                <Link to="/poker-hand-history-analyzer" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Hand History Analyzer
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -262,10 +292,11 @@ function BlogHandAnalysis() {
           <div className="footer-brand-ai">
             <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
           </div>
-          <div className="footer-links-ai">
-            <Link to="/blog">Blog</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/faq">FAQ</Link>
+        <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
+          <Link to="/blog">Blog</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/faq">FAQ</Link>
             <Link to="/terms">Terms</Link>
             <Link to="/privacy">Privacy</Link>
           </div>

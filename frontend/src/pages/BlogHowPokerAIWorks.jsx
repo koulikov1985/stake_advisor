@@ -28,6 +28,7 @@ function BlogHowPokerAIWorks() {
           </Link>
           <nav className="landing-nav">
             <Link to="/blog">Blog</Link>
+            <Link to="/poker-software">Software</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>
             <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -63,6 +64,17 @@ function BlogHowPokerAIWorks() {
               <p>
                 This article breaks down the technology powering modern poker AI software, from computer vision to GTO algorithms
                 and machine learning models.
+              </p>
+              <p>
+                If you want the matching commercial pages, start with{' '}
+                <Link to="/poker-software" style={{ color: 'var(--accent-cyan)' }}>poker software</Link>,{' '}
+                <Link to="/poker-decision-support-software" style={{ color: 'var(--accent-cyan)' }}>
+                  poker decision support software
+                </Link>
+                , and{' '}
+                <Link to="/multi-table-poker-software" style={{ color: 'var(--accent-cyan)' }}>
+                  multi-table poker software
+                </Link>.
               </p>
 
               <h2>The 6-Stage Poker AI Pipeline</h2>
@@ -286,6 +298,21 @@ function BlogHowPokerAIWorks() {
                 </svg>
               </Link>
             </div>
+
+            <div style={{ marginTop: '3rem', padding: '2rem', background: 'var(--bg-surface)', borderRadius: '16px' }}>
+              <h3>Related Software Pages</h3>
+              <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                <Link to="/poker-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Software
+                </Link>
+                <Link to="/poker-decision-support-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Poker Decision Support Software
+                </Link>
+                <Link to="/multi-table-poker-software" style={{ textDecoration: 'none', color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>
+                  → Multi-Table Poker Software
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -293,10 +320,11 @@ function BlogHowPokerAIWorks() {
           <div className="footer-brand-ai">
             <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
           </div>
-          <div className="footer-links-ai">
-            <Link to="/blog">Blog</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/faq">FAQ</Link>
+        <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
+          <Link to="/blog">Blog</Link>
+          <Link to="/pricing">Pricing</Link>
+          <Link to="/faq">FAQ</Link>
             <Link to="/terms">Terms</Link>
             <Link to="/privacy">Privacy</Link>
           </div>

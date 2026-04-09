@@ -4,6 +4,29 @@ import '../styles/landing.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+const downloadGuides = [
+  {
+    href: '/poker-software-for-mac',
+    title: 'Poker software for Mac',
+    description: 'A dedicated page for macOS buyers comparing poker software options.',
+  },
+  {
+    href: '/poker-software-for-windows',
+    title: 'Poker software for Windows',
+    description: 'The matching Windows page for desktop-focused commercial traffic.',
+  },
+  {
+    href: '/poker-software',
+    title: 'Poker software',
+    description: 'The broad software hub if you want the full product overview before downloading.',
+  },
+  {
+    href: '/poker-decision-support-software',
+    title: 'Poker decision support software',
+    description: 'Useful if you are evaluating the product from a workflow and positioning angle.',
+  },
+];
+
 function Download() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasLicense, setHasLicense] = useState(false);
@@ -141,6 +164,7 @@ function Download() {
             </svg>
             <span>Discord</span>
           </a>
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/affiliate" className="nav-affiliate-glow">Affiliate</Link>
           <Link to="/download">Download</Link>
@@ -293,6 +317,23 @@ function Download() {
         </div>
       </section>
 
+      <section className="landing-features">
+        <div className="features-header">
+          <span className="section-tag">Related Pages</span>
+          <h2>Choose the right software page before you install</h2>
+          <p>These pages answer the most common Mac, Windows, and product-fit questions around download intent.</p>
+        </div>
+        <div className="seo-resource-grid">
+          {downloadGuides.map((page) => (
+            <Link key={page.href} to={page.href} className="seo-resource-card">
+              <h3>{page.title}</h3>
+              <p>{page.description}</p>
+              <span className="seo-resource-link">Open page</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="final-cta-ai">
         <div className="cta-bg-ai">
@@ -318,6 +359,7 @@ function Download() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
         <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>

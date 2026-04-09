@@ -94,6 +94,7 @@ function BlogWhatIsGTO() {
           </Link>
           <nav className="landing-nav">
             <Link to="/blog">Blog</Link>
+            <Link to="/poker-software">Software</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>
             <Link to="/login" className="nav-btn-ghost">Login</Link>
@@ -290,6 +291,16 @@ function BlogWhatIsGTO() {
                 Use <Link to="/" style={{ color: 'var(--accent-cyan)' }}>poker training software</Link> that provides
                 real-time GTO analysis to practice implementing these concepts at the tables.
               </p>
+              <p>
+                If you want the more strategy-specific landing pages, continue with{' '}
+                <Link to="/poker-strategy-software" style={{ color: 'var(--accent-cyan)' }}>
+                  poker strategy software
+                </Link>{' '}
+                or our deeper comparison of{' '}
+                <Link to="/gto-vs-exploitative-poker" style={{ color: 'var(--accent-cyan)' }}>
+                  GTO vs exploitative poker
+                </Link>.
+              </p>
 
               <h2>Common GTO Poker Mistakes to Avoid</h2>
 
@@ -375,6 +386,20 @@ function BlogWhatIsGTO() {
             }}>
               <h3>Related Articles</h3>
               <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                <Link to="/poker-strategy-software" style={{
+                  textDecoration: 'none',
+                  color: 'var(--accent-cyan)',
+                  fontSize: '1.1rem'
+                }}>
+                  → Poker Strategy Software
+                </Link>
+                <Link to="/gto-vs-exploitative-poker" style={{
+                  textDecoration: 'none',
+                  color: 'var(--accent-cyan)',
+                  fontSize: '1.1rem'
+                }}>
+                  → GTO vs Exploitative Poker
+                </Link>
                 <Link to="/blog/best-poker-software-2026" style={{
                   textDecoration: 'none',
                   color: 'var(--accent-cyan)',
@@ -429,6 +454,7 @@ function BlogWhatIsGTO() {
             <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
           </div>
           <div className="footer-links-ai">
+            <Link to="/poker-software">Software</Link>
             <Link to="/blog">Blog</Link>
             <Link to="/pricing">Pricing</Link>
             <Link to="/download">Download</Link>

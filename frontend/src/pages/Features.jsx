@@ -58,6 +58,29 @@ const technicalFeatures = [
   }
 ];
 
+const featureLinkTargets = [
+  {
+    href: '/poker-software',
+    title: 'Poker software',
+    description: 'Use the broad software hub if you are comparing the full product stack.',
+  },
+  {
+    href: '/poker-hud-software',
+    title: 'Poker HUD software',
+    description: 'Go deeper on opponent tracking, stat interpretation, and HUD-specific buying intent.',
+  },
+  {
+    href: '/multi-table-poker-software',
+    title: 'Multi-table poker software',
+    description: 'See the workflow page built for players running several tables at once.',
+  },
+  {
+    href: '/poker-decision-support-software',
+    title: 'Poker decision support software',
+    description: 'Read the page focused on analysis and player-controlled decision support.',
+  },
+];
+
 function Features() {
   return (
     <div className="landing ai-theme">
@@ -87,6 +110,7 @@ function Features() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="logo-image" />
         </Link>
         <nav className="landing-nav">
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/affiliate" className="nav-affiliate-glow">Affiliate</Link>
           <Link to="/download">Download</Link>
@@ -155,6 +179,23 @@ function Features() {
         </div>
       </section>
 
+      <section className="landing-features">
+        <div className="features-header">
+          <span className="section-tag">Related Pages</span>
+          <h2>Explore the right feature angle next</h2>
+          <p>These internal links connect the feature page to the more specific software and use-case pages.</p>
+        </div>
+        <div className="seo-resource-grid">
+          {featureLinkTargets.map((page) => (
+            <Link key={page.href} to={page.href} className="seo-resource-card">
+              <h3>{page.title}</h3>
+              <p>{page.description}</p>
+              <span className="seo-resource-link">Open page</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="landing-cta">
         <div className="cta-card">
@@ -180,6 +221,7 @@ function Features() {
           <img src="/images/poker-ai-logo.png" alt="Poker AI" className="footer-logo" />
         </div>
         <div className="footer-links-ai">
+          <Link to="/poker-software">Software</Link>
           <Link to="/pricing">Pricing</Link>
           <Link to="/download">Download</Link>
           <Link to="/faq">FAQ</Link>
