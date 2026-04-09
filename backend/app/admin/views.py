@@ -422,22 +422,9 @@ class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
     column_searchable_list = ["paddle_transaction_id"]
     column_sortable_list = ["transaction_date", "amount"]
     column_default_sort = [("transaction_date", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
-    form_columns = [
-        "user_id",
-        "subscription_id",
-        "paddle_transaction_id",
-        "transaction_type",
-        "status",
-        "amount",
-        "currency",
-        "plan_tier",
-        "description",
-        "extra_data",
-        "transaction_date",
-    ]
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Transaction"
     name_plural = "Transactions"
     icon = "fa-solid fa-dollar-sign"
