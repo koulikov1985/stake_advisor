@@ -55,16 +55,37 @@ class User(Base):
 
     # Relationships
     licenses: Mapped[list["License"]] = relationship(
-        "License", back_populates="user", lazy="selectin"
+        "License", back_populates="user", lazy="selectin", cascade="all, delete-orphan"
     )
     subscriptions: Mapped[list["Subscription"]] = relationship(
-        "Subscription", back_populates="user", lazy="selectin"
+        "Subscription", back_populates="user", lazy="selectin", cascade="all, delete-orphan"
     )
     referred_by: Mapped["User"] = relationship(
         "User", remote_side=[id], foreign_keys=[referred_by_id], lazy="selectin"
     )
     referrals: Mapped[list["Referral"]] = relationship(
-        "Referral", back_populates="affiliate", foreign_keys="Referral.affiliate_id", lazy="selectin"
+        "Referral", back_populates="affiliate", foreign_keys="Referral.affiliate_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    referred_users: Mapped[list["Referral"]] = relationship(
+        "Referral", foreign_keys="Referral.referred_user_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    commissions: Mapped[list["Commission"]] = relationship(
+        "Commission", foreign_keys="Commission.affiliate_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    payouts: Mapped[list["AffiliatePayout"]] = relationship(
+        "AffiliatePayout", foreign_keys="AffiliatePayout.affiliate_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    notes: Mapped[list["UserNote"]] = relationship(
+        "UserNote", foreign_keys="UserNote.user_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    tag_assignments: Mapped[list["UserTagAssignment"]] = relationship(
+        "UserTagAssignment", foreign_keys="UserTagAssignment.user_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    activity_logs: Mapped[list["UserActivityLog"]] = relationship(
+        "UserActivityLog", foreign_keys="UserActivityLog.user_id", lazy="selectin", cascade="all, delete-orphan"
+    )
+    transactions: Mapped[list["RevenueTransaction"]] = relationship(
+        "RevenueTransaction", foreign_keys="RevenueTransaction.user_id", lazy="selectin", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

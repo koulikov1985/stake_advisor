@@ -121,6 +121,64 @@ const faqPageSchema = {
   ],
 };
 
+const pokerBotAlternativeBreadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: `${SITE_URL}/`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Poker Bot Alternative',
+      item: `${SITE_URL}/poker-bot-alternative`,
+    },
+  ],
+};
+
+const pokerBotAlternativeFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is a poker bot?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'A poker bot is software that automates poker decisions and actions without the player manually choosing each move.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is Poker AI a poker bot?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Poker AI is positioned as non-automated study and decision-support software. The player still reviews the information and makes the final action.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why do players search for a poker bot alternative?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Players usually want faster decisions, better analysis, and structured study tools without relying on software that automates play.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What features matter in a poker bot alternative?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The most important features are real-time decision support, GTO study, post-session hand review, HUD statistics, and multi-table usability.',
+      },
+    },
+  ],
+};
+
 export const routeMetadata = {
   '/': {
     title: 'Poker AI Software | GTO Solver, Hand Analyzer & Poker HUD',
@@ -229,12 +287,16 @@ export const routeMetadata = {
     prerender: true,
   },
   '/poker-bot-alternative': {
-    title: 'Poker Bot Alternative | Decision Support and Poker Study Software',
+    title: 'Poker Bot Alternative | Non-Automated Poker AI for Study and Review',
     description:
-      'Compare Poker AI as an alternative to poker bots with real-time decision support, GTO analysis, and post-session study tools.',
+      'Need a poker bot alternative? Compare automated bots with Poker AI and use non-automated software for GTO study, hand analysis, HUD stats, and decision support.',
+    ogTitle: 'Poker Bot Alternative | Compare Bots, Poker AI and Study Tools',
+    ogDescription:
+      'Understand what a poker bot is, why players look for alternatives, and how Poker AI helps with real-time study, review, and decision support.',
     changefreq: 'monthly',
-    priority: '0.8',
+    priority: '0.9',
     prerender: true,
+    scripts: [softwareApplicationSchema, pokerBotAlternativeBreadcrumbSchema, pokerBotAlternativeFaqSchema],
   },
   '/poker-equity-calculator': {
     title: 'Poker Equity Calculator | Estimate Hand Equity and Range Strength',

@@ -187,6 +187,14 @@ function BlogBestPokerSoftware() {
                 multi-table players, Mac users seeking modern software.
               </p>
 
+              <p>
+                If your search started with <strong>poker bot</strong>, read our{' '}
+                <Link to="/poker-bot-alternative" style={{ color: 'var(--accent-cyan)' }}>
+                  poker bot alternative guide
+                </Link>
+                . It breaks down the difference between automated bots, decision-support software, and study tools.
+              </p>
+
               <p style={{ padding: '1.5rem', background: 'var(--accent-cyan)', color: 'var(--bg-darker)', borderRadius: '8px', fontWeight: 'bold' }}>
                 ⭐ Our Pick: Poker AI offers the best value and most innovative features in 2026.{' '}
                 <Link to="/signup" style={{ color: 'var(--bg-darker)', textDecoration: 'underline' }}>
