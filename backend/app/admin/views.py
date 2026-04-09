@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from sqlalchemy import delete, or_, select, update
+from sqlalchemy.ext.asyncio import async_object_session
 from sqladmin import Admin, ModelView
 
 from app.models import (
@@ -51,16 +53,159 @@ class UserAdmin(ModelView, model=User):
     icon = "fa-solid fa-user"
 
     async def on_model_delete(self, model, request):
-        # Keep nullable history rows while removing the user graph.
-        for referred_user in list(model.referred_users):
-            referred_user.referred_by = None
+        # Delete the user graph explicitly so admin deletes do not depend on
+        # async relationship loading or database-level cascade constraints.
+        session = async_object_session(model)
+        if session is None:
+            for referred_user in list(model.referred_users):
+                referred_user.referred_by = None
 
-        for transaction in list(model.revenue_transactions):
-            transaction.user = None
+            for transaction in list(model.revenue_transactions):
+                transaction.user = None
 
-        for subscription in list(model.subscriptions):
-            for transaction in list(subscription.revenue_transactions):
-                transaction.subscription = None
+            for subscription in list(model.subscriptions):
+                for transaction in list(subscription.revenue_transactions):
+                    transaction.subscription = None
+            return
+
+        user_id = model.id
+
+        license_ids = list(
+            (
+                await session.scalars(
+                    select(License.id).where(License.user_id == user_id)
+                )
+            ).all()
+        )
+
+        if license_ids:
+            subscription_stmt = select(Subscription.id).where(
+                or_(
+                    Subscription.user_id == user_id,
+                    Subscription.license_id.in_(license_ids),
+                )
+            )
+        else:
+            subscription_stmt = select(Subscription.id).where(
+                Subscription.user_id == user_id
+            )
+
+        subscription_ids = list((await session.scalars(subscription_stmt)).all())
+        referral_ids = list(
+            (
+                await session.scalars(
+                    select(Referral.id).where(
+                        or_(
+                            Referral.affiliate_id == user_id,
+                            Referral.referred_user_id == user_id,
+                        )
+                    )
+                )
+            ).all()
+        )
+
+        await session.execute(
+            update(User)
+            .where(User.referred_by_id == user_id)
+            .values(referred_by_id=None)
+            .execution_options(synchronize_session=False)
+        )
+        await session.execute(
+            update(RevenueTransaction)
+            .where(RevenueTransaction.user_id == user_id)
+            .values(user_id=None)
+            .execution_options(synchronize_session=False)
+        )
+
+        if subscription_ids:
+            await session.execute(
+                update(RevenueTransaction)
+                .where(RevenueTransaction.subscription_id.in_(subscription_ids))
+                .values(subscription_id=None)
+                .execution_options(synchronize_session=False)
+            )
+
+        await session.execute(
+            delete(UserActivityLog)
+            .where(UserActivityLog.user_id == user_id)
+            .execution_options(synchronize_session=False)
+        )
+        await session.execute(
+            delete(UserTagAssignment)
+            .where(UserTagAssignment.user_id == user_id)
+            .execution_options(synchronize_session=False)
+        )
+        await session.execute(
+            delete(UserNote)
+            .where(UserNote.user_id == user_id)
+            .execution_options(synchronize_session=False)
+        )
+
+        if license_ids:
+            await session.execute(
+                delete(DeviceActivation)
+                .where(DeviceActivation.license_id.in_(license_ids))
+                .execution_options(synchronize_session=False)
+            )
+
+        if referral_ids:
+            await session.execute(
+                delete(Commission)
+                .where(
+                    or_(
+                        Commission.affiliate_id == user_id,
+                        Commission.referral_id.in_(referral_ids),
+                    )
+                )
+                .execution_options(synchronize_session=False)
+            )
+        else:
+            await session.execute(
+                delete(Commission)
+                .where(Commission.affiliate_id == user_id)
+                .execution_options(synchronize_session=False)
+            )
+
+        await session.execute(
+            delete(AffiliatePayout)
+            .where(AffiliatePayout.affiliate_id == user_id)
+            .execution_options(synchronize_session=False)
+        )
+        await session.execute(
+            delete(Referral)
+            .where(
+                or_(
+                    Referral.affiliate_id == user_id,
+                    Referral.referred_user_id == user_id,
+                )
+            )
+            .execution_options(synchronize_session=False)
+        )
+
+        if license_ids:
+            await session.execute(
+                delete(Subscription)
+                .where(
+                    or_(
+                        Subscription.user_id == user_id,
+                        Subscription.license_id.in_(license_ids),
+                    )
+                )
+                .execution_options(synchronize_session=False)
+            )
+        else:
+            await session.execute(
+                delete(Subscription)
+                .where(Subscription.user_id == user_id)
+                .execution_options(synchronize_session=False)
+            )
+
+        await session.execute(
+            delete(License)
+            .where(License.user_id == user_id)
+            .execution_options(synchronize_session=False)
+        )
+        await session.flush()
 
 
 class LicenseAdmin(ModelView, model=License):
