@@ -217,7 +217,6 @@ class LicenseAdmin(ModelView, model=License):
     can_create = True
     can_edit = True
     can_delete = True
-    form_excluded_columns = ["device_activations", "subscription"]
     form_columns = [
         "user_id",
         "license_key",
@@ -272,7 +271,6 @@ class SubscriptionAdmin(ModelView, model=Subscription):
     can_create = True
     can_edit = True
     can_delete = True
-    form_excluded_columns = ["revenue_transactions"]
     form_columns = [
         "user_id",
         "license_id",
