@@ -218,6 +218,16 @@ class LicenseAdmin(ModelView, model=License):
     can_edit = True
     can_delete = True
     form_excluded_columns = ["device_activations", "subscription"]
+    form_columns = [
+        "user_id",
+        "license_key",
+        "tier",
+        "status",
+        "max_devices",
+        "activated_devices",
+        "expires_at",
+        "features",
+    ]
     name = "License"
     name_plural = "Licenses"
     icon = "fa-solid fa-key"
@@ -263,6 +273,15 @@ class SubscriptionAdmin(ModelView, model=Subscription):
     can_edit = True
     can_delete = True
     form_excluded_columns = ["revenue_transactions"]
+    form_columns = [
+        "user_id",
+        "license_id",
+        "paddle_subscription_id",
+        "stripe_subscription_id",
+        "status",
+        "current_period_start",
+        "current_period_end",
+    ]
     name = "Subscription"
     name_plural = "Subscriptions"
     icon = "fa-solid fa-credit-card"
@@ -290,6 +309,14 @@ class DeviceActivationAdmin(ModelView, model=DeviceActivation):
     can_create = True
     can_edit = True
     can_delete = True
+    form_columns = [
+        "license_id",
+        "device_fingerprint",
+        "device_info",
+        "activated_at",
+        "last_validated_at",
+        "is_active",
+    ]
     name = "Device"
     name_plural = "Devices"
     icon = "fa-solid fa-laptop"
@@ -313,8 +340,8 @@ class PaddleWebhookAdmin(ModelView, model=PaddleWebhook):
     column_searchable_list = ["paddle_event_id", "event_type"]
     column_sortable_list = ["created_at", "processed"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
+    can_create = False
+    can_edit = False
     can_delete = True
     name = "Webhook"
     name_plural = "Webhooks"
@@ -326,8 +353,8 @@ class AdminUserAdmin(ModelView, model=AdminUser):
     column_searchable_list = ["email"]
     column_default_sort = [("created_at", True)]
     form_excluded_columns = ["password_hash"]
-    can_create = True
-    can_edit = True
+    can_create = False
+    can_edit = False
     can_delete = True
     name = "Admin User"
     name_plural = "Admin Users"
@@ -347,9 +374,9 @@ class AuditLogAdmin(ModelView, model=AuditLog):
     column_searchable_list = ["entity_type", "action", "actor_email"]
     column_sortable_list = ["created_at"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
-    can_delete = True
+    can_create = False
+    can_edit = False
+    can_delete = False
     name = "Audit Log"
     name_plural = "Audit Logs"
     icon = "fa-solid fa-clipboard-list"
@@ -359,9 +386,17 @@ class AdminSessionAdmin(ModelView, model=AdminSession):
     column_list = ["id", "admin_user_id", "ip_address", "expires_at", "created_at"]
     column_sortable_list = ["created_at", "expires_at"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
+    can_create = False
+    can_edit = False
     can_delete = True
+    form_columns = [
+        "admin_user_id",
+        "session_token",
+        "ip_address",
+        "user_agent",
+        "expires_at",
+        "last_activity_at",
+    ]
     name = "Admin Session"
     name_plural = "Admin Sessions"
     icon = "fa-solid fa-clock"
@@ -392,6 +427,19 @@ class RevenueTransactionAdmin(ModelView, model=RevenueTransaction):
     can_create = True
     can_edit = True
     can_delete = True
+    form_columns = [
+        "user_id",
+        "subscription_id",
+        "paddle_transaction_id",
+        "transaction_type",
+        "status",
+        "amount",
+        "currency",
+        "plan_tier",
+        "description",
+        "extra_data",
+        "transaction_date",
+    ]
     name = "Transaction"
     name_plural = "Transactions"
     icon = "fa-solid fa-dollar-sign"
@@ -545,6 +593,7 @@ class UserNoteAdmin(ModelView, model=UserNote):
     can_create = True
     can_edit = True
     can_delete = True
+    form_columns = ["user_id", "admin_id", "content"]
     name = "User Note"
     name_plural = "User Notes"
     icon = "fa-solid fa-sticky-note"
@@ -575,9 +624,17 @@ class UserActivityLogAdmin(ModelView, model=UserActivityLog):
     column_searchable_list = ["activity_type"]
     column_sortable_list = ["created_at"]
     column_default_sort = [("created_at", True)]
-    can_create = True
-    can_edit = True
+    can_create = False
+    can_edit = False
     can_delete = True
+    form_columns = [
+        "user_id",
+        "activity_type",
+        "description",
+        "ip_address",
+        "user_agent",
+        "extra_data",
+    ]
     name = "User Activity"
     name_plural = "User Activities"
     icon = "fa-solid fa-chart-line"
