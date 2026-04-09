@@ -52,10 +52,10 @@ class Referral(Base):
 
     # Relationships
     affiliate: Mapped["User"] = relationship(
-        "User", back_populates="referrals", foreign_keys=[affiliate_id], lazy="selectin"
+        "User", foreign_keys=[affiliate_id], lazy="selectin"
     )
     referred_user: Mapped["User"] = relationship(
-        "User", back_populates="referral_record", foreign_keys=[referred_user_id], lazy="selectin"
+        "User", foreign_keys=[referred_user_id], lazy="selectin"
     )
     commissions: Mapped[list["Commission"]] = relationship(
         "Commission", back_populates="referral", lazy="selectin", cascade="all, delete"
@@ -110,7 +110,7 @@ class Commission(Base):
     )
 
     # Relationships
-    affiliate: Mapped["User"] = relationship("User", back_populates="commissions", lazy="selectin")
+    affiliate: Mapped["User"] = relationship("User", lazy="selectin")
     referral: Mapped["Referral"] = relationship("Referral", back_populates="commissions", lazy="selectin")
     payout: Mapped["AffiliatePayout"] = relationship("AffiliatePayout", back_populates="commissions", lazy="selectin")
 
@@ -151,7 +151,7 @@ class AffiliatePayout(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
 
     # Relationships
-    affiliate: Mapped["User"] = relationship("User", back_populates="payouts", lazy="selectin")
+    affiliate: Mapped["User"] = relationship("User", lazy="selectin")
     commissions: Mapped[list["Commission"]] = relationship(
         "Commission", back_populates="payout", lazy="selectin", cascade="all, delete"
     )

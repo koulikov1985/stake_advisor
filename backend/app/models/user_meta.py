@@ -26,7 +26,7 @@ class UserNote(Base):
     )
 
     # Relationships
-    user: Mapped["User"] = relationship("User", back_populates="notes", lazy="selectin")
+    user: Mapped["User"] = relationship("User", lazy="selectin")
     admin: Mapped["AdminUser"] = relationship("AdminUser", lazy="selectin")
 
     def __repr__(self) -> str:
@@ -74,7 +74,7 @@ class UserTagAssignment(Base):
     assigned_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     # Relationships
-    user: Mapped["User"] = relationship("User", back_populates="tag_assignments", lazy="selectin")
+    user: Mapped["User"] = relationship("User", lazy="selectin")
     tag: Mapped["UserTag"] = relationship("UserTag", back_populates="user_assignments", lazy="selectin")
     admin: Mapped["AdminUser"] = relationship("AdminUser", lazy="selectin")
 
@@ -97,7 +97,7 @@ class UserActivityLog(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
 
     # Relationships
-    user: Mapped["User"] = relationship("User", back_populates="activity_logs", lazy="selectin")
+    user: Mapped["User"] = relationship("User", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"<UserActivityLog {self.activity_type}>"

@@ -39,15 +39,7 @@ class UserAdmin(ModelView, model=User):
         "licenses",
         "subscriptions",
         "referred_by",
-        "referred_users",
-        "referrals",
-        "referral_record",
-        "commissions",
-        "payouts",
-        "notes",
-        "tag_assignments",
-        "activity_logs",
-        "revenue_transactions",
+        "password_hash",
     ]
     name = "User"
     name_plural = "Users"
@@ -59,15 +51,6 @@ class UserAdmin(ModelView, model=User):
         # async relationship loading or database-level cascade constraints.
         session = async_object_session(model)
         if session is None:
-            for referred_user in list(model.referred_users):
-                referred_user.referred_by = None
-
-            for transaction in list(model.revenue_transactions):
-                transaction.user = None
-
-            for subscription in list(model.subscriptions):
-                for transaction in list(subscription.revenue_transactions):
-                    transaction.subscription = None
             return
 
         user_id = model.id
@@ -214,14 +197,6 @@ class UserAdmin(ModelView, model=User):
             selectinload(User.referred_by),
             selectinload(User.licenses),
             selectinload(User.subscriptions),
-            selectinload(User.referrals),
-            selectinload(User.referral_record),
-            selectinload(User.commissions),
-            selectinload(User.payouts),
-            selectinload(User.notes),
-            selectinload(User.tag_assignments).selectinload(UserTagAssignment.tag),
-            selectinload(User.activity_logs),
-            selectinload(User.revenue_transactions),
         )
 
 
