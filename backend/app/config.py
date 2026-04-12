@@ -43,7 +43,7 @@ class Settings(BaseSettings):
 
     # Email (Resend)
     resend_api_key: str = ""
-    email_from: str = "PokerSharkScope <noreply@pokersharkscope.com>"
+    email_from: str = "PokerSharkScope <noreply@mail.sharkpokerclub.com>"
 
     # Frontend URL (for email links)
     frontend_url: str = "https://sharkpokerclub.com"
